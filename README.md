@@ -1,8 +1,8 @@
-# Hinode Module - Template
+# Hinode Module - Utilities
 
 <!-- Tagline -->
 <p align="center">
-    <b>A template to define a Hugo module compatible with Hinode</b>
+    <b>A Hugo module with common utilities for your Hinode site (work in progress)</b>
     <br />
 </p>
 
@@ -14,17 +14,17 @@
     <a href="https://gethinode.com" alt="Hinode theme">
         <img src="https://img.shields.io/badge/theme-hinode-blue">
     </a>
-    <a href="https://github.com/gethinode/mod-template/commits/main" alt="Last commit">
-        <img src="https://img.shields.io/github/last-commit/gethinode/mod-template.svg">
+    <a href="https://github.com/gethinode/mod-utils/commits/main" alt="Last commit">
+        <img src="https://img.shields.io/github/last-commit/gethinode/mod-utils.svg">
     </a>
-    <a href="https://github.com/gethinode/mod-template/issues" alt="Issues">
-        <img src="https://img.shields.io/github/issues/gethinode/mod-template.svg">
+    <a href="https://github.com/gethinode/hinode/issues" alt="Issues">
+        <img src="https://img.shields.io/github/issues/gethinode/hinode.svg">
     </a>
-    <a href="https://github.com/gethinode/mod-template/pulls" alt="Pulls">
-        <img src="https://img.shields.io/github/issues-pr-raw/gethinode/mod-template.svg">
+    <a href="https://github.com/gethinode/mod-utils/pulls" alt="Pulls">
+        <img src="https://img.shields.io/github/issues-pr-raw/gethinode/mod-utils.svg">
     </a>
-    <a href="https://github.com/gethinode/mod-template/blob/main/LICENSE" alt="License">
-        <img src="https://img.shields.io/github/license/gethinode/mod-template">
+    <a href="https://github.com/gethinode/mod-utils/blob/main/LICENSE" alt="License">
+        <img src="https://img.shields.io/github/license/gethinode/mod-utils">
     </a>
 </p>
 
@@ -32,7 +32,7 @@
 
 ![Logo](https://raw.githubusercontent.com/gethinode/hinode/main/static/img/logo.png)
 
-Hinode is a clean blog theme for [Hugo][hugo], an open-source static site generator. Hinode is available as a [template][repository_template], and a [main theme][repository]. <!-- This repository maintains a Hugo module to add [module][module] to a Hinode site. --> Visit the Hinode documentation site for [installation instructions][hinode_docs].
+Hinode is a clean blog theme for [Hugo][hugo], an open-source static site generator. Hinode is available as a [template][repository_template], and a [main theme][repository]. This repository maintains a Hugo module that define common utilities compatible with your Hinode site. Visit the Hinode documentation site for [installation instructions][hinode_docs].
 
 <!-- MARKDOWN LINKS -->
 [hugo]: https://gohugo.io
