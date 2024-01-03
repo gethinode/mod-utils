@@ -2,7 +2,7 @@
 
 <!-- Tagline -->
 <p align="center">
-    <b>A Hugo module with common utilities for your Hinode site (work in progress)</b>
+    <b>A Hugo module with common utilities for your Hinode site</b>
     <br />
 </p>
 
