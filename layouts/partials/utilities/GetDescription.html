@@ -12,7 +12,9 @@
 
 {{- if not $description -}}
     {{- $description = $page.Summary -}}
-    {{- if $page.Truncated }}{{ $description = print $description "..." }}{{ end -}}}
+    {{- if $page.Truncated }}{{ $description = print $description "..." }}{{ end -}}
 {{- end -}}
+
+{{ $description = $description | htmlUnescape | plainify | replaceRE `[^0-9a-zA-Z ;.,\/'’"]` "" }}
 
 {{- return $description -}}
