@@ -3,6 +3,8 @@
     {{- errorf "partial [utilities/GetDescription.html] - Expected page context" -}}
 {{- end -}}
 
+{{ $filter := site.Params.modules.utils.filter | default `[^0-9A-Za-zŽžÀ-ÿ ;.,\/'’"]` }}
+
 {{- $description := "" -}}
 {{- if not $page.RelPermalink -}}
     {{- $description = $page.Content -}}
@@ -15,6 +17,6 @@
     {{- if $page.Truncated }}{{ $description = print $description "..." }}{{ end -}}
 {{- end -}}
 
-{{ $description = $description | htmlUnescape | plainify | replaceRE `[^0-9a-zA-Z ;.,\/'’"]` "" }}
+{{ $description = $description | htmlUnescape | plainify | replaceRE $filter "" }}
 
 {{- return $description -}}
