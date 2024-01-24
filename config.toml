@@ -9,3 +9,4 @@
 
 [params.modules.utils]
   filter = "[^0-9A-Za-zŽžÀ-ÿ ;.,\\/'’\"]"
+  raw = false
