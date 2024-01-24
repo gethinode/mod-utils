@@ -4,6 +4,7 @@
 {{- end -}}
 
 {{ $filter := site.Params.modules.utils.filter | default `[^0-9A-Za-zŽžÀ-ÿ ;.,\/'’"]` }}
+{{ $raw := site.Params.modules.utils.raw | default false }}
 
 {{- $description := "" -}}
 {{- if not $page.RelPermalink -}}
@@ -17,6 +18,8 @@
     {{- if $page.Truncated }}{{ $description = print $description "..." }}{{ end -}}
 {{- end -}}
 
-{{ $description = $description | htmlUnescape | plainify | replaceRE $filter "" }}
+{{ if not $raw }}
+    {{ $description = $description | htmlUnescape | plainify | replaceRE $filter "" }}
+{{ end }}
 
 {{- return $description -}}

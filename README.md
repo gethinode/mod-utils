@@ -41,6 +41,7 @@ This module supports the following parameters (see the section `params.modules` 
 | Setting                 | Default | Description |
 |-------------------------|---------|-------------|
 | utils.filter      | `[^0-9A-Za-zŽžÀ-ÿ ;.,\/'’"]` | Defines the regular expression for characters to remove from page descriptions. These page descriptions are used to define card content and metadata for search indexes. Adjust the filter to define which characters to support. You may need to adjust these settings to support specific diacritical letters. |
+| utils.raw         | false | Flag to indicate page descriptions should be returned as-is. In this setting, the filter is ignored. |
 
 <!-- MARKDOWN LINKS -->
 [hugo]: https://gohugo.io
