@@ -102,16 +102,11 @@
                     {{ warnf "[%s] argument '%s': unexpected value '%s'" $structure (string $key) $val }}
                     {{ $error = true }}
                 {{ end }}
-            {{ else if and $def.options.min (in (slice "int" "float" "float64") $actual) }}
-                {{ if lt $val $def.options.min }}
+            {{ else if and (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
+                {{ if or (lt $val $def.options.min) (gt $val $def.options.max) }}
                     {{ warnf "[%s] argument '%s': value '%s' out of range [%d, %d]" $structure (string $key) (string $val) $def.options.min $def.options.max}}
                     {{ $error = true }}
-                {{ end }}
-            {{ else if and $def.options.max (in (slice "int" "float" "float64") $actual) }}
-                {{ if (gt $val $def.options.max) }}
-                    {{ warnf "[%s] argument '%s': value '%s' out of range [%d, %d]" $structure (string $key) (string $val) $def.options.min $def.options.max}}
-                    {{ $error = true }}
-                {{ end }}
+                {{ end }}            
             {{ end }}
         {{ end }}
     {{ end }}
