@@ -103,8 +103,13 @@
                     {{ $error = true }}
                 {{ end }}
             {{ else if and (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
-                {{ if or (lt $val $def.options.min) (gt $val $def.options.max) }}
-                    {{ warnf "[%s] argument '%s': value '%s' out of range [%d, %d]" $structure (string $key) (string $val) $def.options.min $def.options.max}}
+                {{ if or 
+                    (and $def.options.min (lt $val $def.options.min))
+                    (and $def.options.max (gt $val $def.options.max))
+                }}
+                    {{ $min := (string (or $def.options.min "-")) }}
+                    {{ $max := (string (or $def.options.max "-")) }}
+                    {{ warnf "[%s] argument '%s': value '%s' out of range [%s, %s]" $structure (string $key) (string $val) $min $max }}
                     {{ $error = true }}
                 {{ end }}            
             {{ end }}
@@ -137,6 +142,12 @@
         {{ warnf "[%s] expected '%d' args, got '%d'" $structure $expected $max }}
         {{ $error = true }}
     {{ end }}
+{{ end }}
+
+{{ if $error }}
+    {{ $ref := page.RelPermalink }}
+    {{ with page.File }}{{ $ref = .Filename }}{{ end }}
+    {{- errorf "[%s] invalid arguments: %s" $structure $ref -}}
 {{ end }}
 
 {{ return $error }}
