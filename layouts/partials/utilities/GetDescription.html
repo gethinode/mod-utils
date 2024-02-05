@@ -1,10 +1,10 @@
-{{- $page := . -}}
+{{- $page := .page -}}
 {{- if ne (printf "%T" $page) "*hugolib.pageState" -}}
     {{- errorf "partial [utilities/GetDescription.html] - Expected page context" -}}
 {{- end -}}
 
 {{ $filter := site.Params.modules.utils.filter | default `[^0-9A-Za-zŽžÀ-ÿ ;.,\/'’"]` }}
-{{ $raw := site.Params.modules.utils.raw | default false }}
+{{ $raw := .raw | default site.Params.modules.utils.raw }}
 
 {{- $description := "" -}}
 {{- if not $page.RelPermalink -}}
