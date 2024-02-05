@@ -139,4 +139,10 @@
     {{ end }}
 {{ end }}
 
+{{ if $error }}
+    {{ $ref := page.RelPermalink }}
+    {{ with page.File }}{{ $ref = .Filename }}{{ end }}
+    {{- errorf "[%s] invalid arguments: %s" $structure $ref -}}
+{{ end }}
+
 {{ return $error }}
