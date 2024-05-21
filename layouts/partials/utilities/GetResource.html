@@ -28,6 +28,11 @@
 {{ $remote := hasPrefix (lower $url) "http" }}
 {{ if $remote }}
     {{ $res = resources.GetRemote $url -}}
+    {{ if not $res }}
+        <!-- Bypass Hugo's cache when first download attempt fails -->
+        {{ $cacheKey := print $url (now.Format "2006-01-02") }}
+        {{ $res = resources.GetRemote $url (dict "key" $cacheKey) -}}
+    {{ end }}
 {{ else }}
     {{ if $page }}
         {{ $res = $page.Resources.Get $url -}}
