@@ -17,12 +17,30 @@
 {{ $res := "" }}
 {{ $remote := hasPrefix (lower $url) "http" }}
 
+{{ define "partials/utilities/GetResourceBypassCache.html" }}
+    {{ $url := .url -}}
+    {{ $res := "" }}
+
+    <!-- Bypass Hugo's cache when first download attempt fails -->
+    {{ $cacheKey := print $url (now.Format "2006-01-02") }}
+    {{ with resources.GetRemote $url (dict "key" $cacheKey) -}}
+        {{ if not .Err }}
+            {{ $res = . }}
+        {{ end }}
+    {{ end }}
+
+    {{ return $res }}
+{{ end }}
+
 {{ if $remote }}
-    {{ $res = resources.GetRemote $url -}}
-    {{ if not $res }}
-        <!-- Bypass Hugo's cache when first download attempt fails -->
-        {{ $cacheKey := print $url (now.Format "2006-01-02") }}
-        {{ $res = resources.GetRemote $url (dict "key" $cacheKey) -}}
+    {{ with resources.GetRemote $url }}
+        {{ if .Err }}
+            {{ $res = partial "partials/utilities/GetResourceBypassCache.html" (dict "url" $url) }}
+        {{ else }}
+            {{ $res = . }}
+        {{ end }}
+    {{ else }}
+        {{ $res = partial "partials/utilities/GetResourceBypassCache.html" (dict "url" $url) }}
     {{ end }}
 {{ else }}
     {{ $pageContext := "" }}
