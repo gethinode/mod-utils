@@ -42,7 +42,7 @@
     {{ else }}
         {{ $res = partial "partials/utilities/GetResourceBypassCache.html" (dict "url" $url) }}
     {{ end }}
-{{ else }}
+{{ else if $page }}
     {{ $pageContext := "" }}
     {{ if and (hasPrefix $url "/") $page.File }}
         {{ $pageContext = (path.Join "/content" $page.File.Dir) -}}
@@ -52,12 +52,17 @@
         {{ $url = strings.TrimPrefix $pageContext $url -}}
         {{ $url = strings.TrimPrefix "/" $url -}}
         {{ $res = $page.Resources.Get $url -}}
-    {{ else }}
-        {{ if hasPrefix $url "/assets/" }}
-            {{ $url = strings.TrimPrefix "/assets/" $url -}}
-        {{ end }}
-        {{ $res = resources.GetMatch $url }}
+    {{ else if ne (substr $url 0 1) "/" }}
+        {{ $res = $page.Resources.Get $url -}}
     {{ end }}
+{{ else }}
+    {{ if hasPrefix $url "/assets/" }}
+        {{ $url = strings.TrimPrefix "/assets/" $url -}}
+    {{ end }}
+{{ end }}
+
+{{ if not $res }}
+    {{ $res = resources.GetMatch $url }}
 {{ end }}
 
 {{ return $res -}}
