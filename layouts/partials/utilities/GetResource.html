@@ -55,13 +55,12 @@
     {{ else if ne (substr $url 0 1) "/" }}
         {{ $res = $page.Resources.Get $url -}}
     {{ end }}
-{{ else }}
-    {{ if hasPrefix $url "/assets/" }}
-        {{ $url = strings.TrimPrefix "/assets/" $url -}}
-    {{ end }}
 {{ end }}
 
 {{ if not $res }}
+    {{ if and (eq .url $url) (hasPrefix $url "/assets/") }}
+        {{ $url = strings.TrimPrefix "/assets/" $url -}}
+    {{ end }}
     {{ $res = resources.GetMatch $url }}
 {{ end }}
 
