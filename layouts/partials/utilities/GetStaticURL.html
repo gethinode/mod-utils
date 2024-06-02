@@ -1,0 +1,10 @@
+{{ $url := .url }}
+{{ $result := $url }}
+
+{{ if not (strings.HasPrefix $url "http") }}
+    {{ $lang := site.LanguageCode | default site.Language.Lang }}
+    {{ $base :=  strings.TrimSuffix (printf "%s/" $lang) site.Home.RelPermalink }}
+    {{ $result = urls.JoinPath $base $url }}
+{{ end }}
+
+{{ return $result }}
