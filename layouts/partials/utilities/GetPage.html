@@ -14,20 +14,14 @@
 {{- $isExternal := ne (urls.Parse (absURL $url)).Host (urls.Parse site.BaseURL).Host -}}
 {{- if not $isExternal -}}
     {{- $ref = $page.GetPage $url -}}
-    {{ if not $ref }}
-        {{ $ref = (index (where $page.Site.AllPages "RelPermalink" (printf "%s/" (strings.TrimSuffix "/" $url))) 0)}} 
-    {{ end }}
 
-    {{- if not $ref }}
-        {{- $segments := split $url "/" -}}
-        {{- if and (hasPrefix $url "/")  (gt (len $segments) 1) -}}
-            {{- $prefix := index $segments 1 -}}
-            {{ with index (where site.Sites "Language.Lang" $prefix) 0 }}
-                {{- $path := printf "/%s" (strings.TrimPrefix (printf "/%s/" $prefix) $url) }}
-                {{- $ref = .GetPage $path -}}
-            {{ end }}
-        {{- end -}}
-    {{- end -}}
+    {{ if not $ref }}
+        {{ $match := partial "utilities/GetStaticURL" (dict "url" $url) }}
+        {{ if not (hasSuffix $match "/") }}{{ $match = printf "%s/" $match }}{{ end }}
+        
+        {{ $matches := first 1 (where $page.Site.AllPages "RelPermalink" $match) }}
+        {{ if eq (len $matches) 1 }}{{ $ref = index $matches 0 }}{{ end }}
+    {{ end }}
 {{- end -}}
 
 {{ return $ref }}
