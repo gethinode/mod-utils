@@ -1,6 +1,6 @@
 {
   "name": "@gethinode/mod-utils",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "A Hugo module with common utilities for your Hinode site (work in progress)",
   "keywords": [
     "hugo",
@@ -38,9 +38,9 @@
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "cpy-cli": "^5.0.0",
-    "hugo-bin": "^0.123.2",
+    "hugo-bin": "^0.123.3",
     "rimraf": "^5.0.7",
-    "semantic-release": "^23.1.1"
+    "semantic-release": "^24.0.0"
   },
   "hugo-bin": {
     "buildTags": "extended"
