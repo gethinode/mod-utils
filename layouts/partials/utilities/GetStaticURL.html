@@ -1,10 +1,28 @@
 {{ $url := .url }}
 {{ $result := $url }}
+{{ $major_required := 0 }}
+{{ $minor_required := 112 }}
 
 {{ if not (strings.HasPrefix $url "http") }}
     {{ $lang := site.LanguageCode | default site.Language.Lang }}
     {{ $base :=  strings.TrimSuffix (printf "%s/" $lang) site.Home.RelPermalink }}
-    {{ $result = urls.JoinPath $base $url }}
+    
+    {{/* Test if the (embedded) hugo binary supports urls.JoinPath function (introduced in v0.112.0) */}}
+    {{ $version := split hugo.Version "." }}
+    {{ $major := 0 }}
+    {{ $minor := 0 }}
+    {{ if gt (len $version) 1 }}
+        {{ $major = index $version 0 }}
+        {{ $minor = index $version 1 }}
+    {{ end }}
+
+    {{ if and (ge $major $major_required) (ge $minor $minor_required) }}
+        {{ $result = urls.JoinPath $base $url }}
+    {{ else }}
+        {{ $base = strings.TrimSuffix "/" $base }}
+        {{ $url = strings.TrimPrefix "/" $url }}
+        {{ $result = printf "%s/%s" $base $url }}
+    {{ end }}
 {{ end }}
 
 {{ return $result }}
