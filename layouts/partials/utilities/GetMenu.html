@@ -4,8 +4,19 @@
 
 {{- $menu := "" -}}
 {{- if $page.IsPage -}}
-    {{- $sidebarFilename = printf "%s-%s" $page.Section $version -}}
+    {{/* Try filename with language extension */}}
+    {{- $sidebarFilename = printf "%s-%s.%s" $page.Section $version $page.Lang -}}
     {{- $menu = index site.Data $sidebarFilename -}}
+    {{ if not $menu }}
+        {{- $sidebarFilename = printf "%s.%s" $page.Section $page.Lang -}}
+        {{ $menu = index site.Data $sidebarFilename }}
+    {{ end }}
+
+    {{/* Try filename without language extension */}}
+    {{ if not $menu }}
+        {{- $sidebarFilename = printf "%s-%s" $page.Section $version -}}
+        {{- $menu = index site.Data $sidebarFilename -}}
+    {{ end }}
     {{ if not $menu }}
         {{- $sidebarFilename = $page.Section -}}
         {{ $menu = index site.Data $sidebarFilename }}
