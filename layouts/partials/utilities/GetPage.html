@@ -1,14 +1,17 @@
 {{- $ref := "" -}}
 {{- $anchor := "" -}}
 
+{{ $origin := "" }}
+{{ with page.File }}{{ $origin = .Path }}{{ else }}{{ $origin = page.File }}{{ end }}
+
 {{ $url := .url }}
 {{ if not $url }}
-    {{- errorf "partial [utilities/GetPage.html] - Expected param 'url'" -}}
+    {{- errorf "partial [utilities/GetPage.html] - Expected param 'url', see: %s" $origin -}}
 {{ end }}
 
 {{ $page := .page }}
 {{ if not $page }}
-    {{- errorf "partial [utilities/GetPage.html] - Expected param 'page'" -}}
+    {{- errorf "partial [utilities/GetPage.html] - Expected param 'page', see: %s" $origin -}}
 {{ end }}
 
 {{- $isExternal := ne (urls.Parse (absURL $url)).Host (urls.Parse site.BaseURL).Host -}}
