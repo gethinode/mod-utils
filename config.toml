@@ -4,6 +4,9 @@
     min = "0.110.0"
     max = ""
   [[module.mounts]]
+    source = 'data'
+    target = 'data'
+  [[module.mounts]]
     source = 'layouts'
     target = 'layouts'
 
