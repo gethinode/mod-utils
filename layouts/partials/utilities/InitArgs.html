@@ -7,8 +7,6 @@
 {{ $error := false }}
 {{ $errorMsg := slice }}
 
-{{ $aliases := dict "path" "string" "select" "string" "url" "string" }}
-
 {{ $structure := .structure }}
 {{ if not $structure }}
     {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing value for param 'structure'") -}}
@@ -40,18 +38,37 @@
 {{ $group := .group }}
 {{ $namedArgs := true }}
 
+{{ define "partials/assets/type-def.html" }}
+    {{ $def := "" }}
+    {{ if eq (printf "%T" .key) "string" }}
+        {{ $def = index .definitions .key }}
+    {{ else }}
+        {{ $namedArgs = false }}
+        {{ range $d := .definitions }}
+            {{ if eq $d.position .key }}{{ $def = $d }}{{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{ return $def }}
+{{ end }}
+
+{{ define "partials/assets/alias-type.html" }}
+    {{ $aliases := dict "path" "string" "select" "string" "url" "string" "dict" "[]map[string]interface {}" "slice" "[]interface {}" }}
+
+    {{ $types := slice | append .type }}
+    {{ $extra := slice }}
+    {{ range $types }}
+        {{ $alias := index $aliases . }}
+        {{ if $alias }}{{ $extra = $extra | append $alias }}{{ end }}
+    {{ end }}
+    {{ if $extra }}{{ $types = $types | append $extra }}{{ end }}
+
+    {{ return $types }}
+{{ end }}
+
 {{ if not $error }}
     {{ range $key, $val := $args }}
-        {{ $def := "" }}
-        {{ if eq (printf "%T" $key) "string" }}
-            {{ $def = index $definitions $key }}
-        {{ else }}
-            {{ $namedArgs = false }}
-            {{ range $d := $definitions }}
-                {{ if eq $d.position $key }}{{ $def = $d }}{{ end }}
-            {{ end }}
-        {{ end }}
-
+        {{ $def := partial "assets/type-def.html" (dict "definitions" $definitions "key" $key) }}
         {{ if $def }}
             {{ $groups := slice | append $def.group }}
             {{ if and $group $def.group }}
@@ -72,13 +89,7 @@
             {{ if and (not $val) $def.default }}{{ $val = $def.default }}{{ end }}
 
             {{/* validate type */}}
-            {{ $expected := slice | append $def.type }}
-            {{ $extra := slice }}
-            {{ range $expected }}
-                {{ $alias := index $aliases . }}
-                {{ if $alias }}{{ $extra = $extra | append $alias }}{{ end }}
-            {{ end }}
-            {{ if $extra }}{{ $expected = $expected | append $extra }}{{ end }}
+            {{ $expected := partial "assets/alias-type.html" (dict "type" $def.type) }}
             {{ $actual := printf "%T" $val }}
 
             {{/* cast supported types from/to string */}}
@@ -148,10 +159,19 @@
         {{ $error = true }}
     {{ end }}
 
-    {{/* add missing keys with default values */}}
+    {{/* add missing keys with default values or empty collections */}}
     {{ range $key, $val := $definitions }}
-        {{ if and (not (isset $params $key)) (isset $val "default") }}
-            {{ $params = merge $params (dict $key $val.default ) }}
+        {{ $def := partial "assets/type-def.html" (dict "definitions" $definitions "key" $key) }}
+        {{ $expected := partial "assets/alias-type.html" (dict "type" $def.type) }}
+
+        {{ if (not (isset $params $key)) }}
+            {{ if (isset $val "default") }}
+                {{ $params = merge $params (dict $key $val.default ) }}
+            {{ else if (in $expected "[]map[string]interface {}") }}
+                {{ $params = merge $params (dict $key dict) }}
+            {{ else if (in $expected "[]interface {}") }}
+                {{ $params = merge $params (dict $key slice) }}
+            {{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
