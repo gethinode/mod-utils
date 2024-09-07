@@ -1,16 +1,40 @@
-{{- $base := .base -}}
-{{- if not $base }}
-    {{- errorf "partial [assets/utilities/URLJoin.html] - Expected param 'base'" -}}
-{{- end -}}
+<!-- 
+    Copyright © 2024 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+-->
 
-{{- $path := .path -}}
-{{- if not $path }}
-    {{- errorf "partial [assets/utilities/URLJoin.html] - Expected param 'path'" -}}
-{{- end -}}
+<!-- Initialize arguments -->
+{{ $args := partial "utilities/InitArgs.html" (dict "structure" "urljoin" "args" .) }}
+{{ if $args.err }}
+    {{ partial "utilities/LogErr.html" (dict 
+        "partial" "assets/URLJoin.html" 
+        "msg" "Invalid arguments"
+        "details" $args.errmsg
+        "file" page.File
+    )}}
+{{ end }}
 
-{{- $url := $path -}}
-{{- if not (hasPrefix $path "http") -}}
-    {{- $url = printf "%s/%s" (strings.TrimSuffix "/" $base) $path -}}
-{{- end }}
+<!-- Initialize local variables -->
+{{ $major_required := 0 }}
+{{ $minor_required := 112 }}
+{{- $result := "" -}}
 
-{{- return $url -}}
+<!-- Main code -->
+{{/* Test if the (embedded) hugo binary supports urls.JoinPath function (introduced in v0.112.0) */}}
+{{ $version := split hugo.Version "." }}
+{{ $major := 0 }}
+{{ $minor := 0 }}
+{{ if gt (len $version) 1 }}
+    {{ $major = index $version 0 }}
+    {{ $minor = index $version 1 }}
+{{ end }}
+
+<!-- Join the elements -->
+{{ if or (and (eq $major $major_required) (ge $minor $minor_required)) ((gt $major $major_required)) }}
+    {{ $result = urls.JoinPath $args.base $args.path }}
+{{ else }}
+    {{ $result = printf "%s/%s" (strings.TrimSuffix "/" $args.base) (strings.TrimPrefix "/" $args.path) }}
+{{ end }}
+
+{{- return $result -}}
