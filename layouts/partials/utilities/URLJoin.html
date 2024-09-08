@@ -19,6 +19,10 @@
 {{ $major_required := 0 }}
 {{ $minor_required := 112 }}
 {{- $result := "" -}}
+{{ $elements := slice }}
+{{ with $args.base }}{{ $elements = $elements | append . }}{{ end }}
+{{ with $args.path }}{{ $elements = $elements | append . }}{{ end }}
+{{ with $args.elements }}{{ $elements = $elements | append . }}{{ end }}
 
 <!-- Main code -->
 {{/* Test if the (embedded) hugo binary supports urls.JoinPath function (introduced in v0.112.0) */}}
@@ -34,7 +38,19 @@
 {{ if or (and (eq $major $major_required) (ge $minor $minor_required)) ((gt $major $major_required)) }}
     {{ $result = urls.JoinPath $args.base $args.path }}
 {{ else }}
-    {{ $result = printf "%s/%s" (strings.TrimSuffix "/" $args.base) (strings.TrimPrefix "/" $args.path) }}
+    {{ $len := $elements | len }}
+    {{ if gt $len 0 }}
+        {{ range $index, $element := $elements }}
+            {{ if lt $index (sub $len 1) }}{{ $element = strings.TrimSuffix "/" $element }}{{ end }}
+
+            {{ if eq $index 0 }}
+                {{ $result = $element }}
+            {{ else }}
+                {{ $element = strings.TrimPrefix "/" $element }}
+                {{ $result = printf "%s/%s" $result $element }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
 {{ end }}
 
 {{- return $result -}}
