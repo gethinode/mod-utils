@@ -13,7 +13,7 @@
 {{- $modules := .modules -}}
 {{- $all := .all }}
 {{- $basepath := strings.TrimSuffix "/" .basepath -}}
-{{- $ext := trim (path.Ext (trim $match "{}")) "." -}}
+{{- $ext := trim (path.Ext (trim $match "{}")) "." | default "js" -}}
 {{- if not $ext -}}
     {{- errorf "partial [assets/bundle.html] - Cannot derive file extension of match pattern: %s" $match -}}
 {{- end -}}
@@ -30,7 +30,7 @@
             {{- $matches = $matches | append (printf "%s/%s.%s" $basepath $mod $ext) -}}
         {{- end -}}
     {{- end -}}
-    {{- $match = printf "{%s}" (delimit $matches ",") }}
+    {{- $match = printf "{%s}" (trim (delimit $matches ",") ",") }}
 {{- end -}}
 
 <!-- TODO: concat by module, then sorted by filename -->
@@ -49,7 +49,7 @@
 {{- end -}}
 
 {{- if $debugging -}}
-    {{ warnf "Processing pattern: %s" $match}}
+    {{ warnf "Processing pattern for '%s': %s" $filename $match}}
     {{- range $index, $file := $sorted -}}
         {{- warnf " - Processing file: %s" $file }}
     {{- end -}}
