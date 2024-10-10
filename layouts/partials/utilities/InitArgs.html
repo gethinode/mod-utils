@@ -93,7 +93,9 @@
             {{ end }}
             {{ $error = true }}
         {{ else }}
-            {{ if and (not $val) $def.default }}{{ $val = $def.default }}{{ end }}
+            {{ if and (not (isset $args $key)) $def.default }}
+                {{ $val = $def.default }}
+            {{ end }}
 
             {{/* validate type */}}
             {{ $expected := partial "assets/alias-type.html" (dict "type" $def.type) }}
@@ -136,7 +138,9 @@
         {{ end }}
 
         {{/* append the argument to the return set */}}
-        {{ if $val }}{{ $params = merge $params (dict $key $val) }}{{ end }}
+        {{ if ne $val nil }}
+            {{ $params = merge $params (dict $key $val) }}
+        {{ end }}
     {{ end }}
     
     {{/* validate required arguments */}}
