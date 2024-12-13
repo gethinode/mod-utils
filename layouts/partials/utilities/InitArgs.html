@@ -16,12 +16,7 @@
 {{ $args := .args | default dict }}
 {{ $params := dict }}
 
-{{ $definitions := (index site.Data.structures $structure).arguments }}
-{{ if not $definitions }}
-    {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing definitions: %s" $structure) -}}
-    {{ $error =  true }}
-{{ end }}
-
+{{ $definitions := (index site.Data.structures $structure).arguments | default dict }}
 {{ range $key, $def := $definitions }}
     {{ if not $def.type }}
         {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing type for '%s' in '%s'" $key $structure) -}}
