@@ -1,28 +1,28 @@
 {{- $page := .page -}}
 {{- $version := .version -}}
-{{- $sidebarFilename := "" -}}
+{{- $path := "" -}}
 
 {{- $menu := "" -}}
-{{- if $page.IsPage -}}
+{{- if or $page.IsPage $page.IsSection -}}
     {{/* Try filename with language extension */}}
-    {{- $sidebarFilename = printf "%s-%s.%s" $page.Section $version $page.Lang -}}
-    {{- $menu = index site.Data $sidebarFilename -}}
+    {{- $path = printf "%s-%s.%s" $page.Section $version $page.Lang -}}
+    {{- $menu = index site.Data $path -}}
     {{ if not $menu }}
-        {{- $sidebarFilename = printf "%s.%s" $page.Section $page.Lang -}}
-        {{ $menu = index site.Data $sidebarFilename }}
+        {{- $path = printf "%s.%s" $page.Section $page.Lang -}}
+        {{ $menu = index site.Data $path }}
     {{ end }}
 
     {{/* Try filename without language extension */}}
     {{ if not $menu }}
-        {{- $sidebarFilename = printf "%s-%s" $page.Section $version -}}
-        {{- $menu = index site.Data $sidebarFilename -}}
+        {{- $path = printf "%s-%s" $page.Section $version -}}
+        {{- $menu = index site.Data $path -}}
     {{ end }}
     {{ if not $menu }}
-        {{- $sidebarFilename = $page.Section -}}
-        {{ $menu = index site.Data $sidebarFilename }}
+        {{- $path = $page.Section -}}
+        {{ $menu = index site.Data $path }}
     {{ end }}
 {{- end -}}
 
-{{ if $menu }}{{ with $sidebarFilename }}{{ $page.Scratch.Set "sidebarFilename" (path.Join "data" .) }}{{ end }}{{ end -}}
+{{ if $menu }}{{ with $path }}{{ $page.Scratch.Set "sidebarFilename" (path.Join "data" .) }}{{ end }}{{ end -}}
 
 {{- return $menu -}}
