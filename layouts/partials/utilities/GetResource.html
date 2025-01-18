@@ -23,9 +23,9 @@
 
     <!-- Bypass Hugo's cache when first download attempt fails -->
     {{ $cacheKey := print $url (now.Format "2006-01-02") }}
-    {{ with resources.GetRemote $url (dict "key" $cacheKey) -}}
+    {{ with try (resources.GetRemote $url (dict "key" $cacheKey)) -}}
         {{ if not .Err }}
-            {{ $res = . }}
+            {{ $res = .Value }}
         {{ end }}
     {{ end }}
 
@@ -33,11 +33,11 @@
 {{ end }}
 
 {{ if $remote }}
-    {{ with resources.GetRemote $url }}
+    {{ with try (resources.GetRemote $url) }}
         {{ if .Err }}
             {{ $res = partial "partials/utilities/GetResourceBypassCache.html" (dict "url" $url) }}
         {{ else }}
-            {{ $res = . }}
+            {{ $res = .Value }}
         {{ end }}
     {{ else }}
         {{ $res = partial "partials/utilities/GetResourceBypassCache.html" (dict "url" $url) }}

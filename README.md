@@ -43,9 +43,15 @@ This module supports the following parameters (see the section `params.modules` 
 | utils.filter      | `[^0-9A-Za-zŽžÀ-ÿ ;.,\/'’"]` | Defines the regular expression for characters to remove from page descriptions. These page descriptions are used to define card content and metadata for search indexes. Adjust the filter to define which characters to support. You may need to adjust these settings to support specific diacritical letters. |
 | utils.raw         | false | Flag to indicate page descriptions should be returned as-is. In this setting, the filter is ignored. |
 
+## Contributing
+
+This module uses [semantic-release][semantic-release] to automate the release of new versions. The package uses `husky` and `commitlint` to ensure commit messages adhere to the [Conventional Commits][conventionalcommits] specification. You can run `npx git-cz` from the terminal to help prepare the commit message.
+
 <!-- MARKDOWN LINKS -->
 [hugo]: https://gohugo.io
 [hinode_docs]: https://gethinode.com
-<!-- [module]: https://example.com -->
 [repository]: https://github.com/gethinode/hinode.git
 [repository_template]: https://github.com/gethinode/template.git
+[conventionalcommits]: https://www.conventionalcommits.org
+[husky]: https://typicode.github.io/husky/
+[semantic-release]: https://semantic-release.gitbook.io/
