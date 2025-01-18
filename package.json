@@ -1,6 +1,6 @@
 {
   "name": "@gethinode/mod-utils",
-  "version": "2.8.6",
+  "version": "2.9.0",
   "description": "A Hugo module with common utilities for your Hinode site (work in progress)",
   "keywords": [
     "hugo",
