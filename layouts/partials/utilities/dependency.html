@@ -1,0 +1,51 @@
+<!-- 
+    Copyright © 2025 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+-->
+
+{{ $error := false }}
+{{ $result := false }}
+
+<!-- Initialize arguments -->
+{{ $args := partial "utilities/InitArgs.html" (dict "structure" "dependency" "args" .) }}
+{{ if $args.err }}
+    {{ partial "utilities/LogErr.html" (dict 
+        "partial" "utilities/dependency.html" 
+        "msg" "Invalid arguments"
+        "details" $args.errmsg
+        "file" page.File
+    )}}
+    {{ $error = true }}
+{{ end }}
+
+{{ if not $error }}
+    <!-- Validate provided version -->
+    {{- $regex := `^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$` -}}
+    {{- $match := findRE $regex $args.version -}}
+
+    {{ if not $match }}
+        {{ partial "utilities/LogErr.html" (dict 
+            "partial" "utilities/dependency.html" 
+            "msg" (printf "version '%s' is not a semantic version" $args.version)
+            "file" page.File
+        )}}
+    {{ else }}
+        {{ $current := split hugo.Version "." }}    
+        {{ $expected := split $args.version "." }}
+
+        {{ $majorCurrent := int (index $current 0) }}
+        {{ $majorExpected := int (index $expected 0) }}
+        {{ $minorCurrent := int (index $current 1) }}
+        {{ $minorExpected := int (index $expected 1) }}
+        {{ $patchCurrent := int (index $current 2) }}
+        {{ $patchExpected := int (index $expected 2) }}
+
+        {{ $result = eq $majorCurrent $majorExpected }}
+        {{ if $result }}
+            {{ $result = or (gt $minorCurrent $minorExpected) (and (eq $minorCurrent $minorExpected) (ge $patchCurrent $patchExpected)) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ return $result }}

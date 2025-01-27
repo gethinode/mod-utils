@@ -1,0 +1,10 @@
+comment: >-
+  Validates if the current Hugo version meets the version requirements. Provide
+  the requirement as semantic version string, e.g. `0.141.0`. The function
+  returns true if Hugo's major version is equal and the minor.patch version is
+  equal or greater than the provided version string. Any labels are ignored.
+arguments:
+  version:
+    type: string
+    optional: false
+    comment: Minimum required version of Hugo in semantic versioning format.
