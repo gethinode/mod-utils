@@ -49,7 +49,7 @@
         {{ $error =  true }}
     {{ else }}
         {{ range $key, $val := $extra_def }}
-            {{ if $val.parent }}{{ $definitions = merge (dict $key $val) $definitions }}{{ end }}
+            {{ if and $val $val.parent }}{{ $definitions = merge (dict $key $val) $definitions }}{{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
