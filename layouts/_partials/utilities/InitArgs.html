@@ -204,7 +204,7 @@
 
         {{ with $val.deprecated }}
             {{ if and $named (isset $args $key) }}
-                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" $structure $key . }}
+                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" $structure $key (strings.TrimPrefix "v" .) }}
                 {{ with $val.alternative }}
                     {{ $warn = printf "%s, use '%s' instead" $warn . }}
                 {{ end }}
