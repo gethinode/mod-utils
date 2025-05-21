@@ -78,7 +78,13 @@
     {{ $custom := .types }}
     {{ $references := .references }}
 
-    {{ $types := slice | append .type }}
+    {{ $types := slice }}
+    {{ if not .type }}
+        {{ errorf "expected type argument: %s" page.File }}
+    {{ else }}
+        {{ $types = slice .type }}
+    {{ end }}
+
     {{ $extra := slice }}
     {{ range $types }}
         {{ $alias := index $aliases . }}
