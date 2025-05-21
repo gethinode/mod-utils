@@ -21,6 +21,7 @@ arguments:
     type:
       - string
       - '[]string'
+      - '[]interface {}'
     optional: true
     group: partial
     comment: >-
