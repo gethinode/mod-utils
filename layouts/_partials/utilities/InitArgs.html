@@ -136,6 +136,7 @@
                 {{ $errorMsg = $errorMsg | append printf ("[%s] unsupported argument value '%s'" $structure $val) }}
             {{ end }}
             {{ $error = true }}
+            {{ break }}
         {{ else }}
             {{ if and (eq $val nil) $def.default }}
                 {{ $val = $def.default }}
@@ -160,6 +161,7 @@
             {{ if and $val (not (in $expected $actual)) }}
                 {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s'" $structure (string $name) (delimit $expected ", ") $actual) }}
                 {{ $error = true }}
+                {{ break }}
             {{ end }}
 
             {{/* validate permitted values */}}
@@ -167,6 +169,7 @@
                 {{ if and $val (not (in $def.options.values $val)) }}
                     {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': unexpected value '%s'" $structure (string $name) $val) }}
                     {{ $error = true }}
+                    {{ break }}
                 {{ end }}
             {{ else if and (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
                 {{ if or 
@@ -177,6 +180,7 @@
                     {{ $max := (string (or $def.options.max "-")) }}
                     {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" $structure (string $name) (string $val) $min $max) }}
                     {{ $error = true }}
+                    {{ break }}
                 {{ end }}            
             {{ end }}
         {{ end }}
@@ -186,7 +190,9 @@
             {{ $params = merge $params (dict $name $val) }}
         {{ end }}
     {{ end }}
+{{ end }}
     
+{{ if not $error }}
     {{/* validate required and deprecated arguments */}}
     {{ $max := len $args }}
     {{ $expected := 0 }}
