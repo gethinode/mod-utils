@@ -137,7 +137,7 @@
             {{ end }}
             {{ $error = true }}
         {{ else }}
-            {{ if and (not $val) $def.default }}
+            {{ if and (eq $val nil) $def.default }}
                 {{ $val = $def.default }}
             {{ end }}
 
