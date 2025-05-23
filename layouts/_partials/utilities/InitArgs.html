@@ -82,7 +82,7 @@
     {{ if not .type }}
         {{ errorf "expected type argument: %s" page.File }}
     {{ else }}
-        {{ $types = slice .type }}
+        {{ $types = slice | append .type }}
     {{ end }}
 
     {{ $extra := slice }}
