@@ -262,6 +262,14 @@
         {{ end }}
     {{ end }}
 
+    {{/* add the key-value pair using camel case to support chaining of the identifier */}}
+    {{/* see https://gohugo.io/configuration/params/#article */}}
+    {{ range $key, $val := $params }}
+        {{ if strings.Contains $key "-" }}
+            {{ $camelKey := partial "utilities/camelize.html" $key }}
+            {{ $params = merge $params (dict $camelKey $val) }}
+        {{ end }}
+    {{ end }}
 {{ end }}
 
 {{ $params = merge $params (dict "err" $error "errmsg" $errorMsg "warnmsg" $warnMsg) }}

@@ -1,0 +1,13 @@
+{{ $result := "" }}
+
+{{ $input := replace (chomp .) "-" " " }}
+{{ $elements := split $input " " }}
+{{ range $index, $key :=  $elements }}
+    {{ if gt $index 0 }}
+        {{ $result = print $result (strings.FirstUpper $key) }}
+    {{ else }}
+        {{ $result = (strings.ToLower $key) }}
+    {{ end }}
+{{ end }}
+
+{{ return $result }}
