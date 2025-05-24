@@ -9,9 +9,10 @@
 {{ $warnMsg := slice }}
 
 {{ $structure := .structure }}
+{{ $bookshop := .bookshop }}
 {{ $named := .named | default true }}
-{{ if not $structure }}
-    {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing value for param 'structure'") -}}
+{{ if and (not $structure) (not $bookshop) }}
+    {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing value for param 'structure' or 'bookshop'") -}}
     {{ $error = true }}
 {{ end }}
 
@@ -21,7 +22,13 @@
 {{ $references := index (index site.Data.structures "_arguments") "arguments" }}
 {{ $types := index (index site.Data.structures "_types") "types" }}
 
-{{ $core := (index site.Data.structures $structure).arguments | default dict }}
+{{ $core := dict }}
+{{ if $structure }}
+    {{ $core = (index site.Data.structures $structure).arguments | default dict }}
+{{ else }}
+    {{ $core = index (index (index site.Data.structures.components $bookshop) (printf "%s.bookshop" $bookshop)) "blueprint" | default dict }}
+    {{ $core = merge $core (dict "_bookshop_name" nil) }}
+{{ end }}
 {{ range $key, $def := $core }}
     {{ with index $references $key }}
         {{ if $def }}
@@ -35,8 +42,8 @@
 {{ end }}
 
 {{ range $key, $def := $definitions }}
-    {{ if not $def.type }}
-        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing type for '%s' in '%s'" $key $structure) -}}
+    {{ if or (not $def) (not $def.type) }}
+        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing type for '%s' in '%s'" $key (or $structure $bookshop) ) -}}
         {{ $error =  true }}
     {{ end }}
 {{ end }}
@@ -82,7 +89,7 @@
     {{ if not .type }}
         {{ errorf "expected type argument: %s" page.File }}
     {{ else }}
-        {{ $types = slice .type }}
+        {{ $types = slice | append .type }}
     {{ end }}
 
     {{ $extra := slice }}
@@ -129,15 +136,16 @@
 
         {{ if not $def }}
             {{ if eq (printf "%T" $name) "string" }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument '%s'" $structure $name) }}
+                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument '%s'" (or $structure $bookshop) $name) }}
             {{ else if eq (printf "%T" $name) "int" }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" $structure $name $val) }}
+                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" (or $structure $bookshop) $name $val) }}
             {{ else }}
-                {{ $errorMsg = $errorMsg | append printf ("[%s] unsupported argument value '%s'" $structure $val) }}
+                {{ $errorMsg = $errorMsg | append printf ("[%s] unsupported argument value '%s'" (or $structure $bookshop) $val) }}
             {{ end }}
             {{ $error = true }}
+            {{ break }}
         {{ else }}
-            {{ if and (not $val) $def.default }}
+            {{ if and (eq $val nil) $def.default }}
                 {{ $val = $def.default }}
             {{ end }}
 
@@ -158,15 +166,17 @@
             {{ end }}
 
             {{ if and $val (not (in $expected $actual)) }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s'" $structure (string $name) (delimit $expected ", ") $actual) }}
+                {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s'" (or $structure $bookshop) (string $name) (delimit $expected ", ") $actual) }}
                 {{ $error = true }}
+                {{ break }}
             {{ end }}
 
             {{/* validate permitted values */}}
             {{ if and $def.options.values (eq $actual "string") }}
                 {{ if and $val (not (in $def.options.values $val)) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': unexpected value '%s'" $structure (string $name) $val) }}
+                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': unexpected value '%s'" (or $structure $bookshop) (string $name) $val) }}
                     {{ $error = true }}
+                    {{ break }}
                 {{ end }}
             {{ else if and (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
                 {{ if or 
@@ -175,8 +185,9 @@
                 }}
                     {{ $min := (string (or $def.options.min "-")) }}
                     {{ $max := (string (or $def.options.max "-")) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" $structure (string $name) (string $val) $min $max) }}
+                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" (or $structure $bookshop) (string $name) (string $val) $min $max) }}
                     {{ $error = true }}
+                    {{ break }}
                 {{ end }}            
             {{ end }}
         {{ end }}
@@ -186,7 +197,9 @@
             {{ $params = merge $params (dict $name $val) }}
         {{ end }}
     {{ end }}
+{{ end }}
     
+{{ if not $error }}
     {{/* validate required and deprecated arguments */}}
     {{ $max := len $args }}
     {{ $expected := 0 }}
@@ -200,7 +213,7 @@
         {{ if and (not $skip) (not $val.optional) }}
             {{ if $named }}
                 {{ if not (isset $args $key) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected value" $structure $key) }}
+                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected value" (or $structure $bookshop) $key) }}
                     {{ $error = true }}
                 {{ end }}
             {{ else }}
@@ -210,7 +223,7 @@
 
         {{ with $val.deprecated }}
             {{ if and $named (isset $args $key) }}
-                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" $structure $key (strings.TrimPrefix "v" .) }}
+                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" (or $structure $bookshop) $key (strings.TrimPrefix "v" .) }}
                 {{ with $val.alternative }}
                     {{ $warn = printf "%s, use '%s' instead" $warn . }}
                 {{ end }}
@@ -220,7 +233,7 @@
     {{ end }}
 
     {{ if lt $max $expected }}
-        {{ $errorMsg = $errorMsg | append (printf "[%s] expected '%d' args, got '%d'" $structure $expected $max) }}
+        {{ $errorMsg = $errorMsg | append (printf "[%s] expected '%d' args, got '%d'" (or $structure $bookshop) $expected $max) }}
         {{ $error = true }}
     {{ end }}
 
@@ -246,6 +259,15 @@
             {{ else if (in $expected "[]interface {}") }}
                 {{ $params = merge $params (dict $key slice) }}
             {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{/* add the key-value pair using camel case to support chaining of the identifier */}}
+    {{/* see https://gohugo.io/configuration/params/#article */}}
+    {{ range $key, $val := $params }}
+        {{ if strings.Contains $key "-" }}
+            {{ $camelKey := partial "utilities/camelize.html" $key }}
+            {{ $params = merge $params (dict $camelKey $val) }}
         {{ end }}
     {{ end }}
 {{ end }}
