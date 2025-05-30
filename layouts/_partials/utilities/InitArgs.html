@@ -31,7 +31,7 @@
 {{ end }}
 {{ range $key, $def := $core }}
     {{ with index $references $key }}
-        {{ if $def }}
+        {{ if reflect.IsMap $def }}
             {{ $definitions = merge $definitions (dict $key (merge . $def)) }}
         {{ else }}
             {{ $definitions = merge $definitions (dict $key .) }}
@@ -172,13 +172,13 @@
             {{ end }}
 
             {{/* validate permitted values */}}
-            {{ if and $def.options.values (eq $actual "string") }}
+            {{ if and (reflect.IsSlice $def.options) $def.options.values (eq $actual "string") }}
                 {{ if and $val (not (in $def.options.values $val)) }}
                     {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': unexpected value '%s'" (or $structure $bookshop) (string $name) $val) }}
                     {{ $error = true }}
                     {{ break }}
                 {{ end }}
-            {{ else if and (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
+            {{ else if and (reflect.IsSlice $def.options) (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
                 {{ if or 
                     (and $def.options.min (lt $val $def.options.min))
                     (and $def.options.max (gt $val $def.options.max))
