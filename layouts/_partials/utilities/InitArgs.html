@@ -166,7 +166,7 @@
             {{ end }}
 
             {{ if and $val (not (in $expected $actual)) }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s'" (or $structure $bookshop) (string $name) (delimit $expected ", ") $actual) }}
+                {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s' with value '%v'" (or $structure $bookshop) (string $name) (delimit $expected ", ") $actual $val) }}
                 {{ $error = true }}
                 {{ break }}
             {{ end }}
