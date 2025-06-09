@@ -11,6 +11,10 @@ arguments:
     group: partial
     comment: >-
       Type of message, either warning or error. The build fails on errors.
+  warnid:
+    type: string
+    optional: true
+    group: partial
   msg:
     type: string
     optional: false
