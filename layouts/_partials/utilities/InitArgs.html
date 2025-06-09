@@ -4,153 +4,107 @@
     Visit gethinode.com/license for more details.
 -->
 
-{{ $error := false }}
-{{ $errorMsg := slice }}
-{{ $warnMsg := slice }}
-
-{{ $structure := .structure }}
-{{ $bookshop := .bookshop }}
-{{ $named := .named | default true }}
-{{ if and (not $structure) (not $bookshop) }}
-    {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing value for param 'structure' or 'bookshop'") -}}
-    {{ $error = true }}
-{{ end }}
-
-{{ $args := .args | default dict }}
-{{ $params := dict }}
-{{ $definitions := dict }}
-{{ $references := index (index site.Data.structures "_arguments") "arguments" }}
-{{ $types := index (index site.Data.structures "_types") "types" }}
-
-{{ $core := dict }}
-{{ if $structure }}
-    {{ $core = (index site.Data.structures $structure).arguments | default dict }}
-{{ else }}
-    {{ $core = index (index (index site.Data.structures.components $bookshop) (printf "%s.bookshop" $bookshop)) "blueprint" | default dict }}
-    {{ $core = merge $core (dict "_bookshop_name" nil) }}
-{{ end }}
-{{ range $key, $def := $core }}
-    {{ with index $references $key }}
-        {{ if reflect.IsMap $def }}
-            {{ $definitions = merge $definitions (dict $key (merge . $def)) }}
-        {{ else }}
-            {{ $definitions = merge $definitions (dict $key .) }}
-        {{ end }}
-    {{ else }}
-        {{ $definitions = merge $definitions (dict $key $def) }}
-    {{ end }}
-{{ end }}
-
-{{ range $key, $def := $definitions }}
-    {{ if or (not $def) (not $def.type) }}
-        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing type for '%s' in '%s'" $key (or $structure $bookshop) ) -}}
-        {{ $error =  true }}
-    {{ end }}
-{{ end }}
-
-{{ $child := .child }}
-{{ if $child }}
-    {{ $extra_def := (index site.Data.structures $child).arguments }}
-    {{ if not $extra_def }}
-        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitArgs.html] - Missing definitions: %s" $child) -}}
-        {{ $error =  true }}
-    {{ else }}
-        {{ range $key, $val := $extra_def }}
-            {{ if and $val $val.parent }}{{ $definitions = merge (dict $key $val) $definitions }}{{ end }}
-        {{ end }}
-    {{ end }}
-{{ end }}
-
-{{ $group := .group }}
-
-{{ define "_partials/inline/type-def.html" }}
-    {{ $key := .key }}
-    {{ $def := "" }}
-    {{ if eq (printf "%T" .key) "string" }}
-        {{ $def = index .definitions .key }}
-    {{ else }}
-        {{ range $k, $d := .definitions }}
-            {{ if eq $d.position $key }}
-                {{ $def = $d }}{{ $key = $k }}
-            {{ end }}
-        {{ end }}
-    {{ end }}
-
-    {{ return (dict "key" $key "def" $def) }}
-{{ end }}
-
 {{ define "_partials/inline/alias-type.html" }}
-    {{ $aliases := dict "path" "string" "select" "string" "url" "string" "dict" "[]map[string]interface {}" "slice" "[]interface {}" }}
-    {{ $reserved := slice "bool" "int" "int64" "float" "float64" "string" "dict" "slice" }}
+    {{ $type := .type }}
     {{ $custom := .types }}
     {{ $references := .references }}
+    {{ $aliases := dict "path" "string" "select" "string" "url" "string" "dict" "[]map[string]interface {}" "slice" "[]interface {}" }}
+    {{ $reserved := slice "bool" "int" "int64" "float" "float64" "string" "dict" "slice" }}
 
-    {{ $types := slice }}
-    {{ if not .type }}
+    {{ $input := slice }}
+    {{ if not $type }}
         {{ errorf "expected type argument: %s" page.File }}
     {{ else }}
-        {{ $types = slice | append .type }}
+        {{ $input = slice | append $type }}
     {{ end }}
 
     {{ $extra := slice }}
-    {{ range $types }}
-        {{ $alias := index $aliases . }}
+    {{ range $element := $input }}
+        {{ $alias := index $aliases $element }}
         {{ if $alias }}{{ $extra = $extra | append slice $alias }}{{ end }}
-        {{ if not (in $reserved .) }}
-            {{ $type := index $custom . }}
-            {{ if $type }}
-                {{ range $k, $v := $type }}
-                    {{ if eq (printf "%T" $k) "string"}}
-                        {{ if not (index $references $k) }}
-                            {{ errorf "cannot find type definition for '%s.%s'" $.type $k }}
-                        {{ end }}
-                    {{ else }}
-                        {{ range $nk, $nv := $v }}
-                            {{ if not (index $references $nk) }}
-                                {{ errorf "cannot find type definition for '%s.%s'" $.type $nk }}
-                            {{ end }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
-            
-                {{ $extra = $extra | append slice (printf "%T" $type) }}
+        {{ if not (in $reserved $element) }}
+            {{ $def := index $references $element }}
+            {{ if $def }}
+                {{ $extra = $extra | append slice $def._reflect }}
             {{ end }}
         {{ end }}
+        {{ if $extra }}{{ $input = $input | append $extra }}{{ end }}
     {{ end }}
-    {{ if $extra }}{{ $types = $types | append $extra }}{{ end }}
 
-    {{ return $types }}
+    {{ return $input }}
 {{ end }}
 
+{{/* Initialize arguments */}}
+{{ $structure := .structure }}
+{{ $bookshop := .bookshop }}
+{{ $child := .child }}
+{{ $named := .named | default true }}
+{{ $args := .args | default dict }}
+{{ $group := .group }}
+
+{{/* Initialize local variables */}}
+{{ $error := false }}
+{{ $errmsg := slice }}
+{{ $warnmsg := slice }}
+{{ $params := dict }}
+{{ $types := dict }}
+
+{{/* Validate partial arguments */}}
+{{ if and (not $structure) (not $bookshop) }}
+    {{- $errmsg = $errmsg | append (printf "partial [utilities/InitArgs.html] - Missing value for param 'structure' or 'bookshop'") -}}
+    {{ $error = true }}
+{{ end }}
+
+{{/* Initialize type structure */}}
+{{ if hasPrefix $structure "bookshop-" }}{{ $bookshop = strings.TrimPrefix "bookshop-" $structure }}{{ $structure = "" }}{{ end }}
 {{ if not $error }}
-    {{ range $key, $val := $args }}
-        {{ $result := partial "inline/type-def.html" (dict "definitions" $definitions "key" $key) }}
-        {{ $def := $result.def }}
-        {{ $name := $result.key }}
-        {{ if $def }}
-            {{ $groups := slice | append $def.group }}
-            {{ if and $group $def.group }}
-                {{ if not (in $groups $group )}}{{ $def = "" }}{{ end }}
+    {{ $types = partial "utilities/InitTypes.html" (dict "structure" $structure "bookshop" $bookshop "child" $child ) }}
+    {{ if $types.errmsg }}{{ $errmsg = $errmsg | append $types.errmsg }}{{ $error = $types.err }}{{ end }}
+    {{ if $types.warnmsg }}{{ $warnmsg = $warnmsg | append $types.warnmsg }}{{ end }}
+{{ end }}
+
+{{ $namedargs := dict }}
+{{ if not $named }}
+    {{ range $index, $val := $args }}
+        {{ $found := false }}
+        {{ range $k, $v := $types.types }}
+            {{ if eq $index $v.position }}
+                {{ $namedargs = merge $namedargs (dict $k $val) }}
+                {{ $found = true }}
+                {{ break }}
             {{ end }}
         {{ end }}
+        {{ if not $found }}
+            {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" (or $structure $bookshop) $index $val) }}
+        {{ end }}
+    {{ end }}
+{{ else }}
+    {{ $namedargs = $args }}
+{{ end }}
+
+{{/* Validate passed arguments and initialize their default value when applicable */}}
+{{ if not $error }}
+    {{ range $key, $val := $namedargs }}
+        {{ $def := index $types.types $key }}
 
         {{ if not $def }}
-            {{ if eq (printf "%T" $name) "string" }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument '%s'" (or $structure $bookshop) $name) }}
-            {{ else if eq (printf "%T" $name) "int" }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" (or $structure $bookshop) $name $val) }}
+            {{ if eq (printf "%T" $key) "string" }}
+                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument '%s'" (or $structure $bookshop) $key) }}
+            {{ else if eq (printf "%T" $key) "int" }}
+                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" (or $structure $bookshop) $key $val) }}
             {{ else }}
-                {{ $errorMsg = $errorMsg | append printf ("[%s] unsupported argument value '%s'" (or $structure $bookshop) $val) }}
+                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument value '%v'" (or $structure $bookshop) $val) }}
             {{ end }}
             {{ $error = true }}
             {{ break }}
         {{ else }}
+            {{/* initialize default value */}}
             {{ if and (eq $val nil) $def.default }}
                 {{ $val = $def.default }}
             {{ end }}
 
             {{/* validate type */}}
-            {{ $expected := partial "inline/alias-type.html" (dict "type" $def.type "types" $types "references" $references) }}
+            {{ $expected := partial "inline/alias-type.html" (dict "type" $def.type "types" $types.types "references" $types.udt) }}
             {{ $actual := printf "%T" $val }}
 
             {{/* cast supported types from/to string */}}
@@ -166,7 +120,7 @@
             {{ end }}
 
             {{ if and $val (not (in $expected $actual)) }}
-                {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected type '%s', got '%s' with value '%v'" (or $structure $bookshop) (string $name) (delimit $expected ", ") $actual $val) }}
+                {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': expected type '%s', got '%s' with value '%v'" (or $structure $bookshop) (string $key) (delimit $expected ", ") $actual $val) }}
                 {{ $error = true }}
                 {{ break }}
             {{ end }}
@@ -174,7 +128,7 @@
             {{/* validate permitted values */}}
             {{ if and (reflect.IsSlice $def.options) $def.options.values (eq $actual "string") }}
                 {{ if and $val (not (in $def.options.values $val)) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': unexpected value '%s'" (or $structure $bookshop) (string $name) $val) }}
+                    {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': unexpected value '%s'" (or $structure $bookshop) (string $key) $val) }}
                     {{ $error = true }}
                     {{ break }}
                 {{ end }}
@@ -185,25 +139,34 @@
                 }}
                     {{ $min := (string (or $def.options.min "-")) }}
                     {{ $max := (string (or $def.options.max "-")) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" (or $structure $bookshop) (string $name) (string $val) $min $max) }}
+                    {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" (or $structure $bookshop) (string $key) (string $val) $min $max) }}
                     {{ $error = true }}
                     {{ break }}
                 {{ end }}            
+            {{ end }}
+
+            {{/* validate if argument is deprecated */}}
+            {{ with $def.deprecated }}
+                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" (or $structure $bookshop) $key (strings.TrimPrefix "v" .) }}
+                {{ with $def.alternative }}
+                    {{ $warn = printf "%s, use '%s' instead" $warn . }}
+                {{ end }}
+                {{ $warnmsg = $warnmsg | append $warn }}
             {{ end }}
         {{ end }}
 
         {{/* append the argument to the return set */}}
         {{ if not $error }}
-            {{ $params = merge $params (dict $name $val) }}
+            {{ $params = merge $params (dict $key $val) }}
         {{ end }}
     {{ end }}
 {{ end }}
-    
+
 {{ if not $error }}
-    {{/* validate required and deprecated arguments */}}
-    {{ $max := len $args }}
+    {{/* validate required arguments */}}
+    {{ $max := len $namedargs }}
     {{ $expected := 0 }}
-    {{ range $key, $val := $definitions }}
+    {{ range $key, $val := $types.types }}
         {{ $skip := false }}
         {{ $groups := slice | append $val.group }}
         {{ if and $group $val.group }}
@@ -211,53 +174,36 @@
         {{ end }}
 
         {{ if and (not $skip) (not $val.optional) }}
-            {{ if $named }}
-                {{ if not (isset $args $key) }}
-                    {{ $errorMsg = $errorMsg | append (printf "[%s] argument '%s': expected value" (or $structure $bookshop) $key) }}
-                    {{ $error = true }}
-                {{ end }}
-            {{ else }}
-                {{ $expected = add $expected 1 }}
-            {{ end }}
-        {{ end }}
-
-        {{ with $val.deprecated }}
-            {{ if and $named (isset $args $key) }}
-                {{ $warn := printf "[%s] argument '%s': deprecated in v%s" (or $structure $bookshop) $key (strings.TrimPrefix "v" .) }}
-                {{ with $val.alternative }}
-                    {{ $warn = printf "%s, use '%s' instead" $warn . }}
-                {{ end }}
-                {{ $warnMsg = $warnMsg | append $warn }}
+            {{ if not (isset $namedargs $key) }}
+                {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': expected value" (or $structure $bookshop) $key) }}
+                {{ $error = true }}
             {{ end }}
         {{ end }}
     {{ end }}
 
     {{ if lt $max $expected }}
-        {{ $errorMsg = $errorMsg | append (printf "[%s] expected '%d' args, got '%d'" (or $structure $bookshop) $expected $max) }}
+        {{ $errmsg = $errmsg | append (printf "[%s] expected '%d' args, got '%d'" (or $structure $bookshop) $expected $max) }}
         {{ $error = true }}
     {{ end }}
 
-    {{/* add missing keys with default values or empty collections */}}
-    {{ range $key, $val := $definitions }}
-        {{ $result := partial "inline/type-def.html" (dict "definitions" $definitions "key" $key) }}
-        {{ $def := $result.def }}
-        {{ $expected := partial "inline/alias-type.html" (dict "type" $def.type "types" $types "references" $references) }}
-
+    {{/* add missing keys with default values (nested one level deep) or empty slice */}}
+    {{ range $key, $val := $types.types }}
         {{ if (not (isset $params $key)) }}
+            {{ $udt := index $types.udt $key }}
             {{ if (isset $val "default") }}
                 {{ $params = merge $params (dict $key $val.default ) }}
-            {{ else if (in $expected "map[string]interface {}") }}
-                {{ $init := dict }}
-                {{ $type := index $types $val.type }}
-                {{ range $k, $ignore := $type }}
-                    {{ $ref := index $references $k }}
-                    {{ if $ref }}{{ with $ref.default }}{{ $init = merge $init (dict $k .) }}{{ end }}{{ end }}
+            {{ else if $udt }}
+                {{ if eq $udt._reflect "[]interface {}" }}
+                    {{ $params = merge $params (dict $key slice) }}
+                {{ else }}
+                    {{ $nested := dict }}
+                    {{ range $k, $v := $udt }}
+                        {{ if and (reflect.IsMap $v) $v.default }}
+                            {{ $nested = merge $nested (dict $k $v.default)}}
+                        {{ end }}
+                    {{ end }}
+                    {{ $params = merge $params (dict $key $nested) }}
                 {{ end }}
-                {{ $params = merge $params (dict $key $init) }}
-            {{ else if (in $expected "[]map[string]interface {}") }}
-                {{ $params = merge $params (dict $key dict) }}
-            {{ else if (in $expected "[]interface {}") }}
-                {{ $params = merge $params (dict $key slice) }}
             {{ end }}
         {{ end }}
     {{ end }}
@@ -272,6 +218,5 @@
     {{ end }}
 {{ end }}
 
-{{ $params = merge $params (dict "err" $error "errmsg" $errorMsg "warnmsg" $warnMsg) }}
-
+{{ $params = merge $params (dict "err" $error "errmsg" $errmsg "warnmsg" $warnmsg) }}
 {{ return $params }}
