@@ -26,6 +26,8 @@
     <!-- Log the message -->
     {{ if eq $args.type "error" }}
         {{- errorf "%s" $msg }}
+    {{ else if $args.warnid }}
+        {{- warnidf $args.warnid "%s" $msg }}
     {{ else }}
         {{- warnf "%s" $msg }}
     {{ end }}
