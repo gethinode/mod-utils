@@ -53,7 +53,6 @@
         {{ end }}
     {{ end }}
 
-
     {{ $merged := or $def dict }}
     {{ if reflect.IsMap $val }}{{ $merged = merge $merged $val }}{{ end }}
     {{ if not $merged.type }}
@@ -103,14 +102,20 @@
             {{ $error =  true }}
         {{ else }}
             {{ range $key, $val := $extra_def }}
-                {{ if and $val $val.parent }}{{ $args = merge (dict $key $val) $args }}{{ end }}
+                {{ if and $val $val.parent }}
+                    {{ $newval := dict }}
+                    {{ range $k, $v := $val }}
+                        {{ if ne $k "default" }}{{ $newval = merge $newval (dict $k $v) }}{{ end }}
+                    {{ end}}
+                    {{ $args = merge $args (dict $key $newval) }}
+                {{ end }}
             {{ end }}
         {{ end }}
     {{ end }}
 
     {{/* Initialize the arguments and their type definitions recursively */}}
     {{ range $key, $v := $args }}
-        {{ $type := partial "inline/type-definition.html" (dict "key" $key "val" $v "args" $args "arguments" $arguments "types" $types) }}
+        {{ $type := partial "inline/type-definition.html" (dict "key" $key "val" $v "args" $args "arguments" $arguments "types" $types "structure" $structure) }}
         {{ $errmsg = $errmsg | append $type.errmsg }}
         {{ if and $type $type.definition $type.definition.type }}
             {{ $definitions = merge $definitions (dict $key $type.definition) }}
