@@ -556,6 +556,13 @@ arguments:
     optional: true
     default: false
     comment: Flag to render the element inline with the text.
+  inline-style:
+    type: string
+    optional: true
+    comment: >-
+      Custom style of the element, e.g. `--fa-animation-duration: 2s;`. Please
+      note that Hinode disables inline styles by default, review the Content
+      Security Policy for more details.
   input:
     type: input
     optional: false
@@ -1210,7 +1217,8 @@ arguments:
     optional: true
     comment:
       Class attribute of the element's wrapper. It supports Bootstrap attributes
-      to modify the styling of the element.
+      to modify the styling of the element. Icons include the `fa-wrapper` and
+      `fa-fluid` attributes by default.
   width:
     type: int
     optional: true
