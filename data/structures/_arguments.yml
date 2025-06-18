@@ -416,6 +416,11 @@ arguments:
       Flag to indicate a link should bypass any language redirection. Only applicable when
       the site param `enableLanguageSelectionStorage` is set to true. When `force` is true,
       the link to a local page is kept as is.
+  form-id:
+    type: string
+    optional: false
+    comment: >-
+      The form's ID, which is used to retrieve the form definition.
   full:
     type: bool
     optional: true
@@ -887,6 +892,12 @@ arguments:
       - float64
     optional: true
     comment: Longitude of the popup marker.
+  portal:
+    type: int
+    optional: true
+    comment: >-
+      The portal ID of the account where the form has been created. This is used
+      to retrieve the form definition.
   portrait:
     type: bool
     optional: true
@@ -955,6 +966,16 @@ arguments:
         - 4x3
         - 16x9
         - 21x9
+  region:
+    type: select
+    optional: true
+    comment: >-
+      The region of the portal where the form was created. This is used to
+      retrieve the form definition.
+    options:
+      values:
+        - eu1
+        - na1
   release-state:
     type: select
     optional: true
