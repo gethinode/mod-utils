@@ -615,6 +615,13 @@ arguments:
       rendering code examples with the `example` shortcode, use `hugo` to process
       Hugo (escaped) shortcodes and `bookshop` to render a Bookshop component
       using inline YAML data.
+  lat:
+    type:
+      - float
+      - float64
+    optional: true
+    default: 52.377
+    comment: Latitude of the map center.
   link:
     type:
       - string
@@ -657,6 +664,13 @@ arguments:
       values:
         - lazy
         - eager
+  long:
+    type:
+      - float
+      - float64
+    optional: true
+    default: 4.90
+    comment: Longitude of the map center.
   loop:
     type: bool
     optional: true
@@ -857,6 +871,22 @@ arguments:
     comment:
       Flag to indicate if the image should render a plain image instead of an
       image set. When set, no transformations are applied to the image.
+  popup:	
+    type: string
+    optional: true
+    comment: Optional text of a popup marker.
+  popup-lat:
+    type:
+      - float
+      - float64
+    optional: true
+    comment: Latitude of the popup marker.
+  popup-long:
+    type:
+      - float
+      - float64
+    optional: true
+    comment: Longitude of the popup marker.
   portrait:
     type: bool
     optional: true
@@ -1229,3 +1259,14 @@ arguments:
     options:
       min: 1
       max: 12
+
+  # z
+  zoom:
+    type: int
+    optional: true
+    default: 13
+    comment: >-
+      Initial map zoom level between 1 (minimum zoom) - 18 (maximum zoom).
+    options:
+      min: 1
+      max: 18
