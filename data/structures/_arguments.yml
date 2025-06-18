@@ -70,6 +70,12 @@ arguments:
         - Bottom
         - BottomRight
         - Smart
+  animation-data:
+    type: string
+    optional: false
+    comment: >-
+      Path of the JSON file that contains the animation, relative to the static
+      folder.
   aria-label:
     type: string
     optional: true
@@ -96,8 +102,8 @@ arguments:
     optional: true
     default: false
     comment: >-
-      Flag indicating the video should start playing immediately when loaded, if
-      supported by the browser. The audio will be muted.
+      Flag indicating the animation or video should start playing immediately
+      when loaded, if supported by the browser. Any audio will be muted.
   autotitle:
     type: bool
     optional: true
@@ -485,6 +491,13 @@ arguments:
     type: string
     optional: true
     comment: Host to add to the prompt, e.g. `localhost`.
+  hover:
+    type: bool
+    optional: true
+    default: false
+    comment: >-
+      Flag to indicate the animation should start playing when hovering the
+      mouse over it.
 
   # i
   id:
@@ -637,6 +650,11 @@ arguments:
       values:
         - lazy
         - eager
+  loop:
+    type: bool
+    optional: true
+    default: true
+    comment: Flag to indicate the animation should play in a loop.
 
   # m
   max:
@@ -671,7 +689,7 @@ arguments:
     default: false
     optional: true
     comment: >-
-      Flag indicating if the image should support color modes. If set, the
+      Flag indicating if the media asset should support color modes. If set, the
       elements searches for images having a matching color-mode suffix
       such as `-light` or `-dark`.
   more:
