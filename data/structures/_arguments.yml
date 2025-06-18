@@ -488,6 +488,12 @@ arguments:
     type: bool
     optional: true
     comment: Forces the more button, ignoring page count.
+  href-title:
+    type: string
+    optional: true
+    comment: >-
+      Title of the button or hyperlink as companion to href.
+    group: partial
   hook:
     type: string
     optional: true
