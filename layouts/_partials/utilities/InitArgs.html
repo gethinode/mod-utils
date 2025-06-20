@@ -110,10 +110,13 @@
             {{/* cast supported types from/to string */}}
             {{ if and (in $expected "bool") (in (slice "true" "false") $val) }}
                 {{ $actual = "bool" }}
+                {{ $val = cond (eq $val "true") true false }}
             {{ else if and (in $expected "int") (findRE `^-?\d+$` $val) }}
                 {{ $actual = "int" }}
+                {{ $val = int $val }}
             {{ else if and (in $expected "float") (findRE `^(?:[1-9]\d*|0)?(?:\.\d+)?$` $val) }}
                 {{ $actual = "float" }}
+                {{ $val = float $val }}
             {{ else if and (in $expected "string") (in (slice "bool" "int" "int64" "float" "float64") $actual) }}
                 {{ $actual = "string" }}
                 {{ $val = string $val }}
