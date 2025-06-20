@@ -129,13 +129,13 @@
             {{ end }}
 
             {{/* validate permitted values */}}
-            {{ if and (reflect.IsSlice $def.options) $def.options.values (eq $actual "string") }}
+            {{ if and (reflect.IsMap $def.options) $def.options.values (eq $actual "string") }}
                 {{ if and $val (not (in $def.options.values $val)) }}
                     {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': unexpected value '%s'" (or $structure $bookshop) (string $key) $val) }}
                     {{ $error = true }}
                     {{ break }}
                 {{ end }}
-            {{ else if and (reflect.IsSlice $def.options) (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
+            {{ else if and (reflect.IsMap $def.options) (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
                 {{ if or 
                     (and $def.options.min (lt $val $def.options.min))
                     (and $def.options.max (gt $val $def.options.max))
