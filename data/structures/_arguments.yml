@@ -188,6 +188,7 @@ arguments:
     comment: Size of the button.
     options:
       values:
+        - xs
         - sm
         - md
         - lg
