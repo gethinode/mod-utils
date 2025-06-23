@@ -476,6 +476,11 @@ arguments:
   hide-empty:
     type: bool
     comment: Hides the entire section when no pages are available.
+  highlight-options:
+    type: string
+    optional: true
+    comment: >-
+        Hugo highlighting options, see https://gohugo.io/shortcodes/highlight/#options-1.
   href:
     type:
       - string
