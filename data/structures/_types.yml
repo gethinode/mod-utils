@@ -52,6 +52,10 @@ types:
   more:
     title:
     link:
+  options:
+    max:
+    min:
+    values:
   styles:
     - ratio:
       orientation:

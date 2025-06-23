@@ -1,0 +1,56 @@
+comment: >-
+  Defines the available argument attributes.
+arguments:
+  name:
+    type: string
+    optional: false
+    comment: Argument name.
+  type:
+    type: string
+    optional: false
+    comment: >-
+      Data type of the argument, either a primitive or complex type. Supported
+      primitive types are `bool`, `int`, `int64`, `float`, `float64`, `string`,
+      `dict`, and `slice`. Complex types can either be a `dict` or a `slice` and
+      should be defined in `data/_types.yml`.
+  optional:
+    type: string
+    optional: true
+    default: false
+    comment: Flag to indicate if the argument is optional.
+  default:
+    type: string
+    optional: true
+    comment: Default value when no value is provided.
+  parent:
+    type: select
+    optional: true
+    comment: >-
+      Defines if the argument inherits a value from its parent. The value
+      `cascade` indicates the child element should inherit the entire
+      parent's value. When set to `merge`, the parent and child values are
+      merged together separated by a space character.
+    options:
+      values:
+        - cascade
+        - merge
+  release:
+    type: string
+    optional: true
+    comment: >-
+      Points to the version in which the argument was released (it may include
+      the `v` prefix).
+  deprecated:
+    type: string
+    optional: true
+    comment: >-
+      Points to the version in which the argument was deprecated (it may include
+      the `v` prefix).
+  comment:
+    type: string
+    optional: true
+    comment: Documentation about the argument.
+  options:
+    type: options
+    optional: true
+    comment: Conditional value requirements, pending data type.
