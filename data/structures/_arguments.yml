@@ -634,6 +634,13 @@ arguments:
     optional: true
     default: 52.377
     comment: Latitude of the map center.
+  limit:
+    type: int
+    optional: true
+    comment: Maximum number of elements to display.
+    group: partial
+    options:
+      min: 1
   link:
     type:
       - string
@@ -693,14 +700,15 @@ arguments:
   max:
     type: int
     optional: true
-    comment: Maximum number of elements to display.
-    group: partial
-    options:
-      min: 1
+    comment: End of the value range (inclusive).
   media-id:
     type: string
     optional: true
     comment: ID of the asset to be embedded.
+  min:
+    type: int
+    optional: true
+    comment: Start of the value range (inclusive).
   minimal:
     type: bool
     optional: true
@@ -769,10 +777,8 @@ arguments:
 
   # o
   options:
-    type: string
+    type: options
     optional: true
-    comment: >-
-        Hugo highlighting options, see https://gohugo.io/shortcodes/highlight/#options-1.
   order:
     type: select
     optional: true
@@ -1250,6 +1256,10 @@ arguments:
         - start
         - center
         - end
+  values:
+    type: slice
+    optional: true
+    comment: A slice of permitted select values.
   version:
     type: string
     optional: false
