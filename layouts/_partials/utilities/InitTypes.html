@@ -44,7 +44,7 @@
                     {{ if and $type $type.definition }}
                         {{ $definitions = merge $definitions (dict . $type.definition) }}
                     {{ else }}
-                        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s.%s' in '%s'" $key . ) -}}
+                        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s.%s'" $key . ) -}}
                     {{ end }}
                 {{ end }}
 
