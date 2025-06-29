@@ -596,7 +596,7 @@ arguments:
   justify:
     type: select
     optional: true
-    default: center
+    default: start
     comment: Justification of the child elements.
     options:
       values:
