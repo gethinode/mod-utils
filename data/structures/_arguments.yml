@@ -984,6 +984,7 @@ arguments:
         - 4x3
         - 16x9
         - 21x9
+        - auto
   region:
     type: select
     optional: true
