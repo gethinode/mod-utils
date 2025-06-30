@@ -761,6 +761,13 @@ arguments:
         - accordion
         - tab-pane
     group: partial
+  nav-disabled:
+    type:
+      - slice
+      - '[]string'
+    optional: true
+    comment: ID of disabled nav items, used when passing preprocessed nav items.
+    group: partial
   nav-items:
     type: string
     optional: true
