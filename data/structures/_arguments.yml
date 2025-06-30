@@ -773,6 +773,11 @@ arguments:
     optional: true
     comment: Preprocessed nav items, typically passed by a shortcode to a partial.
     group: partial
+  nav-show:
+    type: string
+    optional: true
+    comment: ID of the nav item to show, used when passing preprocessed nav items.
+    group: partial
   nav-titles:
     type:
       - slice
