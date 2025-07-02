@@ -13,6 +13,8 @@ types:
     size:
   illustration:
     image:
+    caption:
+    caption-url:
     icon:
     ratio:
     class:
