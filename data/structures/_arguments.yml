@@ -209,6 +209,16 @@ arguments:
     type: string
     optional: true
     comment: Caption of the carousel slide or illustration.
+  caption-url:
+    type:
+      - string
+      - template.URL
+    optional: true
+    comment: >-
+      Address of the caption destination, either a local reference or an external
+      address. Include the `scheme` when referencing an external address, such
+      as `https://google.com`. Local references may include an optional anchor
+      link such as `blog/bootstrap-elements/#docs`.
   cards:
     type: string
     optional: true
@@ -283,6 +293,11 @@ arguments:
     options:
       min: 1
       max: 5
+  contact:
+    type: string
+    optional: true
+    comment: >-
+      The full name of the contact to retrieve.
   container:
     type: string
     optional: true
@@ -382,6 +397,13 @@ arguments:
       Path of the input file. The path is relative to the `basePath` defined in
       the `docs` section of the site's parameters. If the file starts with `./`,
       the path of the repository is used as base path instead.
+  fluid:
+    type: bool
+    optional: true
+    default: true
+    comment: >-
+      Flag to set the section container to fluid design, else the section is
+      limited to `xxl`.
   format:
     type: select
     optional: true
@@ -632,6 +654,12 @@ arguments:
       rendering code examples with the `example` shortcode, use `hugo` to process
       Hugo (escaped) shortcodes and `bookshop` to render a Bookshop component
       using inline YAML data.
+  language-tag:
+    type: string
+    optional: true
+    comment: >-
+      The language tag as defined by
+      [RFC 5646](https://datatracker.ietf.org/doc/html/rfc5646).
   lat:
     type:
       - float
