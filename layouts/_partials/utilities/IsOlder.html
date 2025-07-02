@@ -8,14 +8,14 @@
 {{ $current := .current }}
 {{ $latest := site.Params.docs.latest }}
 
-{{- define "partials/padZeroPrefix.html" -}}
+{{- define "_partials/inline/padZeroPrefix.html" -}}
     {{- $padSize := 6 }}
     {{- $paddedString := replaceRE "(\\d+)" (print (strings.Repeat (sub $padSize 1) "0") "$1") . }}
     {{- $trimmedString := replaceRE (print "0+(\\d{" $padSize "})") "$1" $paddedString }}
     {{- return $trimmedString }}
 {{- end -}}
 
-{{- define "partials/trimZeroPrefix.html" -}}
+{{- define "_partials/inline/trimZeroPrefix.html" -}}
     {{- return replaceRE "0+(\\d+)" "$1" . }}
 {{- end -}}
 
@@ -23,9 +23,9 @@
 
 {{- if and $current $latest }}
     {{- $versions := slice $current $latest }}
-    {{- $paddedVersions := apply $versions "partial" "padZeroPrefix" "." }}
+    {{- $paddedVersions := apply $versions "partial" "inline/padZeroPrefix" "." }}
     {{- $sortedVersions := (sort $paddedVersions "value" "desc") }}
-    {{- $sortedVersions = apply $sortedVersions "partial" "trimZeroPrefix" "." }}
+    {{- $sortedVersions = apply $sortedVersions "partial" "inline/trimZeroPrefix" "." }}
     {{ $isOlder = ne (index $sortedVersions 0) $current }}
 {{- end -}}
 
