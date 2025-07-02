@@ -11,7 +11,7 @@
 
 {{ $path := .path -}}
 {{ $page := .page -}}
-{{ if hasPrefix $path "/" }}
+{{ if and (hasPrefix $path "/") $page.File }}
     {{ $pageContext := (path.Join "/content" $page.File.Dir) -}}
     {{ if hasPrefix $path $pageContext }}
         {{ $path = strings.TrimPrefix $pageContext $path -}}
