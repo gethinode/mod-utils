@@ -4,6 +4,13 @@ arguments:
     optional: true
     comment: Unique name of the bookshop component.
     group: partial
+  _ordinal:
+    type: int
+    optional: true
+    comment: >-
+      Zero-based position of the bookshop component within the page's component
+      hierarchy.
+    group: partial
 
   # a
   absolute-url:
