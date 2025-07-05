@@ -34,6 +34,8 @@ types:
   items:
     - title:
       description:
+      href:
+      level:
   elements:
     - title:
       icon:
