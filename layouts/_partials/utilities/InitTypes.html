@@ -91,7 +91,7 @@
         {{ $args = (index site.Data.structures $structure).arguments | default dict }}
     {{ else }}
         {{ $args = index (index (index site.Data.structures.components $bookshop) (printf "%s.bookshop" $bookshop)) "blueprint" | default dict }}
-        {{ $args = merge $args (dict "_bookshop_name" nil) }}
+        {{ $args = merge $args (dict "_bookshop_name" nil "_ordinal" nil) }}
     {{ end }}
 
     {{/* Merge any child arguments */}}

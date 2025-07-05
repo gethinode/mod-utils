@@ -4,6 +4,13 @@ arguments:
     optional: true
     comment: Unique name of the bookshop component.
     group: partial
+  _ordinal:
+    type: int
+    optional: true
+    comment: >-
+      Zero-based position of the bookshop component within the page's component
+      hierarchy.
+    group: partial
 
   # a
   absolute-url:
@@ -667,6 +674,14 @@ arguments:
     optional: true
     default: 52.377
     comment: Latitude of the map center.
+  level:
+    type: int
+    optional: true
+    default: 2
+    comment: Nesting level of the item.
+    options:
+      min: 1
+      max: 6
   limit:
     type: int
     optional: true
@@ -1026,6 +1041,14 @@ arguments:
         - 16x9
         - 21x9
         - auto
+  raw:
+    type:
+      - string
+      - template.HTML
+    optional: true
+    comment: >-
+      The raw body content of the item, the content is rendered as-is and is
+      assumed to be safe.
   region:
     type: select
     optional: true
@@ -1055,8 +1078,7 @@ arguments:
     optional: true
     default: true
     comment: >-
-      Flag indicating if the number of columns should be responsive, defaults to
-      `true`.
+      Flag indicating if the element should be responsive.
   reverse:
     type: bool
     optional: true
