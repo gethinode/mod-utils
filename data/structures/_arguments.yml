@@ -562,6 +562,10 @@ arguments:
     type: bool
     optional: true
     comment: Stack the icon in a round container.
+  icon-style:
+    type: string
+    optional: true
+    comment: Icon style.
   illustration:
     type: illustration
     optional: true
@@ -1184,10 +1188,6 @@ arguments:
       Path or url of the image, e.g. `img/example.jpg`. Images with multiple
       color modes are expected to have a basename that ends with either `-dark`
       or `-light`.
-  icon-style:
-    type: string
-    optional: true
-    comment: Icon style.
   styles:
     type: styles
     optional: true
