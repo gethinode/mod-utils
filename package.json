@@ -1,6 +1,6 @@
 {
   "name": "@gethinode/mod-utils",
-  "version": "4.11.0",
+  "version": "0.0.0-semantically-released",
   "description": "A Hugo module with common utilities for your Hinode site (work in progress)",
   "keywords": [
     "hugo",
@@ -56,7 +56,6 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/github",
-      "@semantic-release/npm",
       [
         "@semantic-release/exec",
         {
