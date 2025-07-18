@@ -327,6 +327,12 @@ arguments:
     optional: true
     comment: >-
       Flag indicating if the element text should be rendered with high contrast.
+  controls:
+    type: bool
+    default: false
+    optional: true
+    comment: >-
+      Flag indicating if the element should include interactive controls.
   cover:
     type: bool
     default: true
