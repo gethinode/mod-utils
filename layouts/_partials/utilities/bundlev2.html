@@ -1,0 +1,100 @@
+{{/* 
+    Copyright © 2022 - 2025 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+*/}}
+
+{{/* Initialize arguments */}}
+{{- $args := partial "utilities/InitArgs.html" (dict "structure" "bundle" "args" .) -}}
+{{- if or $args.err $args.warnmsg -}}
+    {{- partial (cond $args.err "utilities/LogErr.html" "utilities/LogWarn.html") (dict 
+        "partial" "utilities/bundlev2.html" 
+        "warnid"  "warn-invalid-arguments"
+        "msg"     "Invalid arguments"
+        "details" ($args.errmsg | append $args.warnmsg)
+        "file"    page.File
+    ) -}}
+{{- end -}}
+
+{{/* Initialize local arguments */}}
+{{- $category := cond (ne $args.category "other") $args.category "" -}}
+{{- $match := $args.match -}}
+{{- $basepath := strings.TrimSuffix "/" $args.basepath -}}
+{{- $ext := trim (path.Ext (trim $match "{}")) "." | default "*js" -}}
+{{- if not $ext -}}
+    {{- errorf "partial [assets/bundlev2.html] - Cannot derive file extension of match pattern: %s" $match -}}
+{{- end -}}
+
+{{/* Initialize return variables */}}
+{{ $bundle := "" }}
+{{ $modBundle := "" }}
+
+{{/* Main code */}}
+{{- if not $args.err -}}
+    {{- if $args.modules -}}
+        {{- $match = trim $match "{}" -}}
+        {{- $matches := slice $match -}}
+        {{- range $index, $mod := $args.modules -}}
+            {{- if $args.all }}
+                {{- $matches = $matches | append (printf "%s/%s/**.%s" $basepath $mod $ext) -}}
+            {{- else -}}
+                {{- $matches = $matches | append (printf "%s/%s.%s" $basepath $mod $ext) -}}
+            {{- end -}}
+        {{- end -}}
+        {{- $match = printf "{%s}" (trim (delimit $matches ",") ",") }}
+    {{- end -}}
+
+    {{ $matches := resources.Match $match }}
+    {{ $templates := cond $args.enableTemplate (resources.Match $args.enableTemplate) dict }}
+    {{ $files := slice }}
+    {{ range $index, $file := $matches }}
+        {{ $add := (dict "name" (strings.TrimSuffix (path.Ext $file.Name) $file.Name) "resource" $file ) }}
+        {{ $files = $files | append $add }}
+    {{ end }}
+
+    {{ $sorted := slice }}
+    {{ $mod := slice }}
+    {{ $files = sort $files "name" }}
+    {{- range $index, $file := $files -}}
+        {{ $process := false }}
+        {{ range $templates }}
+            {{ if eq .Name $file.resource.Name }}
+                {{ $process = true }}
+                {{ break }}
+            {{ end }}
+        {{ end }}
+
+        {{ $res := $file.resource }}
+        {{ if or $process (not $args.skipTemplate )}}
+            {{- $res = $res | resources.ExecuteAsTemplate $res.Name $args.page -}}
+        {{ end }}
+
+        {{ if (hasSuffix (lower $res.Name) ".mjs") }}
+            {{ $mod = $mod | append $res }}
+        {{ else }}    
+            {{ $sorted = $sorted | append $res }}
+        {{ end }}
+    {{- end -}}
+
+    {{- if $args.debugging -}}
+        {{ warnf "Processing pattern for '%s': %s" $args.filename $match }}
+        {{- range $index, $file := union $sorted $mod -}}
+            {{- warnf " - Processing file: %s" $file }}
+        {{- end -}}
+    {{- end -}}
+
+    {{ if gt (len $sorted) 0 }}
+        {{ $bundle = $sorted | resources.Concat $args.filename -}}
+    {{ else }}
+        {{ $bundle = resources.FromString $args.filename "" }}
+    {{ end -}}
+
+    {{ $modFilename := printf "%s.mjs" (strings.TrimSuffix (path.Ext $args.filename) $args.filename) }}
+    {{ if gt (len $mod) 0 }}
+        {{ $modBundle = $mod | resources.Concat $modFilename -}}
+    {{ else }}
+        {{ $modBundle = resources.FromString $modFilename "" }}
+    {{ end -}}
+{{- end -}}
+
+{{- return (dict "bundle" $bundle "module" $modBundle) -}}
