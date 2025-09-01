@@ -4,6 +4,12 @@
     Visit gethinode.com/license for more details.
 -->
 
+{{ define "_partials/inline/default.html" }}
+    {{ $config := split .config "." }}
+    {{ $default := .default }}
+    {{ return or (index site.Params $config) $default }}
+{{ end }}
+
 {{ define "_partials/inline/alias-type.html" }}
     {{ $type := .type }}
     {{ $custom := .types }}
@@ -48,6 +54,7 @@
 {{ $warnmsg := slice }}
 {{ $params := dict }}
 {{ $types := dict }}
+{{ $default := slice }}
 
 {{/* Validate partial arguments */}}
 {{ if and (not $structure) (not $bookshop) }}
@@ -99,8 +106,9 @@
             {{ break }}
         {{ else }}
             {{/* initialize default value */}}
-            {{ if and (eq $val nil) $def.default }}
-                {{ $val = $def.default }}
+            {{ if and (eq $val nil) (or $def.config $def.default) }}
+                {{ $val = (partial "inline/default.html" (dict "config" $def.config "default" $def.default))  }}
+                {{ $default = $default | append $key }}
             {{ end }}
 
             {{/* validate type */}}
@@ -193,16 +201,21 @@
     {{ range $key, $val := $types.types }}
         {{ if (not (isset $params $key)) }}
             {{ $udt := index $types.udt $key }}
-            {{ if (isset $val "default") }}
-                {{ $params = merge $params (dict $key $val.default ) }}
+            {{ if or (isset $val "config") (isset $val "default") }}
+                {{ $params = merge $params (dict
+                    $key (partial "inline/default.html" (dict "config" $val.config "default" $val.default)) 
+                ) }}
+                {{ $default = $default | append $key }}
             {{ else if $udt }}
                 {{ if eq $udt._reflect "[]interface {}" }}
                     {{ $params = merge $params (dict $key slice) }}
                 {{ else }}
                     {{ $nested := dict }}
                     {{ range $k, $v := $udt }}
-                        {{ if and (reflect.IsMap $v) $v.default }}
-                            {{ $nested = merge $nested (dict $k $v.default)}}
+                        {{ if and (reflect.IsMap $v) (or $v.config $v.default) }}
+                            {{ $nested = merge $nested (dict 
+                                $k (partial "inline/default.html" (dict "config" $val.config "default" $val.default)) 
+                            )}}
                         {{ end }}
                     {{ end }}
                     {{ $params = merge $params (dict $key $nested) }}
@@ -221,5 +234,5 @@
     {{ end }}
 {{ end }}
 
-{{ $params = merge $params (dict "err" $error "errmsg" $errmsg "warnmsg" $warnmsg) }}
+{{ $params = merge $params (dict "err" $error "errmsg" $errmsg "warnmsg" $warnmsg "default" $default) }}
 {{ return $params }}
