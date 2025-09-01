@@ -96,6 +96,7 @@ arguments:
   arrangement:
     type: select
     optional: true
+    config: style.title.arrangement
     default: above
     options:
       values:
@@ -318,6 +319,7 @@ arguments:
   content-style:
     type: string
     optional: true
+    config: style.title.contentStyle
     default: lead text-muted
     comment: >-
       Style of the section content, if any.
@@ -502,6 +504,7 @@ arguments:
     type: select
     optional: true
     default: display
+    config: style.title.headingStyle
     options:
       values:
         - display
@@ -1103,13 +1106,6 @@ arguments:
       Enables horizontal scrolling of the cards. By default, the card group
       wraps any cards beyond the amount of defined columns to a new line. When
       `scroll` is set to true, a horizontal scroll bar is added instead.
-  use-section: 
-    type: bool
-    optional: true
-    default: false
-    comment: >-
-      Trigger to use the current section as preheading, applies to single pages
-      only. Any preheading values takes precedence.
   section:
     type: string
     optional: true    
@@ -1153,6 +1149,7 @@ arguments:
   size: 
     type: int
     optional: true
+    config: style.title.size
     default: 4
     comment: Display size of the headline.
     options:
@@ -1314,6 +1311,13 @@ arguments:
     type: string
     optional: true
     comment: User to add to the prompt, e.g. `user`.
+  use-section: 
+    type: bool
+    optional: true
+    default: false
+    comment: >-
+      Trigger to use the current section as preheading, applies to single pages
+      only. Any preheading values takes precedence.
   use-title:
     type: bool
     optional: true
