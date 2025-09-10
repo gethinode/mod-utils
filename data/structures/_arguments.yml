@@ -939,6 +939,11 @@ arguments:
     optional: false
     comment: Identification of the parent (e.g. nav control).
     group: partial
+  passthrough:
+    type: bool
+    optional: true
+    comment: Flag to bypass wrapping of building block;
+    group: partial
   path:
     type: path
     optional: true
