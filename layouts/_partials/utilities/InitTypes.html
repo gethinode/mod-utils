@@ -54,7 +54,11 @@
     {{ end }}
 
     {{ $merged := or $def dict }}
-    {{ if reflect.IsMap $val }}{{ $merged = merge $merged $val }}{{ end }}
+    {{ if reflect.IsMap $val }}
+        {{ $merged = merge $merged $val }}
+    {{ else if and $val (not (reflect.IsSlice $val)) }}
+        {{ $merged = merge $merged (dict "default" $val) }}
+    {{ end }}
     {{ if not $merged.type }}
         {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s'" $key  ) -}}
     {{ end }}
