@@ -719,8 +719,18 @@ arguments:
       values:
         - button
         - link
+  linkedin:
+    type:
+      - string
+      - template.URL
+      - url
+    optional: true
+    comment: >-
+      Link to a LinkedIn profile.
   links:
-    type: links
+    type:
+      - links
+      - '[]map[string]interface {}'
     optional: true
     comment: Links to add as buttons. 
   list:
