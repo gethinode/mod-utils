@@ -802,7 +802,7 @@ arguments:
     optional: true
     comment: >-
       Flag indicating if the media asset should support color modes. If set, the
-      elements searches for images having a matching color-mode suffix
+      element searches for images having a matching color-mode suffix
       such as `-light` or `-dark`.
   more:
     type: more

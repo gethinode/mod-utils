@@ -94,7 +94,9 @@
     {{ range $key, $val := $namedargs }}
         {{ $def := index $types.types $key }}
 
-        {{ if not $def }}
+        {{ if eq $key "_default" }}
+            {{ $default = $default | append $val }}
+        {{ else if not $def }}
             {{ if eq (printf "%T" $key) "string" }}
                 {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument '%s'" (or $structure $bookshop) $key) }}
             {{ else if eq (printf "%T" $key) "int" }}
