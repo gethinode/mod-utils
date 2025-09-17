@@ -56,6 +56,8 @@ types:
   more:
     title:
     link:
+    link-type:
+    icon:
   options:
     max:
     min:
