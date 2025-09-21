@@ -13,6 +13,7 @@ types:
     size:
   illustration:
     image:
+    justify:
     caption:
     caption-url:
     icon:
