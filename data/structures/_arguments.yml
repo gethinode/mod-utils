@@ -388,6 +388,12 @@ arguments:
     optional: false
     comment: >-
       Elements to include in the card group. Each element is rendered as a card.
+  exact:
+    type: bool
+    comment: >-
+      Renders the provided title as-is, without adjusting the case.
+      Overrides the site's title case setting.
+    optional: true
   external:
     type: bool
     optional: true
