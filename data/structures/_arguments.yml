@@ -25,6 +25,12 @@ arguments:
     comment: >-
       Account name of the video asset, required by some digital asset managers.
       You can also set the default account name in the site's parameters.
+  action:
+    type: string
+    position: 0
+    optional: false
+    comment: >-
+      Callback url to include in form submissions.
   active:
     type: bool
     optional: true
