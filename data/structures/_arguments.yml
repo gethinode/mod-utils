@@ -952,7 +952,8 @@ arguments:
     comment: >-
       Sets the per page options in the dropdown. Must be an array of integers or
       arrays in the format [label (string), value (int)]. Requires
-      `paginate = true`. 
+      `paginate = true`. It is recommended to configure values that are a
+      multitude of the `pagination` value.
   pane:
     type: select
     optional: true
