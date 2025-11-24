@@ -946,6 +946,13 @@ arguments:
     group: partial
     options:
       min: 1
+  pagination-select:
+    type: string
+    optional: true
+    comment: >-
+      Sets the per page options in the dropdown. Must be an array of integers or
+      arrays in the format [label (string), value (int)]. Requires
+      `paginate = true`. 
   pane:
     type: select
     optional: true
@@ -1137,6 +1144,10 @@ arguments:
     type: string
     optional: true    
     comment: Name of the content section.
+  searchable:
+    type: bool
+    optional: true
+    comment: Toggle the ability to search the dataset.
   separator:
     type: bool
     optional: true
@@ -1197,6 +1208,10 @@ arguments:
         - date
         - title
         - weight
+  sortable:
+    type: bool
+    optional: true
+    comment: Toggle the ability to sort the columns.
   spacer:
     type: bool
     optional: true
@@ -1386,6 +1401,12 @@ arguments:
     default: false
     optional: true
     comment: Flag to enable word wrapping of tab titles.
+  wrap:
+    type: bool
+    optional: true
+    comment: >-
+      Toggle the last column to wrap to a new row on smaller devices. This
+      setting is not compatible with data tables.
   wrapper:
     type: string
     optional: true
