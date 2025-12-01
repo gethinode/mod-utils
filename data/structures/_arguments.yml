@@ -387,7 +387,7 @@ arguments:
     comment: Flag to indicate the alert is dismissible.
   download:
     type: string
-    optional: false
+    optional: true
     comment: Path to the download file, relative to the site's static folder.
 
   # e
