@@ -3,6 +3,7 @@ types:
     backdrop:
     color:
     subtle:
+    class:
   heading:
     preheading:
     title:
