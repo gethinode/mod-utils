@@ -179,11 +179,13 @@ arguments:
     default: md
     options:
       values:
+        - none
         - xs
         - sm
         - md
         - lg
         - xl
+        - xxl
   button:
     type: bool
     optional: true
