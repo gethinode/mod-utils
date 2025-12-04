@@ -66,7 +66,9 @@
 
         {{ $res := $file.resource }}
         {{ if or $process (not $args.skipTemplate) }}
-            {{- $res = resources.ExecuteAsTemplate (path.Join $args.page.Language.Lang $file.resource.Name) $args.page $file.resource -}}
+            {{/* TODO: 04/DEC/25 Temp fix for Hinode v1, remove in next major version of mod-utils */}}
+            {{ $page := or $args.page page }}
+            {{- $res = resources.ExecuteAsTemplate (path.Join $page.Language.Lang $file.resource.Name) $page $file.resource -}}
         {{ end }}
 
         {{ if (hasSuffix (lower $res.Name) ".mjs") }}
