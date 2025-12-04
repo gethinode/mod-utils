@@ -65,8 +65,8 @@
         {{ end }}
 
         {{ $res := $file.resource }}
-        {{ if or $process (not $args.skipTemplate )}}
-            {{- $res = $res | resources.ExecuteAsTemplate $res.Name $args.page -}}
+        {{ if or $process (not $args.skipTemplate) }}
+            {{- $res = resources.ExecuteAsTemplate (path.Join $args.page.Language.Lang $file.resource.Name) $args.page $file.resource -}}
         {{ end }}
 
         {{ if (hasSuffix (lower $res.Name) ".mjs") }}
