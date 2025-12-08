@@ -187,7 +187,8 @@
         {{ end }}
 
         {{ if and (not $skip) (not $val.optional) }}
-            {{ if not (isset $namedargs $key) }}
+            {{ $check := index $namedargs $key }}
+            {{ if not $check }}
                 {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': expected value" (or $structure $bookshop) $key) }}
                 {{ $error = true }}
             {{ end }}
