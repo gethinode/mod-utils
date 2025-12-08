@@ -25,6 +25,10 @@ types:
     width:
     image-overlay:
     hook:
+  cta:
+    title:
+    url: 
+    label:
   input:
     section:
     nested:
