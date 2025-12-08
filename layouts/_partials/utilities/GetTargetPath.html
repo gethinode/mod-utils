@@ -6,21 +6,24 @@
     
     The partial supports the following arguments:
     "path"          Required path of the resource, e.g. "/assets/img/example.jpg".
-    "page"          Required page context, used to identify page bundle resources.
+    "page"          Optional page context, used to identify page bundle resources.
 -->
 
 {{ $path := .path -}}
 {{ $page := .page -}}
+{{ $pageContext := "" }}
+
 {{ if and (hasPrefix $path "/") $page.File }}
-    {{ $pageContext := (path.Join "/content" $page.File.Dir) -}}
-    {{ if hasPrefix $path $pageContext }}
-        {{ $path = strings.TrimPrefix $pageContext $path -}}
-        {{ $path = strings.TrimPrefix "/" $path -}}
-    {{ else if hasPrefix $path "/assets/" }}
-        {{ $path = strings.TrimPrefix "/assets" $path -}}
-    {{ else if hasPrefix $path "/static/" }}
-        {{ $path = strings.TrimPrefix "/static" $path -}}
-    {{ end }}
+    {{ $pageContext = (path.Join "/content" $page.File.Dir) -}}
+{{ end }}
+
+{{ if and $pageContext (hasPrefix $path $pageContext) }}
+    {{ $path = strings.TrimPrefix $pageContext $path -}}
+    {{ $path = strings.TrimPrefix "/" $path -}}
+{{ else if hasPrefix $path "/assets/" }}
+    {{ $path = strings.TrimPrefix "/assets" $path -}}
+{{ else if hasPrefix $path "/static/" }}
+    {{ $path = strings.TrimPrefix "/static" $path -}}
 {{ end }}
 
 {{ return $path -}}
