@@ -4,7 +4,7 @@ arguments:
   page:
   match:
     type: string
-    optional: false
+    optional: true
     comment: Filename or glob pattern of the source file(s) to bundle.
   filename:
     type: string
