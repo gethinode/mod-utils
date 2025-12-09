@@ -83,6 +83,11 @@ arguments:
         - Bottom
         - BottomRight
         - Smart
+  animated:
+    type: bool
+    optional: true
+    default: false
+    comment: Enables animations.
   animation-data:
     type: string
     optional: false
