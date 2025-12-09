@@ -37,6 +37,11 @@ arguments:
     comment: >-
       Sets the current item as active (only one item at a time). By
       default, the first item is made active.
+  address:
+    type: string
+    optional: false
+    comment: >-
+      Address information.
   alert-type:
     type: select
     optional: true
@@ -652,6 +657,11 @@ arguments:
     comment: >-
       List input of the element. Uses the name of the section to retrieve known
       pages. 
+  instructions:
+    type: instructions
+    optional: true
+    comment: >-
+      Instructions how to reach a location using a specific transport method.
   items:
     type: items
     optional: false
@@ -778,6 +788,11 @@ arguments:
       values:
         - lazy
         - eager
+  locations:
+    type: locations
+    optional: false
+    comment: >-
+      Office location data.
   long:
     type:
       - float
@@ -1032,6 +1047,10 @@ arguments:
         - bottom
         - left
         - right
+  phone:
+    type: string
+    optional: true
+    comment: Phone number.
   plain:
     type: bool
     default: false
