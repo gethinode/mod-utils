@@ -25,6 +25,17 @@ types:
     width:
     image-overlay:
     hook:
+  instructions:
+    - title:
+      description:
+  locations:
+    - title:
+      address:
+      phone:
+      image:
+      mode:
+      anchor:
+      instructions:
   cta:
     title:
     url: 
