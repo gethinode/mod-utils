@@ -337,7 +337,7 @@ arguments:
     type: string
     optional: true
     comment: >-
-      The full name of the contact to retrieve.
+      The full name of the contact to retrieve or display.
   container:
     type: string
     optional: true
