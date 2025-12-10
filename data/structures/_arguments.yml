@@ -1212,6 +1212,10 @@ arguments:
     optional: true
     default: true
     comment: Sets the sort order to descending.
+  role:
+    type: string
+    optional: true
+    comment: Role of the person.
 
   # s
   scroll:

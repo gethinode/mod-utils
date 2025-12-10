@@ -99,13 +99,10 @@ types:
     - logo:
       content:
       client:
-        name:
-        url:
-        image:
-        mode:
       link:
   client:
     name:
-    url:
+    role:
     image:
     mode:
+    url:
