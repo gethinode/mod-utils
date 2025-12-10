@@ -245,11 +245,20 @@ arguments:
       address. Include the `scheme` when referencing an external address, such
       as `https://google.com`. Local references may include an optional anchor
       link such as `blog/bootstrap-elements/#docs`.
+  card:
+    type: card
+    optional: true
+    comment: Background styling of the card.
   cards:
     type: string
     optional: true
     comment: String of rendered cards.
     group: partial
+  carousel:
+    type: bool
+    optional: true
+    comment: >-
+      Flag to show the elements as carousel.
   case:
     type: bool
     optional: true
@@ -272,6 +281,11 @@ arguments:
     comment: >-
       Class attributes of the element. It supports Bootstrap attributes to
       modify the styling of the element.
+  client:
+    type: client
+    optional: true
+    comment: >-
+      Client name and content.
   clipboard:
     type:
       - string
@@ -793,6 +807,10 @@ arguments:
     optional: false
     comment: >-
       Office location data.
+  logo:
+    type: string
+    optional: true
+    comment: Logo image to include in the the content block or section heading.
   long:
     type:
       - float
@@ -1333,6 +1351,9 @@ arguments:
     comment: >-
       Tags to be used as filter. When set, only pages that match at least one of
       the provided tags are retrieved.
+  testimonials:
+    type: testimonials
+    comment: Collection of testimonials to add.
   text:
     type:
       - string

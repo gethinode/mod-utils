@@ -4,6 +4,10 @@ types:
     color:
     subtle:
     class:
+  card:
+    color:
+    subtle:
+    class:
   heading:
     preheading:
     title:
@@ -91,3 +95,17 @@ types:
     id:
     autoplay:
     query-args:
+  testimonials:
+    - logo:
+      content:
+      client:
+        name:
+        url:
+        image:
+        mode:
+      link:
+  client:
+    name:
+    url:
+    image:
+    mode:

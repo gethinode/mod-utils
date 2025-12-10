@@ -22,12 +22,12 @@
 {{ end -}}
 
 {{- if not (in $permitted $paddingX) -}}
-    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.x': %d" $paddingX -}}
+    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.x': %v (type %T)" $paddingX $paddingX -}}
     {{- $paddingX = $defaultX -}}
 {{- end -}}
 
 {{- if not (in $permitted $paddingY) -}}
-    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.y': %d" $paddingY -}}
+    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.y': %v (type %T)" $paddingY $paddingY -}}
     {{- $paddingY = $defaultY -}}
 {{- end -}}
 
