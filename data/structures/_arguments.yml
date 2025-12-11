@@ -625,7 +625,7 @@ arguments:
   image:
     type: string
     optional: true
-    comment: Image to include in the the content block or section heading.
+    comment: Image to include in the content block or section heading.
   image-height:
     type: int
     optional: true
@@ -810,7 +810,7 @@ arguments:
   logo:
     type: string
     optional: true
-    comment: Logo image to include in the the content block or section heading.
+    comment: Logo image to include in the content block or section heading.
   long:
     type:
       - float
