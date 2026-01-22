@@ -202,9 +202,12 @@
 
     {{/* add missing keys with default values (nested one level deep) or empty slice */}}
     {{ range $key, $val := $types.types }}
-        {{ if (not (isset $params $key)) }}
+        {{ $check := index $params $key }}
+        {{ if not $check  }}
             {{ $udt := index $types.udt $key }}
-            {{ if or (isset $val "config") (isset $val "default") }}
+            {{ $check1 := index $val "config" }}
+            {{ $check2 := index $val "default" }}
+            {{ if or $check1 $check2 }}
                 {{ $params = merge $params (dict
                     $key (partial "inline/default.html" (dict "config" $val.config "default" $val.default)) 
                 ) }}
