@@ -6,7 +6,13 @@
 
 {{/* Inline partial to retrieve the type definition of the provided key (without recursion) */}}
 {{ define "_partials/inline/type-definition.html" }}
-    {{ $key := .key }}
+    {{/* Convert key name from snake case to kebab case, except for leading underscores. */}}
+    {{/* Examples: */}}
+    {{/*  - "link_type" → "link-type" */}}
+    {{/*  - "_link_type" → "_link-type" */}}
+    {{/*  - "__link_type" → "__link-type" */}}
+    {{ $match := findRESubmatch "^(_*)(.*)$" .key }}                              
+    {{ $key := print (index $match 0 1) (replaceRE "_" "-" (index $match 0 2)) }} 
     {{ $val := .val }}
     {{ $arguments := .arguments }}
     {{ $types := .types }}

@@ -4,6 +4,11 @@ arguments:
     optional: true
     comment: Unique name of the bookshop component.
     group: partial
+  _bookshop-name:
+    type: string
+    optional: true
+    comment: Alias for _bookshop_name.
+    group: partial
   _ordinal:
     type: int
     optional: true
