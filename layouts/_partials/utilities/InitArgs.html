@@ -203,7 +203,7 @@
     {{/* add missing keys with default values (nested one level deep) or empty slice */}}
     {{ range $key, $val := $types.types }}
         {{ $check := index $params $key }}
-        {{ if not $check  }}
+        {{ if eq $check nil }}
             {{ $udt := index $types.udt $key }}
             {{ $check1 := index $val "config" }}
             {{ $check2 := index $val "default" }}
