@@ -1223,6 +1223,13 @@ arguments:
     comment: Role of the person.
 
   # s
+  scale:
+    type: float64
+    optional: true
+    comment: >-
+      When set, applies a scale transformation to the SVG content. For example,
+      the scale value `1.15` increases the content size with 15%. You can
+      use this to remove any padding inherent to the SVG content.
   scroll:
     type: bool
     optional: true
