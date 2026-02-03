@@ -1,9 +1,10 @@
 {{- $page := .page -}}
 {{- $version := .version -}}
 {{- $path := "" -}}
+{{- $disable := eq (index $page.Params "sidebar-menu") false -}}
 
 {{- $menu := "" -}}
-{{- if or $page.IsPage $page.IsSection -}}
+{{- if and (or $page.IsPage $page.IsSection) (not $disable) -}}
     {{/* Try filename with language extension */}}
     {{- $path = printf "%s-%s.%s" $page.Section $version $page.Lang -}}
     {{- $menu = index site.Data $path -}}
