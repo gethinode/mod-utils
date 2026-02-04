@@ -22,12 +22,24 @@
 {{ end -}}
 
 {{- if not (in $permitted $paddingX) -}}
-    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.x': %v (type %T)" $paddingX $paddingX -}}
+    {{- partial "utilities/LogWarn.html" (dict 
+        "partial" "utilities/GetPadding.html" 
+        "warnid"  "warn-invalid-padding"
+        "msg"     "Invalid padding"
+        "details" (printf "layout [_default/baseof.html] - Invalid value for param 'padding.x': %v (type %T)" $paddingX $paddingX)
+        "file"    page.File
+    ) -}}
     {{- $paddingX = $defaultX -}}
 {{- end -}}
 
 {{- if not (in $permitted $paddingY) -}}
-    {{- warnf "layout [_default/baseof.html] - Invalid value for param 'padding.y': %v (type %T)" $paddingY $paddingY -}}
+    {{- partial "utilities/LogWarn.html" (dict 
+        "partial" "utilities/GetPadding.html" 
+        "warnid"  "warn-invalid-padding"
+        "msg"     "Invalid padding"
+        "details" (printf "layout [_default/baseof.html] - Invalid value for param 'padding.y': %v (type %T)" $paddingY $paddingY)
+        "file"    page.File
+    ) -}}
     {{- $paddingY = $defaultY -}}
 {{- end -}}
 
