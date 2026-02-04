@@ -58,11 +58,23 @@
             {{- if (in $isMirrored $orientation) }}{{ $mirror = true }}{{ end -}}
         {{ end }}
     {{ else -}}
-        {{ warnf "Image type '%s' is not supported: %s" $img.MediaType $url -}}
+        {{- partial "utilities/LogWarn.html" (dict 
+            "partial" "utilities/GetImage.html" 
+            "warnid"  "warn-unsupported-image"
+            "msg"     "Unsupported image"
+            "details" (printf "Unsupported image type %q for resource %q" $img.MediaType $url)
+            "file"    $page.File
+        ) -}}
         {{ $img = "" -}}
     {{ end -}}
-{{ else -}}    
-    {{ warnf "Cannot find image resource: %q" $url -}}
+{{ else -}}
+    {{- partial "utilities/LogWarn.html" (dict 
+        "partial" "utilities/GetImage.html" 
+        "warnid"  "warn-missing-image"
+        "msg"     "Missing image"
+        "details" (printf "Cannot find image resource %q" $url)
+        "file"    $page.File
+    ) -}}
 {{ end -}}
 
 {{ return (dict "resource" $img "mirror" $mirror) -}}
