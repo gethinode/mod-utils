@@ -19,7 +19,7 @@
     {{ else }}
         {{ with $args.file }}{{ $msg = printf "%s: %s" $msg (or .Path .) }}{{ end }}
     {{ end }}
-    {{ range $args.details }}
+    {{ range slice | append $args.details }}
         {{ $msg = printf "%s\n\t%s" $msg . }}
     {{ end }}
 
