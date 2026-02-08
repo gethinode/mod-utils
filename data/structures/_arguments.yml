@@ -178,6 +178,7 @@ arguments:
       values:
         - full
         - title
+        - minimal
         - none
   border:
     type: bool
