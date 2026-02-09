@@ -1,9 +1,25 @@
 {{ $path := .data }}
 {{ $page := .page }}
 
+{{/* Construct language-specific path */}}
+{{ $i18nPath := path.Clean (path.Join (path.Dir $path) (printf "%s.%s" (path.BaseName $path) $page.Language.Lang) (path.Ext $path)) }}
+{{ $file := $i18nPath }}
+
+{{/* Traverse each path segment separately */}}
+{{ $base := site.Data }}
+{{ $dirFile := path.Split $file }}
+{{ with $dirFile.Dir }}
+    {{ $file = $dirFile.File }}
+    {{ range split . "/" }}
+        {{ with . }}
+            {{ $base = index $base . }}
+            {{ if eq $base nil }}{{ $base = site.Data }}{{ break }}{{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
 {{/* Try language-specific file first */}}
-{{ $i18nPath := path.Join (path.Dir $path) (printf "%s.%s" (path.BaseName $path) $page.Language.Lang) (path.Ext $path) }}
-{{ $data := index site.Data $i18nPath }}
+{{ $data := index $base $file }}
 
 {{/* Use exact provided path as backup */}}
 {{ if not $data -}}
