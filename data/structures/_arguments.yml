@@ -78,7 +78,7 @@ arguments:
   anchor:
     type: select
     optional: true
-    comment: 
+    comment: >-
       Anchor of the image's crop box, defaults to anchor value set in
       `imaging` section of the site configuration (usually `Smart`).
     options:
@@ -173,7 +173,7 @@ arguments:
     optional: true
     default: full
     comment: >-
-      Body components of the element. 
+      Body components of the element.
     options:
       values:
         - full
@@ -183,7 +183,7 @@ arguments:
   border:
     type: bool
     optional: true
-    comment: Flag add a border to the element.
+    comment: Flag to add a border to the element.
   breadcrumb:
     type: bool
     optional: true
@@ -228,7 +228,7 @@ arguments:
     type: select
     optional: true
     default: enabled
-    comment: State of the button. 
+    comment: State of the button.
     options:
       values:
         - enabled
@@ -536,7 +536,7 @@ arguments:
     optional: true
     default: full
     comment: >-
-      Header components of the element, displayed in small caps. 
+      Header components of the element, displayed in small caps.
     options:
       values:
         - full
@@ -676,7 +676,7 @@ arguments:
     optional: false
     comment: >-
       List input of the element. Uses the name of the section to retrieve known
-      pages. 
+      pages.
   instructions:
     type: instructions
     optional: true
@@ -717,7 +717,7 @@ arguments:
   label:
     type: string
     optional: true
-    comment: >-         
+    comment: >-
       Assistive label of the element.
   lang:
     type: string
@@ -786,7 +786,7 @@ arguments:
       - links
       - '[]map[string]interface {}'
     optional: true
-    comment: Links to add as buttons. 
+    comment: Links to add as buttons.
   list:
     type:
       - 'page.Pages'
@@ -871,7 +871,7 @@ arguments:
   minimal:
     type: bool
     optional: true
-    comment: Renders the element with without a title.
+    comment: Renders the element without a title.
   messages:
     type: messages
     optional: true
@@ -949,7 +949,7 @@ arguments:
     optional: true
     comment: >-
       If set, retrieves all pages below the section or current page recursively.
-      By default, only first-order childs are retrieved.
+      By default, only first-order children are retrieved.
 
   # o
   options:
@@ -1017,7 +1017,7 @@ arguments:
     optional: true
     comment: >-
       Flag indicating if pagination should be added to the element, if the
-      list exceeds the maximum number of containing elements to display. 
+      list exceeds the maximum number of containing elements to display.
     group: partial
   pagination:
     type: int
@@ -1053,7 +1053,7 @@ arguments:
   passthrough:
     type: bool
     optional: true
-    comment: Flag to bypass wrapping of building block;
+    comment: Flag to bypass wrapping of building block.
     group: partial
   path:
     type: path
@@ -1079,11 +1079,11 @@ arguments:
     type: bool
     default: false
     optional: true
-    comment:
+    comment: >-
       Flag to indicate if the current element should be rendered as plain. For
       image, this implies no transformations are applied. For navbar items,
       this ignores any children.
-  popup:	
+  popup:
     type: string
     optional: true
     comment: Optional text of a popup marker.
@@ -1240,7 +1240,7 @@ arguments:
       `scroll` is set to true, a horizontal scroll bar is added instead.
   section:
     type: string
-    optional: true    
+    optional: true
     comment: Name of the content section.
   searchable:
     type: bool
@@ -1391,7 +1391,7 @@ arguments:
     type: path
     optional: true
     comment: >-
-      Thumbnail image url, displayed on top or the left of the element.
+      Thumbnail image URL, displayed at the top or to the left of the element.
   title:
     type:
       - string
@@ -1410,7 +1410,7 @@ arguments:
     type: string
     optional: true
     comment: >-
-      Text to display in a tooltip. Cannot be used together with 
+      Text to display in a tooltip. Cannot be used together with
       collapse-id. Ignored for active/inactive buttons.
   transform:
     type: select
@@ -1454,13 +1454,13 @@ arguments:
     type: string
     optional: true
     comment: User to add to the prompt, e.g. `user`.
-  use-section: 
+  use-section:
     type: bool
     optional: true
     default: false
     comment: >-
       Trigger to use the current section as preheading, applies to single pages
-      only. Any preheading values takes precedence.
+      only. Any preheading values take precedence.
   use-title:
     type: bool
     optional: true
@@ -1511,7 +1511,7 @@ arguments:
   wrapper:
     type: string
     optional: true
-    comment:
+    comment: >-
       Class attribute of the element's wrapper. It supports Bootstrap attributes
       to modify the styling of the element. Icons include the `fa-wrapper` and
       `fa-fluid` attributes by default.
