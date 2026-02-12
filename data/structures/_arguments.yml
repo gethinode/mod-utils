@@ -403,6 +403,18 @@ arguments:
     optional: true
     comment: >-
       Description of the element.
+  device:
+    type: select
+    optional: true
+    default: desktop
+    comment: >-
+      Device view to display by default in preview component. Determines the
+      initial iframe dimensions and active tab.
+    options:
+      values:
+        - desktop
+        - tablet
+        - mobile
   dims:
     type:
       - slice
