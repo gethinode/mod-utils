@@ -53,4 +53,4 @@ arguments:
   options:
     type: options
     optional: true
-    comment: Conditional value requirements, pending data type.
+    comment: Conditional value requirements, depending on data type.
