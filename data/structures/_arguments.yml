@@ -192,7 +192,6 @@ arguments:
     type: select
     optional: true
     comment: Breakpoint of the element.
-    default: md
     options:
       values:
         - none
@@ -622,12 +621,20 @@ arguments:
     comment: >-
       Unique identifier of the current element.
   icon:
-    type: string
+    type:
+      - string
+      - uint64
     optional: true
     comment: >-
       Icon to include. You can use shorthand notation such as `fas sort` to
       include a Font Awesome icon. The argument also supports files with an
       `.svg` or `.json` extension.
+  icon-class:
+    type: string
+    optional: true
+    comment: >-
+      Class attributes of the icon. Use these to add modifiers such as `fa-2x`
+      and `fa-flip-horizontal`.
   icon-rounded:
     type: bool
     optional: true
