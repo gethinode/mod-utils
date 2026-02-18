@@ -192,7 +192,6 @@ arguments:
     type: select
     optional: true
     comment: Breakpoint of the element.
-    default: md
     options:
       values:
         - none
