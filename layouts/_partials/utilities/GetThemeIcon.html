@@ -1,0 +1,12 @@
+{{- $id := .id -}}
+{{- $alias := .alias -}}
+{{- $default := .default -}}
+{{- $result := "" -}}
+
+{{- if reflect.IsMap site.Params.icons -}}
+    {{- $result = or (index site.Params.icons $id) $alias $default -}}
+{{- else -}}
+    {{- $result = or $alias $default -}}
+{{- end -}}
+
+{{- return $result -}}
