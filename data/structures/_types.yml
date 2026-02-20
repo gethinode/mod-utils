@@ -69,6 +69,7 @@ types:
       download:
       icon:
       force:
+      order:
   messages:
     - title:
       icon:
