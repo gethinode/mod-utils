@@ -12,6 +12,8 @@
 {{ $page := .page }}
 {{ if not $page }}
     {{- errorf "partial [utilities/GetPage.html] - Expected param 'page', see: %s" $origin -}}
+{{ else if eq $page.Kind "404" }}
+    {{ $page = site.Home }}
 {{ end }}
 
 {{- $isExternal := ne (urls.Parse (absURL $url)).Host (urls.Parse site.BaseURL).Host -}}
