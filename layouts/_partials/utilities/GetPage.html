@@ -12,6 +12,8 @@
 {{ $page := .page }}
 {{ if not $page }}
     {{- errorf "partial [utilities/GetPage.html] - Expected param 'page', see: %s" $origin -}}
+{{ else if eq $page.Kind "404" }}
+    {{ $page = site.Home }}
 {{ end }}
 
 {{- $isExternal := ne (urls.Parse (absURL $url)).Host (urls.Parse site.BaseURL).Host -}}
@@ -22,8 +24,12 @@
         {{ $match := partial "utilities/GetStaticURL" (dict "url" $url) }}
         {{ if not (hasSuffix $match "/") }}{{ $match = printf "%s/" $match }}{{ end }}
         
-        {{ $matches := first 1 (where $page.Site.AllPages "RelPermalink" $match) }}
-        {{ if eq (len $matches) 1 }}{{ $ref = index $matches 0 }}{{ end }}
+        {{ $matches := where site.AllPages "RelPermalink" "like" (printf "%s$" $match) }}
+        {{ if eq (len $matches) 1 }}
+            {{ $ref = index $matches 0 }}
+        {{ else if gt (len $matches) 1}}
+            {{- warnf "partial [utilities/GetPage.html] - Page reference %q is ambiguous" $url -}}
+        {{ end }}
     {{ end }}
 {{- end -}}
 
