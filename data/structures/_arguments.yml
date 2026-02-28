@@ -372,6 +372,18 @@ arguments:
     optional: true
     comment: >-
       Flag indicating if the element should include interactive controls.
+  controls-placement:
+    type: select
+    optional: true
+    default: top
+    comment: >-
+      Position of the device selection button group relative to the preview
+      area. Use "top" (default) to place the controls above the preview, or
+      "bottom" to place them below.
+    options:
+      values:
+        - top
+        - bottom
   cover:
     type: bool
     default: true
