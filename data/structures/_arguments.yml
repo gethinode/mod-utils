@@ -402,6 +402,17 @@ arguments:
     optional: true
     comment: >-
       Description of the element.
+  desktop-responsive:
+    type: bool
+    optional: true
+    default: true
+    comment: >-
+      Controls how the desktop iframe scales within the preview container.
+      When true (default), the iframe fills the full container width and height
+      by adjusting its logical height dynamically — the website inside sees a
+      1440px-wide viewport at the current zoom level. When false, the desktop
+      uses a strict 16:10 contain fit so the full 1440 × 900px frame is always
+      visible with no clipping.
   device:
     type: select
     optional: true
