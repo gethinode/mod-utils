@@ -1314,6 +1314,13 @@ arguments:
     comment: >-
       Flag to indicate an item should be shown. For elements with multiple
       items, only one item can be shown at a time.
+  show-fallback:
+    type: bool
+    optional: true
+    comment: >-
+      Forces the error overlay to be rendered server-side, bypassing build-time
+      detection. Useful in offline or CI environments where the HEAD request
+      cannot reach the target URL.
   show-markup:
     type: bool
     optional: true
