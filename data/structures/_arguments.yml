@@ -36,6 +36,9 @@ arguments:
     optional: false
     comment: >-
       Callback url to include in form submissions.
+    editors:
+      - name: cc
+        type: url
   active:
     type: bool
     optional: true
@@ -104,6 +107,9 @@ arguments:
     comment: >-
       Path of the JSON file that contains the animation, relative to the static
       folder.
+    editors:
+      - name: cc
+        type: file
   aria-label:
     type: string
     optional: true
@@ -146,6 +152,9 @@ arguments:
     type: string
     optional: true
     comment: Background image with a mask to improve contrast.
+    editors:
+      - name: cc
+        type: image
   background:
     type:
       - background
@@ -240,6 +249,9 @@ arguments:
     type: string
     optional: true
     comment: Caption of the carousel slide or illustration.
+    editors:
+      - name: cc
+        type: textarea
   caption-url:
     type:
       - string
@@ -250,6 +262,9 @@ arguments:
       address. Include the `scheme` when referencing an external address, such
       as `https://google.com`. Local references may include an optional anchor
       link such as `blog/bootstrap-elements/#docs`.
+    editors:
+      - name: cc
+        type: url
   card:
     type: card
     optional: true
@@ -343,6 +358,11 @@ arguments:
     optional: true
     comment: >-
       The full name of the contact to retrieve or display.
+    editors:
+      - name: cc
+        type: select
+        options:
+          values: data.contacts
   container:
     type: string
     optional: true
@@ -353,6 +373,9 @@ arguments:
       - template.HTML
     optional: true
     comment: Section content displayed below the title.
+    editors:
+      - name: cc
+        type: textarea
   content-style:
     type: string
     optional: true
@@ -414,6 +437,9 @@ arguments:
     optional: true
     comment: >-
       Description of the element.
+    editors:
+      - name: cc
+        type: textarea
   desktop-responsive:
     type: bool
     optional: true
@@ -611,6 +637,9 @@ arguments:
     comment: >-
       Address for the button or hyperlink. When set for a card group, a button
       is added if the list exceeds the maximum number of cards to display.
+    editors:
+      - name: cc
+        type: url
   href-force:
     type: bool
     optional: true
@@ -652,6 +681,11 @@ arguments:
       Icon to include. You can use shorthand notation such as `fas sort` to
       include a Font Awesome icon. The argument also supports files with an
       `.svg` or `.json` extension.
+    editors:
+      - name: cc
+        type: select
+        options:
+          values: data.icons
   icon-class:
     type: string
     optional: true
@@ -674,6 +708,9 @@ arguments:
     type: string
     optional: true
     comment: Image to include in the content block or section heading.
+    editors:
+      - name: cc
+        type: image
   image-height:
     type: int
     optional: true
@@ -796,6 +833,9 @@ arguments:
     optional: true
     comment: Maximum number of elements to display.
     group: partial
+    editors:
+      - name: cc
+        type: number
     options:
       min: 1
   link:
@@ -859,6 +899,9 @@ arguments:
     type: string
     optional: true
     comment: Logo image to include in the content block or section heading.
+    editors:
+      - name: cc
+        type: image
   long:
     type:
       - float
@@ -1067,6 +1110,9 @@ arguments:
     comment: >-
       Number of elements per page in pagination, overrides site settings.
     group: partial
+    editors:
+      - name: cc
+        type: number
     options:
       min: 1
   pagination-select:
@@ -1285,6 +1331,11 @@ arguments:
     type: string
     optional: true
     comment: Name of the content section.
+    editors:
+      - name: cc
+        type: select
+        options:
+          values: data.sections
   searchable:
     type: bool
     optional: true
@@ -1381,6 +1432,9 @@ arguments:
       Path or url of the image, e.g. `img/example.jpg`. Images with multiple
       color modes are expected to have a basename that ends with either `-dark`
       or `-light`.
+    editors:
+      - name: cc
+        type: file
   styles:
     type: styles
     optional: true
