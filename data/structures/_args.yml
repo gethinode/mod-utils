@@ -50,6 +50,14 @@ arguments:
     type: string
     optional: true
     comment: Documentation about the argument.
+  editors:
+    type: slice
+    optional: true
+    comment: >-
+      Per-editor type hints and options. Each item specifies a CMS editor name
+      and an optional type override and editor-specific options for that editor.
+      Currently supported editor names: `cc` (CloudCannon).
+      Takes precedence over type-based inference.
   options:
     type: options
     optional: true
