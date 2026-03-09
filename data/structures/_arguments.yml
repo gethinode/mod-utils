@@ -19,7 +19,7 @@ arguments:
 
   # a
   absolute-url:
-    type: string
+    type: bool
     optional: true
     default: false
     comment: >-
