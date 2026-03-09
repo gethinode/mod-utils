@@ -19,7 +19,7 @@ arguments:
 
   # a
   absolute-url:
-    type: string
+    type: bool
     optional: true
     default: false
     comment: >-
@@ -380,9 +380,9 @@ arguments:
     type: string
     optional: true
     config: style.title.contentStyle
-    default: lead text-muted
     comment: >-
-      Style of the section content, if any.
+      Style of the section content. Defaults to the global site setting style.title.contentStyle
+      in params.toml (typically "lead text-muted").
   contrast:
     type: bool
     default: false
@@ -409,7 +409,7 @@ arguments:
         - bottom
   cover:
     type: bool
-    default: true
+    default: false
     optional: true
     comment: Flag indicating if the element should be rendered fullscreen.
   cta:
@@ -611,14 +611,14 @@ arguments:
   heading-style:
     type: select
     optional: true
-    default: display
     config: style.title.headingStyle
     options:
       values:
         - display
         - fs
     comment: >-
-      Style of the heading, either display style or regular style (fs).
+      Style of the heading. Defaults to the global site setting style.title.headingStyle
+      in params.toml (typically "display").
   hide-empty:
     type: bool
     optional: true
