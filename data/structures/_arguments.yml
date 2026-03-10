@@ -171,6 +171,12 @@ arguments:
     default: false
     comment: >-
       Trigger to use a bento-style layout instead of default grid layout.
+  bg-class:
+    type: string
+    optional: true
+    comment: >-
+      Background class attributes of the element. It supports Bootstrap attributes to
+      modify the background styling of the element.
   body:
     type:
       - string
@@ -1336,6 +1342,12 @@ arguments:
         type: select
         options:
           values: data.sections
+  section-class:
+    type: string
+    optional: true
+    comment: >-
+      Section class attributes of the element. It supports Bootstrap attributes to
+      modify the section styling of the element.
   searchable:
     type: bool
     optional: true
