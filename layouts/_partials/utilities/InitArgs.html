@@ -1,4 +1,4 @@
-<!-- 
+<!--
     Copyright © 2024 - 2025 The Hinode Team / Mark Dumay. All rights reserved.
     Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
     Visit gethinode.com/license for more details.
@@ -94,6 +94,36 @@
     {{ range $key, $val := $namedargs }}
         {{ $def := index $types.types $key }}
 
+        {{/* Bookshop-only: normalize snake_case ↔ kebab-case argument keys */}}
+        {{ if and $bookshop (ne $key "_default") }}
+            {{ if not $def }}
+                {{/* Key not found — try the alternate casing (snake↔kebab). */}}
+                {{ $match := findRESubmatch "^(_*)(.*)$" $key }}
+                {{ $prefix := index $match 0 1 }}
+                {{ $body   := index $match 0 2 }}
+                {{ $altKey := "" }}
+                {{ if strings.Contains $body "_" }}
+                    {{/* snake_case input: try kebab-case lookup (v5 InitTypes stores kebab keys) */}}
+                    {{ $altKey = print $prefix (replaceRE "_" "-" $body) }}
+                {{ else if strings.Contains $body "-" }}
+                    {{/* kebab-case input: try snake_case lookup (v4 InitTypes stores snake keys); warn. */}}
+                    {{ $altKey = print $prefix (replaceRE "-" "_" $body) }}
+                {{ end }}
+                {{ if $altKey }}
+                    {{ with index $types.types $altKey }}
+                        {{ $def = . }}
+                        {{/* Warn only when the caller used kebab-case (snake_case is preferred). */}}
+                        {{ if strings.Contains $key "-" }}
+                            {{ $warnmsg = $warnmsg | append (printf "[%s] argument '%s': prefer snake_case '%s'" $bookshop $key (replaceRE "-" "_" $key)) }}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            {{ else if strings.Contains $key "-" }}
+                {{/* Kebab-case key found directly (v5 InitTypes) — warn to use snake_case instead. */}}
+                {{ $warnmsg = $warnmsg | append (printf "[%s] argument '%s': prefer snake_case '%s'" $bookshop $key (replaceRE "-" "_" $key)) }}
+            {{ end }}
+        {{ end }}
+
         {{ if eq $key "_default" }}
             {{ $default = $default | append $val }}
         {{ else if not $def }}
@@ -146,7 +176,7 @@
                     {{ break }}
                 {{ end }}
             {{ else if and (reflect.IsMap $def.options) (or $def.options.min $def.options.max) (in (slice "int" "float" "float64") $actual) }}
-                {{ if or 
+                {{ if or
                     (and $def.options.min (lt $val $def.options.min))
                     (and $def.options.max (gt $val $def.options.max))
                 }}
@@ -155,7 +185,7 @@
                     {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': value '%s' out of range [%s, %s]" (or $structure $bookshop) (string $key) (string $val) $min $max) }}
                     {{ $error = true }}
                     {{ break }}
-                {{ end }}            
+                {{ end }}
             {{ end }}
 
             {{/* validate if argument is deprecated */}}
@@ -208,7 +238,7 @@
             {{ $check2 := index $val "default" }}
             {{ if or $check1 $check2 }}
                 {{ $params = merge $params (dict
-                    $key (partial "inline/default.html" (dict "config" $val.config "default" $val.default)) 
+                    $key (partial "inline/default.html" (dict "config" $val.config "default" $val.default))
                 ) }}
                 {{ $default = $default | append $key }}
             {{ else if $udt }}
@@ -218,8 +248,8 @@
                     {{ $nested := dict }}
                     {{ range $k, $v := $udt }}
                         {{ if and (reflect.IsMap $v) (or $v.config $v.default) }}
-                            {{ $nested = merge $nested (dict 
-                                $k (partial "inline/default.html" (dict "config" $val.config "default" $val.default)) 
+                            {{ $nested = merge $nested (dict
+                                $k (partial "inline/default.html" (dict "config" $val.config "default" $val.default))
                             )}}
                         {{ end }}
                     {{ end }}
