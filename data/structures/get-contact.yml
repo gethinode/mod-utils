@@ -1,5 +1,6 @@
 comment: >-
   Retrieves contact details by name from a data asset.
+group: partial
 arguments:
   contact:
     type: string

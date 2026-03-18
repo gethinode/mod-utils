@@ -102,6 +102,19 @@
     {{ else }}
         {{ $args = index (index (index site.Data.structures.components $bookshop) (printf "%s.bookshop" $bookshop)) "blueprint" | default dict }}
         {{ $args = merge $args (dict "_bookshop_name" nil "_ordinal" nil "id" nil) }}
+        {{/* Load augmented sidecar (e.g. preview.yml) if present */}}
+        {{ $sidecarData := index (index site.Data.structures.components $bookshop) $bookshop | default dict }}
+        {{ range $key, $sidecarArgDef := ($sidecarData.arguments | default dict) }}
+            {{ if reflect.IsMap $sidecarArgDef }}
+                {{/* Convert kebab sidecar key to snake_case to match blueprint key format */}}
+                {{ $snakeKey := replaceRE "-" "_" $key }}
+                {{ $existing := index $args $snakeKey | default (index $args $key) | default dict }}
+                {{ if not (reflect.IsMap $existing) }}{{ $existing = dict }}{{ end }}
+                {{/* Prefer snake key if it exists in blueprint, otherwise use as-is */}}
+                {{ $targetKey := cond (isset $args $snakeKey) $snakeKey $key }}
+                {{ $args = merge $args (dict $targetKey (merge $existing $sidecarArgDef)) }}
+            {{ end }}
+        {{ end }}
     {{ end }}
 
     {{/* Merge any child arguments */}}

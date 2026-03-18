@@ -1,5 +1,6 @@
 comment: >-
   Bundles a selection of files into a single file.
+group: partial
 arguments:
   page:
   match:
