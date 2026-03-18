@@ -1,4 +1,5 @@
 comment: Retrieves the (meta) description of a page.
+group: partial
 arguments:
   page:
     type:

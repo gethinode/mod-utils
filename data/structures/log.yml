@@ -1,4 +1,5 @@
 comment: Logs a rich warning or error to the terminal.
+group: partial
 arguments:
   type:
     type: select

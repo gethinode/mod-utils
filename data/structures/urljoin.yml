@@ -2,6 +2,7 @@ comment: >-
   Joins the provided elements into a URL string. This partial uses urls.JoinPath
   introduced by Hugo v0.112.0 when available. Only use this partial when
   depending on an older version of Hugo.
+group: partial
 arguments:
   base:
     type: string
