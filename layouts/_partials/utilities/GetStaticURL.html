@@ -11,7 +11,7 @@
     {{ $url = path.Clean $url }}
     {{ if not $url }}{{ $url = "/" }}{{ end }}
 
-    {{ $lang := site.LanguageCode | default site.Language.Lang }}
+    {{ $lang := site.Language.Lang }}
     {{ $base := strings.TrimSuffix (printf "%s/" $lang) site.Home.RelPermalink }}
 
     {{ $url = partial "utilities/URLJoin.html" (dict "base" $base "path" $url) }}
