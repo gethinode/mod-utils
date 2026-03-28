@@ -307,6 +307,12 @@ arguments:
     comment: >-
       Class attributes of the element. It supports Bootstrap attributes to
       modify the styling of the element.
+  clear:
+    type: bool
+    optional: true
+    default: false
+    comment: 
+      Flag to use a clear separator instead of a horizontal line.
   client:
     type: client
     optional: true
