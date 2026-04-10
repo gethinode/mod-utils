@@ -858,6 +858,13 @@ arguments:
     optional: true
     comment: >-
       Local page reference or external hyperlink address.
+  link-icon:
+    type: bool
+    optional: true
+    comment: >-
+      Show a hover icon to the right of the card title to signal a clickable card.
+      Overrides the global main.cards.linkIcon site setting. Only applies to cards
+      without an explicit button. Cascades to all child cards.
   link-type:
     type: select
     optional: true
