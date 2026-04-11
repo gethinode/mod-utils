@@ -532,6 +532,22 @@ arguments:
       Path of the input file. The path is relative to the `basePath` defined in
       the `docs` section of the site's parameters. If the file starts with `./`,
       the path of the repository is used as base path instead.
+  filter:
+    type:
+      - string
+      - slice
+    optional: true
+    comment: >-
+      Slice of category values used to render a filter button group above the
+      element. Each value becomes a button label. An "All" button is always
+      prepended. Uses the text content of the column at filter-col to match rows.
+  filter-col:
+    type: int
+    optional: true
+    default: 1
+    comment: >-
+      Zero-indexed column number whose text content is matched against the active
+      filter value. Defaults to 1. Only used when filter is set.
   fluid:
     type: bool
     optional: true
