@@ -114,6 +114,14 @@ arguments:
     type: string
     optional: true
     comment: Alias for label.
+  aria-role:
+    type: string
+    optional: true
+    default: group
+    comment: >-
+      ARIA role attribute for the element (distinct from the person-role `role`
+      argument). Defaults to "group"; set to "tablist" for tab-switching
+      button groups.
   attributes:
     type: map[string]interface {}
     optional: true
@@ -412,9 +420,9 @@ arguments:
     optional: true
     default: top
     comment: >-
-      Position of the device selection button group relative to the preview
-      area. Use "top" (default) to place the controls above the preview, or
-      "bottom" to place them below.
+      Position of the interactive controls relative to the content area. Use
+      "top" (default) to place the controls before the content, or "bottom"
+      to place them after.
     options:
       values:
         - top
@@ -826,6 +834,14 @@ arguments:
     optional: true
     comment: >-
       Assistive label of the element.
+  layout:
+    type: string
+    optional: true
+    default: default
+    comment: >-
+      Layout variant of the component. The available values depend on the
+      specific component. Use Bootstrap RTL-safe names (e.g. "start" instead
+      of "left") where applicable.
   lang:
     type: string
     optional: true
@@ -1046,6 +1062,26 @@ arguments:
       - '[]string'
     optional: true
     comment: ID of disabled nav items, used when passing preprocessed nav items.
+    group: partial
+  nav-icons:
+    type:
+      - slice
+      - '[]string'
+    optional: true
+    comment: >-
+      Icon names for each nav item button, used when passing preprocessed nav
+      items. When set, the icon is rendered instead of the title text; the
+      title is used as tooltip and aria-label.
+    group: partial
+  nav-item-attrs:
+    type:
+      - slice
+      - '[]map[string]interface {}'
+    optional: true
+    comment: >-
+      Per-item attribute maps for each nav item button, used when passing
+      preprocessed nav items. Each entry is merged as HTML attributes on the
+      corresponding button element.
     group: partial
   nav-items:
     type: string
@@ -1505,6 +1541,7 @@ arguments:
         - pills
         - underline
         - callout
+        - buttons
   tags:
     type:
       - string
