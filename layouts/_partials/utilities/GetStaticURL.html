@@ -12,7 +12,14 @@
     {{ if not $url }}{{ $url = "/" }}{{ end }}
 
     {{ $lang := site.Language.Lang }}
-    {{ $base := strings.TrimSuffix (printf "%s/" $lang) site.Home.RelPermalink }}
+    {{/* site.Home.RelPermalink returns the active output's permalink, so
+        during a non-HTML output render (e.g. a custom searchindex / RSS /
+        custom JSON output) it would inject that output's path here and
+        produce a nonsensical base URL. The HTML output's permalink is the
+        canonical site root and remains stable across render contexts. */}}
+    {{ $homeURL := site.Home.RelPermalink }}
+    {{ with site.Home.OutputFormats.Get "html" }}{{ $homeURL = .RelPermalink }}{{ end }}
+    {{ $base := strings.TrimSuffix (printf "%s/" $lang) $homeURL }}
 
     {{ $url = partial "utilities/URLJoin.html" (dict "base" $base "path" $url) }}
 {{ end }}
