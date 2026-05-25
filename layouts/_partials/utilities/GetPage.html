@@ -20,10 +20,21 @@
 {{- if not $isExternal -}}
     {{- $ref = $page.GetPage $url -}}
 
+    {{/* Fallback to a site-wide lookup. Page.GetPage resolves relative
+        references against Hugo's active rendering context (the `page`
+        global), not the receiver page. When content is processed from a
+        foreign render — e.g. an output format whose layout iterates other
+        pages and reads .Plain / .Content / .Summary — the active context
+        is the driving page, and the receiver-based lookup returns nil.
+        site.GetPage is context-independent and finds the page by name. */}}
+    {{ if not $ref }}
+        {{- $ref = site.GetPage $url -}}
+    {{ end }}
+
     {{ if not $ref }}
         {{ $match := partial "utilities/GetStaticURL" (dict "url" $url) }}
         {{ if not (hasSuffix $match "/") }}{{ $match = printf "%s/" $match }}{{ end }}
-        
+
         {{ $matches := where site.AllPages "RelPermalink" "like" (printf "%s$" $match) }}
         {{ if eq (len $matches) 1 }}
             {{ $ref = index $matches 0 }}
