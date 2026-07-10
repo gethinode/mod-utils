@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    uses: gethinode/.github/.github/workflows/test.yml@v1
+    uses: gethinode/.github/.github/workflows/test.yml@test/no-hoisted
     with:
       package-manager: pnpm
     secrets: inherit
