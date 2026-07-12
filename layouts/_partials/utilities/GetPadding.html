@@ -1,4 +1,11 @@
-{{- /* Define main padding size */ -}}
+{{- /*
+    Define main/section padding size.
+    Reads [*.padding] x/y and optional [*.padding.mobile] x/y for the given
+    "section" (defaults to "main"), falling back to [main.padding] when the
+    section itself does not define a value.
+    Returns a dict with "x" and "y" always set, plus "mobileX"/"mobileY"
+    only when a mobile override is configured and passes validation.
+*/ -}}
 {{- $section := "main" }}
 {{- with index . "section" }}{{ $section = . }}{{ end -}}
 
@@ -23,6 +30,7 @@
     {{ $paddingY = site.Params.main.padding.y }}
 {{ end -}}
 
+{{- /* default dict avoids IsSet with unsupported type "invalid" warnings when the mobile table is absent */ -}}
 {{- $sectionMobile := default dict $padding.padding.mobile -}}
 {{- $mainMobile := default dict site.Params.main.padding.mobile -}}
 
