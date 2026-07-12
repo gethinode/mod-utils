@@ -1,0 +1,5 @@
+[main.padding]
+    x = 4
+    y = 4
+    [main.padding.mobile]
+        x = 2

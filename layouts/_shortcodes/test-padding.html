@@ -1,0 +1,7 @@
+{{- $p := partial "utilities/GetPadding.html" -}}
+<p>x: {{ $p.x }} y: {{ $p.y }} mobileX: {{ $p.mobileX }} mobileY: {{ $p.mobileY }}</p>
+<p>unset: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "y" 4) "axis" "x") }}</p>
+<p>set: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "mobileX" 3) "axis" "x") }}</p>
+<p>equal: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "mobileX" 5) "axis" "x") }}</p>
+<p>zero: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "mobileX" 0) "axis" "x") }}</p>
+<p>pb: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "y" 4 "mobileY" 2) "axis" "y" "prefix" "pb") }}</p>

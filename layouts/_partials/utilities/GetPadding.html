@@ -7,6 +7,8 @@
 {{- $permitted := slice 0 1 2 3 4 5 }}
 {{- $paddingX := $defaultX -}}
 {{- $paddingY := $defaultY -}}
+{{- $mobileX := "" -}}
+{{- $mobileY := "" -}}
 
 {{- $padding := index site.Params $section -}}
 {{- if $padding.padding.x }}
@@ -19,6 +21,21 @@
     {{ $paddingY = $padding.padding.y }}
 {{- else if isset site.Params.main.padding "y" }}
     {{ $paddingY = site.Params.main.padding.y }}
+{{ end -}}
+
+{{- $sectionMobile := default dict $padding.padding.mobile -}}
+{{- $mainMobile := default dict site.Params.main.padding.mobile -}}
+
+{{- if isset $sectionMobile "x" }}
+    {{ $mobileX = index $sectionMobile "x" }}
+{{- else if isset $mainMobile "x" }}
+    {{ $mobileX = index $mainMobile "x" }}
+{{ end -}}
+
+{{- if isset $sectionMobile "y" }}
+    {{ $mobileY = index $sectionMobile "y" }}
+{{- else if isset $mainMobile "y" }}
+    {{ $mobileY = index $mainMobile "y" }}
 {{ end -}}
 
 {{- if not (in $permitted $paddingX) -}}
@@ -43,4 +60,29 @@
     {{- $paddingY = $defaultY -}}
 {{- end -}}
 
-{{- return (dict "x" $paddingX "y" $paddingY) -}}
+{{- if and (ne $mobileX "") (not (in $permitted $mobileX)) -}}
+    {{- partial "utilities/LogWarn.html" (dict
+        "partial" "utilities/GetPadding.html"
+        "warnid"  "warn-invalid-padding"
+        "msg"     "Invalid padding"
+        "details" (printf "layout [_default/baseof.html] - Invalid value for param 'padding.mobile.x': %v (type %T)" $mobileX $mobileX)
+        "file"    page.File
+    ) -}}
+    {{- $mobileX = "" -}}
+{{- end -}}
+
+{{- if and (ne $mobileY "") (not (in $permitted $mobileY)) -}}
+    {{- partial "utilities/LogWarn.html" (dict
+        "partial" "utilities/GetPadding.html"
+        "warnid"  "warn-invalid-padding"
+        "msg"     "Invalid padding"
+        "details" (printf "layout [_default/baseof.html] - Invalid value for param 'padding.mobile.y': %v (type %T)" $mobileY $mobileY)
+        "file"    page.File
+    ) -}}
+    {{- $mobileY = "" -}}
+{{- end -}}
+
+{{- $result := dict "x" $paddingX "y" $paddingY -}}
+{{- if ne $mobileX "" }}{{ $result = merge $result (dict "mobileX" $mobileX) }}{{ end -}}
+{{- if ne $mobileY "" }}{{ $result = merge $result (dict "mobileY" $mobileY) }}{{ end -}}
+{{- return $result -}}
