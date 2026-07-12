@@ -311,7 +311,10 @@
             {{ with index $compiled.positions (string $index) }}
                 {{ $provided = merge $provided (dict . $val) }}
             {{ else }}
-                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" $name $index $val) }}
+                {{/* newly-detectable class (warnings-first): legacy surfaced this message but
+                     never gated on it — err stayed false and the mapped args stayed populated.
+                     Strict mode promotes it to an error; the shim keeps it a warning. */}}
+                {{ $newmsg = $newmsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" $name $index $val) }}
             {{ end }}
         {{ end }}
     {{ end }}
