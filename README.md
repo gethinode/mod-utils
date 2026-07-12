@@ -46,7 +46,7 @@ This module supports the following parameters (see the section `params.modules` 
 ## Argument validation
 
 This module provides the argument and type validation system used by shortcodes, partials, and
-Bookshop components across the Hinode ecosystem. As of v5 the system is split into a cached
+Bookshop components across the Hinode ecosystem. As of v6 the system is split into a cached
 schema compiler (`ArgsSchema.html`), a strict recursive validator (`Args.html`), and two
 compatibility shims (`InitArgs.html`, `InitTypes.html`) that preserve the legacy contract for
 existing call sites.
@@ -135,8 +135,8 @@ while a genuinely wrong explicit value is still caught.
 ### Warnings-first strictness rollout
 
 The following newly detectable problem classes surface as **warnings** (`warnmsg`, `err: false`)
-through the `InitArgs.html`/`InitTypes.html` shims, rather than errors, for one full v5 release
-cycle:
+through the `InitArgs.html`/`InitTypes.html` shims, rather than errors, for the full v6 release
+line:
 
 - Falsy-value type/select mismatches at the top level (e.g. `0` failing an `int` check, `false`
   failing a `select` check).
@@ -145,10 +145,36 @@ cycle:
 - Excess positional arguments.
 
 Calling `Args.html` directly with `strict: true` (the default) already treats every one of these
-as an error today. After one release cycle of the shim surfacing them as warnings, they will be
-promoted to errors in `InitArgs.html`/`InitTypes.html` too. Watch your own build's `warnmsg`
-output (or switch early to `Args.html`) to find call sites that need fixing before that
-promotion release.
+as an error today. The promotion of these warnings to errors in `InitArgs.html`/`InitTypes.html`
+is planned as the next major release (v7). Watch your own build's `warnmsg` output (or switch
+early to `Args.html`) to find call sites that need fixing before that promotion release.
+
+### Migrating from v5 to v6
+
+v6 is a major release: the API of `InitArgs.html`/`InitTypes.html` is drop-in compatible, but
+behavior changes in ways that can affect rendered output and build logs.
+
+1. **Import path.** Update `go.mod` and the `[module.imports]` path in your Hugo configuration
+   from `github.com/gethinode/mod-utils/v5` to `github.com/gethinode/mod-utils/v6`, then re-vendor
+   (`npm run mod:vendor` or `hugo mod vendor`).
+2. **CloudCannon expose configuration.** If your site uses `setup-cloudcannon-cms`, update any
+   expose globs that hardcode the vendored path (e.g.
+   `_vendor/github.com/gethinode/mod-utils/v5/...` → `.../v6/...`) and regenerate
+   `bookshop.config.cjs`; otherwise the live editor silently loses access to the validation
+   partials and structure data.
+3. **Behavior changes to expect.**
+   - Nested defaults now apply correctly (e.g. an omitted `heading` receives its members' real
+     defaults such as `align: start`, `width: 8`) — previously they resolved to null. Rendered
+     output can change without any content edit.
+   - Defaults with falsy values (`false`, `0`) are now applied; previously they were silently
+     ignored.
+   - Explicit `null` members inside nested arguments are dropped from the returned map instead of
+     passed through.
+   - All validation problems are reported per call instead of only the first one.
+   - Site parameters explicitly set to `false`/`0` now take precedence over static defaults for
+     `config`-driven arguments.
+   - New warnings (see the rollout section above) may appear in your build logs; they are
+     non-blocking in v6 and indicate call sites to clean up before v7.
 
 ## Contributing
 

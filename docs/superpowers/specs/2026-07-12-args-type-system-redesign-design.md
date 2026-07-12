@@ -114,7 +114,7 @@ Traced through `setup-cloudcannon-cms`, mod-blocks, and mod-bookshop(-hugo):
 | D4 | Performance | **In scope** — cache compiled schemas with `partialCached`. |
 | D5 | Canonical keys in clean API | **camelCase only** in the `Args.html` envelope; the shim keeps today's duplicated spellings. |
 | D6 | Unknown nested keys | **Error in strict mode** (consistent with top-level), warnings-first during transition. |
-| D7 | Strictness rollout | Newly detectable error classes ship as **warnings for one release cycle** via the shim, then are promoted to errors. |
+| D7 | Strictness rollout | Newly detectable error classes ship as **warnings in v6** via the shim, then are promoted to errors in **v7** (revised: promotion is a major, see §5). |
 
 ### 2.1 Non-goals
 
@@ -305,12 +305,20 @@ inputs testable with golden files.
 | 4 | Caching enabled and measured (`hugo --templateMetrics` before/after on Hinode exampleSite) | No behavior drift in goldens; measurable build-time improvement |
 | 5 (follow-up, separate effort) | Migrate Hinode v2 + first-party modules to `Args.html`; docs `args.md` consumes `ArgsSchema`; promote warnings to errors after one release cycle | Per-module PRs |
 
-Phases 0–4 ship as mod-utils v5 minor releases (with clear release notes for the
-new warnings). The phase-5 warning→error promotion is behaviorally breaking in the
-strict semver sense, but a Go-module major bump would force a `/v6` import path —
-the ecosystem-fork problem that ruled out scenario C. It therefore ships as a
-well-communicated v5 minor after at least one full release cycle of warnings,
-consistent with how mod-utils has rolled out stricter validation historically.
+**Release decision (revised post-implementation, 2026-07-12):** phases 0–4 ship
+together as **mod-utils v6** — a major release with a `/v6` import path. Although
+the API is drop-in compatible, implementation surfaced behavior changes that exceed
+what a minor should carry: nested and false/zero defaults now actually apply (which
+can change rendered output on untouched sites), null members are dropped from
+nested maps, and ~55 distinct new warning patterns surface on Hinode's exampleSite
+alone. A major makes adoption opt-in per module and per site. The original
+ecosystem-fork concern proved weaker than assumed: the ecosystem has absorbed four
+mod-utils majors with existing update automation, and mixed v5/v6 module graphs
+degrade gracefully (each version's partial set is self-contained). Consequences
+accepted: v5 freezes with its known defects (fixes do not propagate automatically),
+and CloudCannon expose configurations that hardcode `_vendor/.../mod-utils/v5/`
+globs must be updated. Hinode absorbs mod-utils v6 in its own next major (naturally
+Hinode v2). The phase-5 warning→error promotion becomes a clean v7.
 
 ## 6. Risks and mitigations
 
