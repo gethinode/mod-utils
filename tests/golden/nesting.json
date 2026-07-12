@@ -25,10 +25,10 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": null,
-        "arrangement": null,
-        "size": null,
-        "width": null
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
       },
       "locations": [],
       "warnmsg": []
@@ -72,10 +72,10 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": null,
-        "arrangement": null,
-        "size": null,
-        "width": null
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
       },
       "locations": [
         {
@@ -85,6 +85,7 @@
               "title": "Parking"
             }
           ],
+          "mode": false,
           "title": "Office"
         }
       ],
@@ -118,7 +119,10 @@
       "errmsg": [],
       "heading": {
         "align": "center",
-        "title": "Hello"
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
       "locations": [],
       "warnmsg": []
@@ -151,9 +155,11 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": null,
-        "preheading": null,
-        "title": "Hello"
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
       "locations": [],
       "warnmsg": []
@@ -189,11 +195,17 @@
       "err": false,
       "errmsg": [],
       "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
         "title": "Hello",
-        "typo-key": "oops"
+        "typo-key": "oops",
+        "width": 8
       },
       "locations": [],
-      "warnmsg": []
+      "warnmsg": [
+        "[test-nested] argument 'heading': unsupported attribute 'typo-key'"
+      ]
     }
   },
   "nested-wrong-type-passes": {
@@ -224,11 +236,16 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": 42,
-        "title": "Hello"
+        "align": "42",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
       "locations": [],
-      "warnmsg": []
+      "warnmsg": [
+        "[test-nested] argument 'heading.align': unexpected value '42'"
+      ]
     }
   },
   "udt-list-empty": {
@@ -257,10 +274,10 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": null,
-        "arrangement": null,
-        "size": null,
-        "width": null
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
       },
       "locations": [],
       "warnmsg": []

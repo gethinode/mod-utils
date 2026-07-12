@@ -169,7 +169,11 @@
                     {{ $min := string (or $node.options.min "-") }}
                     {{ $max := string (or $node.options.max "-") }}
                     {{ $msg := printf "[%s] argument '%s': value '%v' out of range [%s, %s]" $name $path $value $min $max }}
-                    {{ if or (gt $depth 0) (not $value) }}
+                    {{/* unlike the type check above, legacy's numeric range check had no falsy
+                         exemption (it errors on 0 just as it does on any other out-of-range
+                         value) — only recursion depth (a newly-detectable capability) downgrades
+                         this finding; adjudicated in the Task 7/8 handoff (see progress ledger). */}}
+                    {{ if gt $depth 0 }}
                         {{ $newmsg = $newmsg | append $msg }}
                     {{ else }}
                         {{ $errmsg = $errmsg | append $msg }}

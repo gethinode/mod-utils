@@ -15,7 +15,9 @@
       "default": [],
       "err": true,
       "errmsg": [
-        "[test-required] unsupported argument 'bogus-one'"
+        "[test-required] unsupported argument 'bogus-one'",
+        "[test-required] unsupported argument 'bogus-two'",
+        "[test-required] argument 'name': expected value"
       ],
       "warnmsg": []
     }
@@ -56,7 +58,6 @@
       "errmsg": [
         "[test-required] argument 'partial-only': expected value"
       ],
-      "name": "alpha",
       "warnmsg": []
     }
   },
@@ -78,7 +79,6 @@
       "errmsg": [
         "[test-required] argument 'partial-only': expected value"
       ],
-      "name": "alpha",
       "warnmsg": []
     }
   },
@@ -100,7 +100,6 @@
       "errmsg": [
         "[test-required] argument 'name': expected value"
       ],
-      "flag": true,
       "warnmsg": []
     }
   },

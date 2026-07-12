@@ -26,7 +26,10 @@
       "errmsg": [],
       "heading": {
         "align": "center",
-        "title": "Hello"
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
       "locations": [],
       "warnmsg": []

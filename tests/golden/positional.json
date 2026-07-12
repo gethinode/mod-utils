@@ -34,12 +34,10 @@
     },
     "initargs": {
       "default": [],
-      "err": false,
+      "err": true,
       "errmsg": [
         "[test-required] unsupported argument at index 2 (value: 'gamma')"
       ],
-      "kind": "beta",
-      "name": "alpha",
       "warnmsg": []
     }
   },

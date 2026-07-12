@@ -47,7 +47,27 @@
     {{/* merge the global definition with inline overrides from the structure file or blueprint */}}
     {{ $def := index $arguments $normKey | default dict }}
     {{ if reflect.IsMap $val }}
-        {{ $def = merge $def $val }}
+        {{ if and (isset $val "type") $def.type (ne $val.type $def.type) }}
+            {{/* the local override redeclares "type" as something other than the global
+                 definition's type: this is a same-named-but-unrelated argument (e.g. a
+                 deprecated component-local "size" enum shadowing the global heading "size"
+                 int/range, or a component-local "data" dict shadowing the global "data" file
+                 path string). Hugo's merge deep-merges nested maps, so layering the override
+                 over the global def would leak fields whose value is only meaningful for the
+                 old type — "default" and "config" (what value fills the gap when absent) and
+                 "options" (enum/range rules) — into the new one. Drop those three before
+                 merging; harmless metadata such as "comment" is still safe (and useful) to
+                 inherit. */}}
+            {{ $base := dict }}
+            {{ range $k, $v := $def }}
+                {{ if not (in (slice "default" "config" "options") $k) }}
+                    {{ $base = merge $base (dict $k $v) }}
+                {{ end }}
+            {{ end }}
+            {{ $def = merge $base $val }}
+        {{ else }}
+            {{ $def = merge $def $val }}
+        {{ end }}
     {{ else if and (ne $val nil) (not (reflect.IsSlice $val)) }}
         {{ $def = merge $def (dict "default" $val) }}
     {{ end }}
@@ -68,7 +88,11 @@
                 {{ $accepts = $accepts | append "string" }}
             {{ else if eq $type "bool" }}
                 {{ $accepts = $accepts | append "bool" }}
-            {{ else if in (slice "int" "int64") $type }}
+            {{ else if in (slice "int" "int8" "int16" "int32" "int64" "uint" "uint8" "uint16" "uint32" "uint64") $type }}
+                {{/* mirror inline/value-kind.html's "int" kind set: every one of these raw Go
+                     integer type names is used verbatim as a declared type somewhere in
+                     _arguments.yml (e.g. icon's 'uint64'), and legacy matched them via a plain
+                     printf "%T" comparison with no allowlist at all */}}
                 {{ $accepts = $accepts | append "int" }}
             {{ else if in (slice "float" "float64") $type }}
                 {{ $accepts = $accepts | append "float" "int" }}
@@ -82,9 +106,11 @@
             {{ else }}
                 {{ $shape := index $typesData $type }}
                 {{ if eq $shape nil }}
-                    {{ if strings.Contains $type "." }}
-                        {{/* package-qualified Go reflect-type name (e.g. template.HTML): pass through
-                             verbatim for a printf "%T" match at validation time, as legacy did */}}
+                    {{/* opaque Go reflect-type name (e.g. template.HTML, []string, *source.File,
+                         map[string]interface {}): pass through verbatim for a printf "%T" match at
+                         validation time, as legacy did. A plain bareword (no dot/bracket/asterisk)
+                         is never a valid Go type expression, so it is a genuine unknown-type error. */}}
+                    {{ if or (strings.Contains $type ".") (strings.Contains $type "[") (strings.Contains $type "*") }}
                         {{ $reflects = $reflects | append $type }}
                     {{ else }}
                         {{ $errmsg = $errmsg | append (printf "schema: unknown type '%s' for '%s'" $type $path) }}

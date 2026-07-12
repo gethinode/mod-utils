@@ -2,12 +2,9 @@
   "default-arg-collision": {
     "args": {
       "args": {
-        "default": "user-value",
-        "plain": "false"
+        "default": "user-value"
       },
-      "defaulted": [
-        "plain"
-      ],
+      "defaulted": [],
       "err": false,
       "errmsg": [],
       "warnmsg": []

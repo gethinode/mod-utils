@@ -12,14 +12,22 @@
     "initargs": {
       "default": [
         "link_type",
+        "show_more",
         "width"
       ],
       "err": false,
       "errmsg": [],
       "heading": {
-        "title": "Hello"
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
+      "linkType": "button",
       "link_type": "button",
+      "showMore": false,
+      "show_more": false,
       "warnmsg": [],
       "width": 8
     }
@@ -53,16 +61,11 @@
       "warnmsg": []
     },
     "initargs": {
-      "_bookshop_name": "test-hero",
       "default": [],
       "err": true,
       "errmsg": [
         "[test-hero] argument 'width': value '0' out of range [1, 12]"
       ],
-      "heading": {
-        "title": "Hello"
-      },
-      "show_more": false,
       "warnmsg": []
     }
   },
@@ -96,20 +99,27 @@
       "warnmsg": []
     },
     "initargs": {
+      "_bookshopName": "test-hero",
       "_bookshop_name": "test-hero",
       "_ordinal": 0,
       "default": [
         "link_type",
+        "show_more",
         "width"
       ],
       "err": false,
       "errmsg": [],
       "heading": {
-        "align": null,
-        "title": "Hello"
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
+      "linkType": "button",
       "link_type": "button",
-      "show_more": null,
+      "showMore": false,
+      "show_more": false,
       "warnmsg": [],
       "width": 8
     }
@@ -144,17 +154,22 @@
     },
     "initargs": {
       "default": [
-        "link_type",
+        "show_more",
         "width"
       ],
       "err": false,
       "errmsg": [],
       "heading": {
-        "title": "Hello"
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
-      "link-type": "link",
       "linkType": "link",
-      "link_type": "button",
+      "link_type": "link",
+      "showMore": false,
+      "show_more": false,
       "warnmsg": [
         "[test-hero] argument 'link-type': prefer snake_case 'link_type'"
       ],
@@ -188,6 +203,7 @@
       "warnmsg": []
     },
     "initargs": {
+      "_bookshopName": "test-hero",
       "_bookshop_name": "test-hero",
       "default": [
         "width"
@@ -195,9 +211,15 @@
       "err": false,
       "errmsg": [],
       "heading": {
-        "title": "Hello"
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
       },
+      "linkType": "link",
       "link_type": "link",
+      "showMore": true,
       "show_more": true,
       "warnmsg": [],
       "width": 8

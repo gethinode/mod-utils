@@ -33,9 +33,11 @@
       "default": [],
       "err": false,
       "errmsg": [],
-      "ratio-value": 0,
-      "ratioValue": 0,
-      "warnmsg": []
+      "ratio-value": "",
+      "ratioValue": "",
+      "warnmsg": [
+        "[test-cast] argument 'ratio-value': expected type 'float', got 'string' with value ''"
+      ]
     }
   },
   "falsy-wrong-type-skips-validation": {
@@ -55,7 +57,9 @@
       "default": [],
       "err": false,
       "errmsg": [],
-      "warnmsg": []
+      "warnmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'bool' with value 'false'"
+      ]
     }
   },
   "generic-dict-as-map": {
@@ -71,11 +75,12 @@
       "warnmsg": []
     },
     "initargs": {
+      "data": {
+        "anything": "goes"
+      },
       "default": [],
-      "err": true,
-      "errmsg": [
-        "[test-cast] argument 'data': expected type 'dict, []map[string]interface {}', got 'map[string]interface {}' with value 'map[anything:goes]'"
-      ],
+      "err": false,
+      "errmsg": [],
       "warnmsg": []
     }
   },
@@ -94,11 +99,14 @@
       "warnmsg": []
     },
     "initargs": {
-      "default": [],
-      "err": true,
-      "errmsg": [
-        "[test-cast] argument 'data': expected type 'dict, []map[string]interface {}', got '[]interface {}' with value '[map[anything:goes]]'"
+      "data": [
+        {
+          "anything": "goes"
+        }
       ],
+      "default": [],
+      "err": false,
+      "errmsg": [],
       "warnmsg": []
     }
   },
@@ -145,10 +153,9 @@
     },
     "initargs": {
       "default": [],
-      "err": true,
-      "errmsg": [
-        "[test-cast] argument 'label': expected type 'string', got 'uint64' with value '7'"
-      ],
+      "err": false,
+      "errmsg": [],
+      "label": "7",
       "warnmsg": []
     }
   },
