@@ -13,7 +13,13 @@ cases:
       heading:
         title: Hello
       link-type: link
-  # CloudCannon-shaped: every blueprint key present, untouched fields null, implicit args set
+  # CloudCannon-shaped: every blueprint key present, untouched fields null, implicit args set.
+  # Golden shows err: false — nulls are tolerated today and MUST stay tolerated.
+  # Defaults for null keys: link_type ('button') and width (8) ARE applied
+  # (default: [link_type, width]); show_more's blueprint default (false) is NOT
+  # applied and stays null — legacy InitArgs checks `or $def.config $def.default`,
+  # and a false default is falsy, so false defaults are never applied.
+  # heading.align stays null (nested members of a provided map are never defaulted).
   - name: cloudcannon-null-heavy
     bookshop: test-hero
     args:
