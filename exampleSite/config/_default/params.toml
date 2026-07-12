@@ -1,0 +1,17 @@
+[main.padding]
+    x = 4
+    y = 4
+    [main.padding.mobile]
+        x = 2
+
+# Test fixture for the padding-classes test page (not a real section)
+[zerotest.padding]
+    x = 4
+    y = 4
+    [zerotest.padding.mobile]
+        x = 0
+
+# Test fixture for the padding-classes test page (not a real section)
+[fallbacktest.padding]
+    x = 3
+    y = 3
