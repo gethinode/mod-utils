@@ -1,0 +1,18 @@
+cases:
+  # BUG: the canonical's explicit false is expected to survive, but the deprecated
+  # twin (unset) inherits a default and overwrites it once the twin sorts after the
+  # canonical (underscore > hyphen) in the schema loop.
+  - name: explicit-false-on-canonical
+    structure: test-twin
+    args: {flag-a: "false", show-preview: "false"}
+  - name: unset-uses-canonical-default
+    structure: test-twin
+    args: {}
+  - name: explicit-value-on-deprecated-twin
+    structure: test-twin
+    args: {flag_a: "false", show_preview: "false"}
+  # BUG: both spellings provided; the canonical's explicit false must win over the
+  # deprecated twin's explicit true, regardless of iteration order.
+  - name: both-spellings-provided
+    structure: test-twin
+    args: {flag-a: "false", flag_a: "true", show-preview: "false", show_preview: "true"}
