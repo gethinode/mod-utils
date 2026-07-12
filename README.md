@@ -132,6 +132,24 @@ This is distinct from a value the caller *explicitly* provided as `false`, `0`, 
 (every blueprint key present, typically `null`, plus `_bookshop_name`/`_ordinal`) build clean
 while a genuinely wrong explicit value is still caught.
 
+### Deprecated arguments and camelKey collisions
+
+A deprecated argument (e.g. a legacy snake_case twin of a kebab-case canonical, such as
+`show_preview` next to `show-preview`) is compiled by `ArgsSchema.html` without a `default` or
+`config` — even when the canonical argument it replaces carries one in the global
+`_arguments.yml` definition. A deprecated alias exists only to accept an explicit legacy value
+and emit a warning; defaults belong solely to the canonical replacement. This keeps an unset
+deprecated twin out of the `defaulted` list entirely.
+
+Because hyphens and underscores both camelize to the same key (`show-preview` and `show_preview`
+both become `showPreview`), `Args.html` can visit the same output entry more than once while
+walking the schema. The merge follows a fixed precedence lattice rather than relying on
+iteration order: a caller-provided value on the canonical argument always wins, followed by a
+caller-provided value on the deprecated twin, followed by a defaulted value. A defaulted value
+never overwrites an existing entry, and a value provided through a deprecated argument never
+overwrites a value already provided through its canonical replacement — regardless of which one
+the schema loop happens to visit first.
+
 ### Warnings-first strictness rollout
 
 The following newly detectable problem classes surface as **warnings** (`warnmsg`, `err: false`)

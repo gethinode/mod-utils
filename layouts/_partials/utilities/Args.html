@@ -343,19 +343,42 @@
         {{ end }}
     {{ end }}
 
-    {{/* validate every schema argument and enforce required ones */}}
+    {{/* validate every schema argument and enforce required ones.
+
+         Two or more declared names (e.g. a kebab-case canonical and its deprecated snake_case
+         twin) can camelize to the same camelKey, so the schema loop below can visit the same
+         $out entry more than once. Map iteration order is sorted by key, which is NOT a
+         reliable precedence signal (it's an accident of "-" < "_" in ASCII) — so track, per
+         camelKey, whether the current entry came from a caller-provided value in $providedKeys
+         and merge under this lattice:
+           - provided-canonical  > provided-deprecated  > defaulted
+           - a defaulted value never overwrites an existing entry (provided or defaulted)
+           - a provided value overwrites a defaulted entry
+           - a provided value from a deprecated node never overwrites an existing provided entry
+             (so a provided canonical always beats a provided deprecated twin, whichever of the
+             two is visited first) */}}
+    {{ $providedKeys := dict }}
     {{ range $key, $node := $schema }}
         {{ $isProvided := isset $normalized $key }}
         {{ $val := index $normalized $key }}
+        {{ $wasProvided := and $isProvided (ne $val nil) }}
         {{ $res := partial "inline/validate-node.html" (dict
             "value" $val "node" $node "path" $key "name" $name
-            "depth" 0 "provided" (and $isProvided (ne $val nil))) }}
+            "depth" 0 "provided" $wasProvided) }}
         {{ range $res.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
         {{ range $res.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
         {{ range $res.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
         {{ range $res.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
         {{ if ne $res.value nil }}
-            {{ $out = merge $out (dict $node.camelKey $res.value) }}
+            {{ $alreadyProvided := index $providedKeys $node.camelKey }}
+            {{ if $wasProvided }}
+                {{ if or (not $alreadyProvided) (not $node.deprecated) }}
+                    {{ $out = merge $out (dict $node.camelKey $res.value) }}
+                    {{ $providedKeys = merge $providedKeys (dict $node.camelKey true) }}
+                {{ end }}
+            {{ else if not $alreadyProvided }}
+                {{ $out = merge $out (dict $node.camelKey $res.value) }}
+            {{ end }}
         {{ end }}
 
         {{ $skip := false }}
