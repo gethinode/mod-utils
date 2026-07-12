@@ -1,0 +1,33 @@
+{
+  "both-positions": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "kind": "beta",
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "excess-position-errors": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [
+        "[test-required] unsupported argument at index 2 (value: 'gamma')"
+      ],
+      "kind": "beta",
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "first-position-only": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  }
+}

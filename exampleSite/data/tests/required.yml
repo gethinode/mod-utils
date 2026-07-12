@@ -1,0 +1,25 @@
+cases:
+  - name: required-provided
+    structure: test-required
+    group: shortcode
+    args: {name: alpha}
+  - name: required-missing-errors
+    structure: test-required
+    group: shortcode
+    args: {flag: true}
+  - name: group-filter-skips-partial-arg
+    structure: test-required
+    group: shortcode
+    args: {name: alpha}
+  - name: group-partial-requires-both
+    structure: test-required
+    group: partial
+    args: {name: alpha}
+  - name: no-group-requires-all
+    structure: test-required
+    args: {name: alpha}
+  # BUG(6): two problems, only the first reported (break on first error)
+  - name: first-error-wins
+    structure: test-required
+    group: shortcode
+    args: {bogus-one: 1, bogus-two: 2}

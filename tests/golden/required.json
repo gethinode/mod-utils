@@ -1,0 +1,63 @@
+{
+  "first-error-wins": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] unsupported argument 'bogus-one'"
+      ],
+      "warnmsg": []
+    }
+  },
+  "group-filter-skips-partial-arg": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "group-partial-requires-both": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'partial-only': expected value"
+      ],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "no-group-requires-all": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'partial-only': expected value"
+      ],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "required-missing-errors": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'name': expected value"
+      ],
+      "flag": true,
+      "warnmsg": []
+    }
+  },
+  "required-provided": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  }
+}
