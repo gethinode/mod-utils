@@ -1,0 +1,110 @@
+{
+  "absent-udt-shape-fill": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": null,
+        "arrangement": null,
+        "size": null,
+        "width": null
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "depth-three-nesting": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": null,
+        "arrangement": null,
+        "size": null,
+        "width": null
+      },
+      "locations": [
+        {
+          "instructions": [
+            {
+              "description": "Use lot B",
+              "title": "Parking"
+            }
+          ],
+          "title": "Office"
+        }
+      ],
+      "warnmsg": []
+    }
+  },
+  "heading-valid": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "center",
+        "title": "Hello"
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "nested-null-members": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": null,
+        "preheading": null,
+        "title": "Hello"
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "nested-unknown-key-passes": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "title": "Hello",
+        "typo-key": "oops"
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "nested-wrong-type-passes": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": 42,
+        "title": "Hello"
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "udt-list-empty": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": null,
+        "arrangement": null,
+        "size": null,
+        "width": null
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  }
+}

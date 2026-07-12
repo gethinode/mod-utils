@@ -1,0 +1,47 @@
+cases:
+  # BUG(1): heading omitted → members with defaults get keys but the PARENT's (nil) default
+  # as value. Verified live: {"align": null, "arrangement": null, "size": null, "width": null}
+  # even though _arguments.yml gives align default 'start' and width default 8.
+  - name: absent-udt-shape-fill
+    structure: test-nested
+    args: {}
+  - name: heading-valid
+    structure: test-nested
+    args:
+      heading:
+        title: Hello
+        align: center
+  # BUG(2): nested member type violations pass silently (align expects a select string)
+  - name: nested-wrong-type-passes
+    structure: test-nested
+    args:
+      heading:
+        title: Hello
+        align: 42
+  # BUG(2): unknown nested members pass silently
+  - name: nested-unknown-key-passes
+    structure: test-nested
+    args:
+      heading:
+        title: Hello
+        typo-key: oops
+  - name: depth-three-nesting
+    structure: test-nested
+    args:
+      locations:
+        - title: Office
+          instructions:
+            - title: Parking
+              description: Use lot B
+  - name: udt-list-empty
+    structure: test-nested
+    args:
+      locations: []
+  # spec §1.3.3: null members are "not provided" — CloudCannon writes these
+  - name: nested-null-members
+    structure: test-nested
+    args:
+      heading:
+        title: Hello
+        preheading: null
+        align: null

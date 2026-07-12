@@ -1,0 +1,4 @@
+---
+title: child
+outputs: ["json"]
+---

@@ -1,0 +1,31 @@
+{
+  "child-args-cascade": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "hook": "custom-hook",
+      "title": "Stack",
+      "warnmsg": []
+    }
+  },
+  "child-default-stripped": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "title": "Stack",
+      "warnmsg": []
+    }
+  },
+  "child-non-parent-arg-rejected": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-stack] unsupported argument 'ignored-non-parent'"
+      ],
+      "warnmsg": []
+    }
+  }
+}

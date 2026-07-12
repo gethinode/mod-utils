@@ -1,0 +1,25 @@
+{
+  "params-typed-nested-map": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "center",
+        "title": "Hello"
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "params-typed-scalars": {
+    "initargs": {
+      "count": 42,
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag": true,
+      "warnmsg": []
+    }
+  }
+}
