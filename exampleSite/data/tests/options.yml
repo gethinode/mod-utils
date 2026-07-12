@@ -1,0 +1,19 @@
+cases:
+  - name: select-valid
+    structure: test-options
+    args: {mode: manual}
+  - name: select-invalid
+    structure: test-options
+    args: {mode: bogus}
+  - name: select-default
+    structure: test-options
+    args: {}
+  - name: range-inside
+    structure: test-options
+    args: {size: 5}
+  - name: range-below-min
+    structure: test-options
+    args: {size: 0}
+  - name: range-above-max
+    structure: test-options
+    args: {size: 11}

@@ -1,0 +1,14 @@
+comment: Test fixture for permitted values and numeric ranges.
+arguments:
+  mode:
+    type: select
+    optional: true
+    default: auto
+    options:
+      values: [auto, manual]
+  size:
+    type: int
+    optional: true
+    options:
+      min: 1
+      max: 10

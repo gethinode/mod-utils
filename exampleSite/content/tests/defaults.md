@@ -1,0 +1,4 @@
+---
+title: defaults
+outputs: ["json"]
+---

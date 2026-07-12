@@ -1,0 +1,45 @@
+cases:
+  - name: string-to-bool
+    structure: test-cast
+    args: {flag: "true"}
+  - name: string-to-int
+    structure: test-cast
+    args: {count: "42"}
+  - name: string-to-float
+    structure: test-cast
+    args: {ratio-value: "1.5"}
+  - name: int-to-string
+    structure: test-cast
+    args: {label: 7}
+  - name: bool-arg-real-bool
+    structure: test-cast
+    args: {flag: true}
+  # BUG(3): explicit false skips type validation entirely — a bool false into an int arg passes
+  - name: falsy-wrong-type-skips-validation
+    structure: test-cast
+    args: {count: false}
+  - name: wrong-type-errors
+    structure: test-cast
+    args: {count: "abc"}
+  # Latent quirk: type 'float' expects reflect name 'float', but real floats reflect as 'float64'
+  - name: real-float-value
+    structure: test-cast
+    args: {ratio-value: 1.5}
+  # Latent quirk: the legacy float regex matches the empty string
+  - name: empty-string-float
+    structure: test-cast
+    args: {ratio-value: ""}
+  - name: generic-dict-as-map
+    structure: test-cast
+    args:
+      data: {anything: goes}
+  # Legacy quirk kept on purpose: type 'dict' also accepts a slice of maps
+  - name: generic-dict-as-maplist
+    structure: test-cast
+    args:
+      data:
+        - anything: goes
+  - name: generic-slice
+    structure: test-cast
+    args:
+      items-list: [1, "two", true]

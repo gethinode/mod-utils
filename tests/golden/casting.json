@@ -1,0 +1,126 @@
+{
+  "bool-arg-real-bool": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag": true,
+      "warnmsg": []
+    }
+  },
+  "empty-string-float": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "ratio-value": 0,
+      "ratioValue": 0,
+      "warnmsg": []
+    }
+  },
+  "falsy-wrong-type-skips-validation": {
+    "initargs": {
+      "count": false,
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "generic-dict-as-map": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'data': expected type 'dict, []map[string]interface {}', got 'map[string]interface {}' with value 'map[anything:goes]'"
+      ],
+      "warnmsg": []
+    }
+  },
+  "generic-dict-as-maplist": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'data': expected type 'dict, []map[string]interface {}', got '[]interface {}' with value '[map[anything:goes]]'"
+      ],
+      "warnmsg": []
+    }
+  },
+  "generic-slice": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "items-list": [
+        1,
+        "two",
+        true
+      ],
+      "itemsList": [
+        1,
+        "two",
+        true
+      ],
+      "warnmsg": []
+    }
+  },
+  "int-to-string": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'label': expected type 'string', got 'uint64' with value '7'"
+      ],
+      "warnmsg": []
+    }
+  },
+  "real-float-value": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "ratio-value": 1.5,
+      "ratioValue": 1.5,
+      "warnmsg": []
+    }
+  },
+  "string-to-bool": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag": true,
+      "warnmsg": []
+    }
+  },
+  "string-to-float": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "ratio-value": 1.5,
+      "ratioValue": 1.5,
+      "warnmsg": []
+    }
+  },
+  "string-to-int": {
+    "initargs": {
+      "count": 42,
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "wrong-type-errors": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'string' with value 'abc'"
+      ],
+      "warnmsg": []
+    }
+  }
+}

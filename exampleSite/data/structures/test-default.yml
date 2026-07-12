@@ -1,0 +1,31 @@
+comment: Test fixture for static, config-based, and deprecated defaults.
+arguments:
+  static-label:
+    type: string
+    optional: true
+    default: fallback
+  from-config:
+    type: string
+    optional: true
+    config: test.label
+    default: static-fallback
+  from-config-true:
+    type: bool
+    optional: true
+    config: test.enabled
+    default: false
+  from-config-false:
+    type: bool
+    optional: true
+    config: test.disabled
+    default: true
+  from-config-missing:
+    type: string
+    optional: true
+    config: test.does-not-exist
+    default: static-fallback
+  legacy-arg:
+    type: string
+    optional: true
+    deprecated: 1.2.0
+    alternative: static-label

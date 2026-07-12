@@ -1,0 +1,69 @@
+{
+  "range-above-max": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'size': value '11' out of range [1, 10]"
+      ],
+      "warnmsg": []
+    }
+  },
+  "range-below-min": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'size': value '0' out of range [1, 10]"
+      ],
+      "warnmsg": []
+    }
+  },
+  "range-inside": {
+    "initargs": {
+      "default": [
+        "mode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "mode": "auto",
+      "size": 5,
+      "warnmsg": []
+    }
+  },
+  "select-default": {
+    "initargs": {
+      "default": [
+        "mode",
+        "size"
+      ],
+      "err": false,
+      "errmsg": [],
+      "mode": "auto",
+      "size": 4,
+      "warnmsg": []
+    }
+  },
+  "select-invalid": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'mode': unexpected value 'bogus'"
+      ],
+      "warnmsg": []
+    }
+  },
+  "select-valid": {
+    "initargs": {
+      "default": [
+        "size"
+      ],
+      "err": false,
+      "errmsg": [],
+      "mode": "manual",
+      "size": 4,
+      "warnmsg": []
+    }
+  }
+}

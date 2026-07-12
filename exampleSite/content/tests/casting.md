@@ -1,0 +1,4 @@
+---
+title: casting
+outputs: ["json"]
+---
