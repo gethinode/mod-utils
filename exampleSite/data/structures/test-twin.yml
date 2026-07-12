@@ -1,0 +1,23 @@
+comment: >-
+  Test fixture for the deprecated snake_case twin vs. canonical kebab-case argument
+  camelKey collision: both names camelize to the same key. 'flag-a'/'flag_a' is a fully
+  inline-declared pair (no global argument definition involved). 'show-preview'/'show_preview'
+  mirrors the real-world shape: the canonical argument inherits its type and default from the
+  module's global _arguments.yml, and the deprecated twin inherits the SAME global definition
+  via ArgsSchema's snake->kebab normKey lookup.
+arguments:
+  flag-a:
+    type: bool
+    optional: true
+    default: true
+  flag_a:
+    type: bool
+    optional: true
+    deprecated: 1.0.0
+    alternative: flag-a
+  show-preview:
+    optional: true
+  show_preview:
+    optional: true
+    deprecated: 1.0.0
+    alternative: show-preview

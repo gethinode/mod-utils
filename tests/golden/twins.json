@@ -1,0 +1,122 @@
+{
+  "both-spellings-provided": {
+    "args": {
+      "args": {
+        "flagA": false,
+        "showPreview": false
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": [
+        "[test-twin] argument 'flag_a': deprecated in v1.0.0, use 'flag-a' instead",
+        "[test-twin] argument 'show_preview': deprecated in v1.0.0, use 'show-preview' instead"
+      ]
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag-a": false,
+      "flagA": false,
+      "flag_a": false,
+      "show-preview": false,
+      "showPreview": false,
+      "show_preview": false,
+      "warnmsg": [
+        "[test-twin] argument 'flag_a': deprecated in v1.0.0, use 'flag-a' instead",
+        "[test-twin] argument 'show_preview': deprecated in v1.0.0, use 'show-preview' instead"
+      ]
+    }
+  },
+  "explicit-false-on-canonical": {
+    "args": {
+      "args": {
+        "flagA": false,
+        "showPreview": false
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag-a": false,
+      "flagA": false,
+      "flag_a": false,
+      "show-preview": false,
+      "showPreview": false,
+      "show_preview": false,
+      "warnmsg": []
+    }
+  },
+  "explicit-value-on-deprecated-twin": {
+    "args": {
+      "args": {
+        "flagA": false,
+        "showPreview": false
+      },
+      "defaulted": [
+        "flag-a",
+        "show-preview"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": [
+        "[test-twin] argument 'flag_a': deprecated in v1.0.0, use 'flag-a' instead",
+        "[test-twin] argument 'show_preview': deprecated in v1.0.0, use 'show-preview' instead"
+      ]
+    },
+    "initargs": {
+      "default": [
+        "flag-a",
+        "show-preview"
+      ],
+      "err": false,
+      "errmsg": [],
+      "flag-a": false,
+      "flagA": false,
+      "flag_a": false,
+      "show-preview": false,
+      "showPreview": false,
+      "show_preview": false,
+      "warnmsg": [
+        "[test-twin] argument 'flag_a': deprecated in v1.0.0, use 'flag-a' instead",
+        "[test-twin] argument 'show_preview': deprecated in v1.0.0, use 'show-preview' instead"
+      ]
+    }
+  },
+  "unset-uses-canonical-default": {
+    "args": {
+      "args": {
+        "flagA": true,
+        "showPreview": true
+      },
+      "defaulted": [
+        "flag-a",
+        "show-preview"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "flag-a",
+        "show-preview"
+      ],
+      "err": false,
+      "errmsg": [],
+      "flag-a": true,
+      "flagA": true,
+      "flag_a": true,
+      "show-preview": true,
+      "showPreview": true,
+      "show_preview": true,
+      "warnmsg": []
+    }
+  }
+}

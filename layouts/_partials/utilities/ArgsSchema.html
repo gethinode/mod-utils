@@ -12,6 +12,13 @@
     "reflects" field: a []string of raw package-qualified Go reflect-type names (e.g.
     "template.HTML") declared in the data files, matched verbatim against printf "%T" at
     validation time.
+
+    A node carrying "deprecated" never stores "default" or "config", regardless of whether that
+    default/config would have come from the global _arguments.yml definition (via the snake->kebab
+    normKey lookup) or from an inline override in the structure file. A deprecated alias exists
+    only to accept an explicit legacy value and warn the caller; defaults belong solely to the
+    canonical replacement argument. This also keeps a deprecated twin out of Args.html's
+    "defaulted" list when the caller leaves it unset.
 */}}
 
 {{ define "_partials/inline/camel-key.html" }}
@@ -162,8 +169,13 @@
         }}
         {{ if $children }}{{ $node = merge $node (dict "children" $children "udtType" $udtType) }}{{ end }}
         {{ if $reflects }}{{ $node = merge $node (dict "reflects" $reflects) }}{{ end }}
-        {{ if ne $def.default nil }}{{ $node = merge $node (dict "default" $def.default) }}{{ end }}
-        {{ with $def.config }}{{ $node = merge $node (dict "config" .) }}{{ end }}
+        {{/* a deprecated argument never carries a default or a config lookup — see the header
+             doc. This applies whether "default"/"config" were inherited from the global
+             definition via the normKey lookup above or declared inline on this node. */}}
+        {{ if not $def.deprecated }}
+            {{ if ne $def.default nil }}{{ $node = merge $node (dict "default" $def.default) }}{{ end }}
+            {{ with $def.config }}{{ $node = merge $node (dict "config" .) }}{{ end }}
+        {{ end }}
         {{ with $def.options }}{{ $node = merge $node (dict "options" .) }}{{ end }}
         {{ if isset $def "position" }}{{ $node = merge $node (dict "position" $def.position) }}{{ end }}
         {{ with $def.group }}{{ $node = merge $node (dict "group" (slice | append .)) }}{{ end }}
