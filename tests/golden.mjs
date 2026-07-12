@@ -9,6 +9,10 @@ const generatedRoot = path.join('exampleSite', 'public', 'tests');
 const goldenRoot = path.join('tests', 'golden');
 const update = process.argv.includes('--update');
 
+// Normalize line endings so a CRLF checkout (e.g. git autocrlf on Windows) compares equal to
+// Hugo's LF output; .gitattributes pins the goldens to LF, this is the defensive second layer.
+const normalize = (s) => s.replaceAll('\r\n', '\n');
+
 const groups = readdirSync(generatedRoot, {withFileTypes: true})
 	.filter((entry) => entry.isDirectory()
 		&& existsSync(path.join(generatedRoot, entry.name, 'index.json')))
@@ -22,7 +26,7 @@ if (groups.length === 0) {
 let failed = false;
 const seen = new Set();
 for (const group of groups) {
-	const generated = readFileSync(path.join(generatedRoot, group, 'index.json'), 'utf8');
+	const generated = normalize(readFileSync(path.join(generatedRoot, group, 'index.json'), 'utf8'));
 	const goldenFile = path.join(goldenRoot, `${group}.json`);
 	seen.add(`${group}.json`);
 	if (update) {
@@ -38,7 +42,7 @@ for (const group of groups) {
 		continue;
 	}
 
-	const golden = readFileSync(goldenFile, 'utf8');
+	const golden = normalize(readFileSync(goldenFile, 'utf8'));
 	if (golden !== generated) {
 		failed = true;
 		console.error(`DIFF in group '${group}' (golden vs generated):`);
