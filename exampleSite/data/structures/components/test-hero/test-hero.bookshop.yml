@@ -1,0 +1,14 @@
+spec:
+  structures:
+    - content_blocks
+  label: Test hero
+  description: Bookshop fixture for schema derivation tests
+  icon: title
+  tags: []
+blueprint:
+  heading:
+    title:
+    align: start
+  link_type: button
+  show_more: false
+  width: 8

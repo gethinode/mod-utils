@@ -1,0 +1,47 @@
+cases:
+  - name: snake-case-args
+    bookshop: test-hero
+    args:
+      _bookshop_name: test-hero
+      heading:
+        title: Hello
+      link_type: link
+      show_more: true
+  - name: kebab-case-warns
+    bookshop: test-hero
+    args:
+      heading:
+        title: Hello
+      link-type: link
+  # CloudCannon-shaped: every blueprint key present, untouched fields null, implicit args set
+  - name: cloudcannon-null-heavy
+    bookshop: test-hero
+    args:
+      _bookshop_name: test-hero
+      _ordinal: 0
+      heading:
+        title: Hello
+        align: null
+      link_type: null
+      show_more: null
+      width: null
+  # explicit falsy values are NOT null — pin the distinction (spec §1.3.3)
+  - name: cloudcannon-explicit-false
+    bookshop: test-hero
+    args:
+      _bookshop_name: test-hero
+      heading:
+        title: Hello
+      show_more: false
+      width: 0
+  - name: bookshop-prefix-via-structure
+    structure: bookshop-test-hero
+    args:
+      heading:
+        title: Hello
+  - name: unknown-bookshop-arg
+    bookshop: test-hero
+    args:
+      heading:
+        title: Hello
+      bogus: nope

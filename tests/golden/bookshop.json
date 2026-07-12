@@ -1,0 +1,100 @@
+{
+  "bookshop-prefix-via-structure": {
+    "initargs": {
+      "default": [
+        "link_type",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "title": "Hello"
+      },
+      "link_type": "button",
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "cloudcannon-explicit-false": {
+    "initargs": {
+      "_bookshop_name": "test-hero",
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-hero] argument 'width': value '0' out of range [1, 12]"
+      ],
+      "heading": {
+        "title": "Hello"
+      },
+      "show_more": false,
+      "warnmsg": []
+    }
+  },
+  "cloudcannon-null-heavy": {
+    "initargs": {
+      "_bookshop_name": "test-hero",
+      "_ordinal": 0,
+      "default": [
+        "link_type",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": null,
+        "title": "Hello"
+      },
+      "link_type": "button",
+      "show_more": null,
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "kebab-case-warns": {
+    "initargs": {
+      "default": [
+        "link_type",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "title": "Hello"
+      },
+      "link-type": "link",
+      "linkType": "link",
+      "link_type": "button",
+      "warnmsg": [
+        "[test-hero] argument 'link-type': prefer snake_case 'link_type'"
+      ],
+      "width": 8
+    }
+  },
+  "snake-case-args": {
+    "initargs": {
+      "_bookshop_name": "test-hero",
+      "default": [
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "title": "Hello"
+      },
+      "link_type": "link",
+      "show_more": true,
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "unknown-bookshop-arg": {
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-hero] unsupported argument 'bogus'"
+      ],
+      "warnmsg": []
+    }
+  }
+}
