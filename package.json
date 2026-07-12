@@ -23,7 +23,9 @@
     "mod:tidy": "hugo mod tidy",
     "mod:vendor": "rimraf _vendor && hugo mod vendor",
     "prepare": "node .husky/install.mjs",
-    "test": "pnpm build"
+    "pretest": "pnpm clean && pnpm mod:vendor",
+    "test": "hugo -s exampleSite && node tests/golden.mjs",
+    "test:update": "pnpm clean && pnpm mod:vendor && hugo -s exampleSite && node tests/golden.mjs --update"
   },
   "repository": {
     "type": "git",

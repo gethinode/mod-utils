@@ -1,0 +1,10 @@
+comment: >-
+  Test fixture demonstrating the envelope namespace collision: an argument named
+  'default' shares the return map with the bookkeeping 'default' slice.
+arguments:
+  default:
+    type: string
+    optional: true
+  plain:
+    type: string
+    optional: true

@@ -12,3 +12,6 @@ title = 'Test site for mod-utils'
   [[module.imports.mounts]]
     source = "layouts"
     target = "layouts"
+  [[module.imports.mounts]]
+    source = "data"
+    target = "data"

@@ -1,0 +1,19 @@
+{
+  "default-arg-collision": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "plain-arg": {
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "plain": "hello",
+      "warnmsg": []
+    }
+  }
+}
