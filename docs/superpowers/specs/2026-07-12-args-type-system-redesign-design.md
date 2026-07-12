@@ -73,7 +73,36 @@ Three consumers share the YAML contract and must stay coherent:
   Bookshop blueprints) to render argument tables.
 - **Bookshop / CloudCannon tooling** — component blueprints (`*.bookshop.yml`),
   sidecar augmentation files, snake_case/kebab-case key normalization, and the
-  `_bookshop_name` / `_ordinal` / `id` implicit arguments.
+  `_bookshop_name` / `_ordinal` / `id` implicit arguments. See §1.3 for the
+  specific compatibility constraints.
+
+### 1.3 CloudCannon / Bookshop compatibility constraints
+
+Traced through `setup-cloudcannon-cms`, mod-blocks, and mod-bookshop(-hugo):
+
+1. **Blueprint is the editor contract.** CloudCannon's visual editor derives each
+   component's shape from `.bookshop.yml`: `spec.structures: [content_blocks]`
+   registers the component in the structure picker; `blueprint` (snake_case keys,
+   nested defaults) defines the frontmatter the editor writes. `ArgsSchema` must
+   keep deriving Bookshop schemas from blueprint + sidecar exactly as `InitTypes`
+   does today (no YAML change — already a non-goal).
+2. **The argument system executes inside CloudCannon's live-editing sandbox.**
+   The `expose` command of setup-cloudcannon-cms compiles glob lists (e.g.
+   `_vendor/github.com/gethinode/<module>/data/structures/*.yml`,
+   `…/layouts/**/*.html`) into `bookshop.config.cjs`, which `@bookshop/generate`
+   uses to make those files available to the browser-side live renderer. Design
+   rule: **all new partials live in `layouts/_partials/utilities/` (same directory
+   as `InitArgs.html`) and no new data directories are introduced**, so existing
+   site expose configurations keep matching without changes.
+3. **CloudCannon-authored content is null-heavy.** The editor writes every
+   blueprint key, typically null for untouched fields, plus `_bookshop_name` and
+   `_ordinal`. The validator must treat null as "not provided" (eligible for
+   defaults, exempt from type errors) at **every** nesting level. This is distinct
+   from explicitly provided `false`/`0`/`""`, which the strictness fix (defect 3)
+   makes subject to validation. Golden cases must pin both behaviors separately.
+4. **`child` structures are load-bearing** — mod-bookshop(-hugo) partials
+   (`stack.html`, `card-group.html`) call `InitArgs` with `"child" "card"`; this
+   path gets first-class coverage in the harness.
 
 ## 2. Decisions (agreed with maintainer)
 
@@ -245,6 +274,11 @@ inputs testable with golden files.
 
   Groups: `defaults`, `casting`, `options`, `positional`, `required`, `nesting`,
   `bookshop`, `child`, `errors`, `warnings`, `envelope`.
+- **CloudCannon-shaped cases:** the `bookshop` group includes payloads as the
+  CloudCannon editor writes them — every blueprint key present with null values,
+  snake_case keys, `_bookshop_name`/`_ordinal` included — plus contrasting cases
+  with explicit `false`/`0`/`""` values, pinning the null-vs-explicit distinction
+  of §1.3(3) at top level and nested levels.
 - **Test structures:** dedicated fixtures under `exampleSite/data/structures/`
   (`test-*.yml` plus supporting `_types` entries) so tests do not depend on
   production structure files.
@@ -267,7 +301,7 @@ inputs testable with golden files.
 | 0 | Golden harness + characterization suite for current `InitArgs`/`InitTypes` | Goldens reviewed; CI green |
 | 1 | `ArgsSchema.html` compiler (cached) + compile-error tests | Schema snapshots for representative structures match expectations |
 | 2 | `inline/validate.html` + `utilities/Args.html` + strict-mode goldens | New-API suite green; old suite untouched |
-| 3 | Rewire `InitArgs`/`InitTypes` as shims; flip goldens for intentional fixes (defects 1–6); warnings-first strictness | Hinode + mod-blocks exampleSites build without new errors; diff of emitted warnings reviewed |
+| 3 | Rewire `InitArgs`/`InitTypes` as shims; flip goldens for intentional fixes (defects 1–6); warnings-first strictness | Hinode exampleSite builds without new errors; diff of emitted warnings reviewed. (mod-blocks' exampleSite is a single placeholder page with zero components — no signal; CloudCannon-shaped coverage comes from the harness's bookshop fixtures instead. Follow-up: seed mod-blocks' exampleSite with representative block content.) |
 | 4 | Caching enabled and measured (`hugo --templateMetrics` before/after on Hinode exampleSite) | No behavior drift in goldens; measurable build-time improvement |
 | 5 (follow-up, separate effort) | Migrate Hinode v2 + first-party modules to `Args.html`; docs `args.md` consumes `ArgsSchema`; promote warnings to errors after one release cycle | Per-module PRs |
 
@@ -282,8 +316,17 @@ consistent with how mod-utils has rolled out stricter validation historically.
 
 - **Behavioral drift the goldens don't cover.** Mitigation: characterization suite
   is written *from the defect inventory and the full feature surface* (every branch
-  of the current code gets at least one case) before refactoring starts; Hinode and
-  mod-blocks exampleSites act as integration smoke tests in phase 3.
+  of the current code gets at least one case) before refactoring starts; the Hinode
+  exampleSite acts as the integration smoke test in phase 3 (mod-blocks' is an
+  empty placeholder and provides no signal until seeded — see phase 3 note).
+- **CloudCannon live-editing sandbox misses new files.** The live renderer only
+  sees files matched by each site's expose globs. Mitigation: design rule §1.3(2)
+  — new partials stay in `layouts/_partials/utilities/`, no new data directories —
+  so existing configurations keep matching. Verified manually on a
+  CloudCannon-connected site before the phase-3 release.
+- **CloudCannon null-heavy payloads hit the new strictness.** Mitigation: null is
+  "not provided" at every level by design (§1.3(3)); dedicated golden cases pin it,
+  and the warnings-first rollout would surface any miss before promotion.
 - **`partialCached` variant explosion.** Cache key is the `(structure, bookshop,
   child)` triple; the ecosystem has ~100s of structures, well within Hugo's cache
   comfort zone.
@@ -313,3 +356,7 @@ consistent with how mod-utils has rolled out stricter validation historically.
    through the shim path.
 6. No changes required to any YAML structure file, blueprint, or call site outside
    mod-utils.
+7. CloudCannon compatibility: bookshop golden cases cover editor-shaped payloads
+   (all-null blueprints, snake_case, implicit args) and the `child` structure path;
+   all new files respect the expose-glob placement rule (§1.3); live editing
+   verified manually on a CloudCannon-connected site before the phase-3 release.
