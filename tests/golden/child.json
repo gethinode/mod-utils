@@ -1,5 +1,15 @@
 {
   "child-args-cascade": {
+    "args": {
+      "args": {
+        "hook": "custom-hook",
+        "title": "Stack"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -10,6 +20,15 @@
     }
   },
   "child-default-stripped": {
+    "args": {
+      "args": {
+        "title": "Stack"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -19,6 +38,15 @@
     }
   },
   "child-non-parent-arg-rejected": {
+    "args": {
+      "args": {},
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-stack] unsupported argument 'ignored-non-parent'"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,

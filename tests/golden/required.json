@@ -1,5 +1,16 @@
 {
   "first-error-wins": {
+    "args": {
+      "args": {},
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] unsupported argument 'bogus-one'",
+        "[test-required] unsupported argument 'bogus-two'",
+        "[test-required] argument 'name': expected value"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -10,6 +21,15 @@
     }
   },
   "group-filter-skips-partial-arg": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -19,6 +39,17 @@
     }
   },
   "group-partial-requires-both": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'partial-only': expected value"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -30,6 +61,17 @@
     }
   },
   "no-group-requires-all": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'partial-only': expected value"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -41,6 +83,17 @@
     }
   },
   "required-missing-errors": {
+    "args": {
+      "args": {
+        "flag": true
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] argument 'name': expected value"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -52,6 +105,15 @@
     }
   },
   "required-provided": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,

@@ -1,5 +1,17 @@
 {
   "default-arg-collision": {
+    "args": {
+      "args": {
+        "default": "user-value",
+        "plain": "false"
+      },
+      "defaulted": [
+        "plain"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -8,6 +20,15 @@
     }
   },
   "plain-arg": {
+    "args": {
+      "args": {
+        "plain": "hello"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,

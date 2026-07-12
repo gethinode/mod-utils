@@ -25,6 +25,8 @@
         {{- with $case.child }}{{ $params = merge $params (dict "child" .) }}{{ end -}}
         {{- with $case.group }}{{ $params = merge $params (dict "group" .) }}{{ end -}}
         {{- $entry = dict "initargs" (partial "utilities/InitArgs.html" $params) -}}
+        {{- $strict := partial "utilities/Args.html" (merge $params (dict "strict" true)) -}}
+        {{- $entry = merge $entry (dict "args" $strict) -}}
     {{- end -}}
     {{- $results = merge $results (dict $case.name $entry) -}}
 {{- end -}}

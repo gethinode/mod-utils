@@ -1,5 +1,19 @@
 {
   "range-above-max": {
+    "args": {
+      "args": {
+        "mode": "auto",
+        "size": 11
+      },
+      "defaulted": [
+        "mode"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'size': value '11' out of range [1, 10]"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -10,6 +24,20 @@
     }
   },
   "range-below-min": {
+    "args": {
+      "args": {
+        "mode": "auto",
+        "size": 0
+      },
+      "defaulted": [
+        "mode"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'size': value '0' out of range [1, 10]"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -20,6 +48,18 @@
     }
   },
   "range-inside": {
+    "args": {
+      "args": {
+        "mode": "auto",
+        "size": 5
+      },
+      "defaulted": [
+        "mode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [
         "mode"
@@ -32,6 +72,19 @@
     }
   },
   "select-default": {
+    "args": {
+      "args": {
+        "mode": "auto",
+        "size": 4
+      },
+      "defaulted": [
+        "mode",
+        "size"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [
         "mode",
@@ -45,6 +98,20 @@
     }
   },
   "select-invalid": {
+    "args": {
+      "args": {
+        "mode": "bogus",
+        "size": 4
+      },
+      "defaulted": [
+        "size"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-options] argument 'mode': unexpected value 'bogus'"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -55,6 +122,18 @@
     }
   },
   "select-valid": {
+    "args": {
+      "args": {
+        "mode": "manual",
+        "size": 4
+      },
+      "defaulted": [
+        "size"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [
         "size"

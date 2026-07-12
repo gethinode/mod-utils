@@ -1,5 +1,15 @@
 {
   "both-positions": {
+    "args": {
+      "args": {
+        "kind": "beta",
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -10,6 +20,18 @@
     }
   },
   "excess-position-errors": {
+    "args": {
+      "args": {
+        "kind": "beta",
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] unsupported argument at index 2 (value: 'gamma')"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -22,6 +44,15 @@
     }
   },
   "first-position-only": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,

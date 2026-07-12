@@ -1,0 +1,373 @@
+<!--
+    Copyright © 2026 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+-->
+
+{{/*
+    Validate and initialize arguments against a compiled schema (see utilities/ArgsSchema.html).
+    Returns a separated envelope: user values never share a namespace with bookkeeping keys.
+    Keys in "args" are camelCase (canonical); "defaulted" lists dotted paths of defaulted values.
+*/}}
+
+{{ define "_partials/inline/site-param.html" }}
+    {{/* isset-based site-parameter lookup: an explicit false/0 value is found and honored */}}
+    {{ $current := site.Params }}
+    {{ $found := true }}
+    {{ range $segment := split .path "." }}
+        {{ if and $found (reflect.IsMap $current) (isset $current $segment) }}
+            {{ $current = index $current $segment }}
+        {{ else }}
+            {{ $found = false }}
+        {{ end }}
+    {{ end }}
+    {{/* this Hugo/Go template version rejects a bare 'nil' as a pipeline command; a missing-key
+         map field access is the supported way to obtain a literal nil value */}}
+    {{ $none := dict }}
+    {{ if not $found }}{{ $current = $none.missing }}{{ end }}
+    {{ return (dict "found" $found "value" $current) }}
+{{ end }}
+
+{{ define "_partials/inline/value-kind.html" }}
+    {{/* map a value to its kind token: string, bool, int, float, map, slice, maplist, other */}}
+    {{ $value := . }}
+    {{ $type := printf "%T" $value }}
+    {{ $kind := "other" }}
+    {{ if eq $type "string" }}{{ $kind = "string" }}
+    {{ else if eq $type "bool" }}{{ $kind = "bool" }}
+    {{ else if in (slice "int" "int8" "int16" "int32" "int64" "uint" "uint8" "uint16" "uint32" "uint64") $type }}
+        {{ $kind = "int" }}
+    {{ else if in (slice "float32" "float64") $type }}{{ $kind = "float" }}
+    {{ else if reflect.IsMap $value }}{{ $kind = "map" }}
+    {{ else if reflect.IsSlice $value }}
+        {{ $kind = "slice" }}
+        {{ if gt (len $value) 0 }}
+            {{ $maps := true }}
+            {{ range $value }}{{ if not (reflect.IsMap .) }}{{ $maps = false }}{{ break }}{{ end }}{{ end }}
+            {{ if $maps }}{{ $kind = "maplist" }}{{ end }}
+        {{ end }}
+    {{ end }}
+    {{ return $kind }}
+{{ end }}
+
+{{ define "_partials/inline/validate-node.html" }}
+    {{/*
+        in:  value, node, path, name, depth (int), provided (bool)
+        out: dict "value" (with defaults and casts applied; nil when absent without default),
+             "errmsg" (errors in every mode), "newmsg" (newly detectable class: error when strict,
+             warning in legacy mode), "warnmsg", "defaulted" (dotted paths)
+
+        A node's "accepts" list matches on kind tokens; a node may also carry "reflects", a
+        []string of package-qualified Go reflect-type names (e.g. "template.HTML") matched
+        verbatim against printf "%T" of the value, for types that never reduce to a plain kind.
+    */}}
+    {{ $value := .value }}
+    {{ $node := .node }}
+    {{ $path := .path }}
+    {{ $name := .name }}
+    {{ $depth := .depth }}
+    {{ $provided := .provided }}
+    {{ $errmsg := slice }}
+    {{ $newmsg := slice }}
+    {{ $warnmsg := slice }}
+    {{ $defaulted := slice }}
+    {{ $outcome := dict }}
+
+    {{/* deprecation warning when the caller provided an actual value */}}
+    {{ if and $provided $node.deprecated }}
+        {{ $warn := printf "[%s] argument '%s': deprecated in v%s" $name $path (strings.TrimPrefix "v" $node.deprecated) }}
+        {{ with $node.alternative }}{{ $warn = printf "%s, use '%s' instead" $warn . }}{{ end }}
+        {{ $warnmsg = $warnmsg | append $warn }}
+    {{ end }}
+
+    {{/* default application: null/absent means "not provided" at every level */}}
+    {{ $absent := false }}
+    {{ if eq $value nil }}
+        {{ $resolved := false }}
+        {{ with $node.config }}
+            {{ $lookup := partial "inline/site-param.html" (dict "path" .) }}
+            {{ if $lookup.found }}{{ $value = $lookup.value }}{{ $resolved = true }}{{ end }}
+        {{ end }}
+        {{ if and (not $resolved) (isset $node "default") }}
+            {{ $value = $node.default }}
+            {{ $resolved = true }}
+        {{ end }}
+        {{ if $resolved }}
+            {{ $defaulted = $defaulted | append $path }}
+        {{ else if $node.children }}
+            {{/* fill the shape of an absent user-defined type so templates can chain safely */}}
+            {{ if eq $node.kind "list" }}
+                {{ $value = slice }}
+            {{ else }}
+                {{ $shape := dict }}
+                {{ range $member, $childNode := $node.children }}
+                    {{ $childRes := partial "inline/validate-node.html" (dict
+                        "value" nil "node" $childNode "path" (printf "%s.%s" $path $member)
+                        "name" $name "depth" (add $depth 1) "provided" false) }}
+                    {{ if ne $childRes.value nil }}
+                        {{ $shape = merge $shape (dict $member $childRes.value) }}
+                        {{ range $childRes.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+                    {{ end }}
+                {{ end }}
+                {{ if $shape }}{{ $value = $shape }}{{ end }}
+            {{ end }}
+        {{ end }}
+        {{ if eq $value nil }}
+            {{ $absent = true }}
+        {{ end }}
+    {{ end }}
+
+    {{ if $absent }}
+        {{ $outcome = dict "value" nil "errmsg" $errmsg "newmsg" $newmsg "warnmsg" $warnmsg "defaulted" $defaulted }}
+    {{ else }}
+        {{/* casting between strings and scalars */}}
+        {{ $kind := partial "inline/value-kind.html" $value }}
+        {{ if eq $kind "string" }}
+            {{ if and (in $node.accepts "bool") (in (slice "true" "false") $value) }}
+                {{ $value = eq $value "true" }}
+                {{ $kind = "bool" }}
+            {{ else if and (in $node.accepts "int") (findRE `^-?\d+$` $value) }}
+                {{ $value = int $value }}
+                {{ $kind = "int" }}
+            {{ else if and (in $node.accepts "float") (findRE `^-?(\d+\.\d+|\.\d+)$` $value) }}
+                {{ $value = float $value }}
+                {{ $kind = "float" }}
+            {{ end }}
+        {{ else if and (in $node.accepts "string") (in (slice "bool" "int" "float") $kind) (not (in $node.accepts $kind)) }}
+            {{ $value = string $value }}
+            {{ $kind = "string" }}
+        {{ end }}
+
+        {{/* type check: applies to every provided value, including explicit false, 0, and "" */}}
+        {{ $typeOk := or (in $node.accepts $kind) (in ($node.reflects | default slice) (printf "%T" $value)) }}
+        {{ if not $typeOk }}
+            {{ $msg := printf "[%s] argument '%s': expected type '%s', got '%s' with value '%v'"
+                $name $path (delimit $node.types ", ") (printf "%T" .value) $value }}
+            {{ if or (gt $depth 0) (not $value) }}
+                {{ $newmsg = $newmsg | append $msg }}
+            {{ else }}
+                {{ $errmsg = $errmsg | append $msg }}
+            {{ end }}
+            {{ $outcome = dict "value" $value "errmsg" $errmsg "newmsg" $newmsg "warnmsg" $warnmsg "defaulted" $defaulted }}
+        {{ else }}
+            {{/* permitted values and numeric ranges */}}
+            {{ if and (reflect.IsMap $node.options) $node.options.values (eq $kind "string") }}
+                {{ if not (in $node.options.values $value) }}
+                    {{ $msg := printf "[%s] argument '%s': unexpected value '%s'" $name $path $value }}
+                    {{ if or (gt $depth 0) (not $value) }}
+                        {{ $newmsg = $newmsg | append $msg }}
+                    {{ else }}
+                        {{ $errmsg = $errmsg | append $msg }}
+                    {{ end }}
+                {{ end }}
+            {{ else if and (reflect.IsMap $node.options)
+                (or (isset $node.options "min") (isset $node.options "max"))
+                (in (slice "int" "float") $kind) }}
+                {{ if or
+                    (and (isset $node.options "min") (lt $value $node.options.min))
+                    (and (isset $node.options "max") (gt $value $node.options.max)) }}
+                    {{ $min := string (or $node.options.min "-") }}
+                    {{ $max := string (or $node.options.max "-") }}
+                    {{ $msg := printf "[%s] argument '%s': value '%v' out of range [%s, %s]" $name $path $value $min $max }}
+                    {{ if or (gt $depth 0) (not $value) }}
+                        {{ $newmsg = $newmsg | append $msg }}
+                    {{ else }}
+                        {{ $errmsg = $errmsg | append $msg }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+
+            {{/* recursion into user-defined types */}}
+            {{ if and $node.children (eq $kind "map") }}
+                {{ $memberRes := partial "inline/validate-members.html" (dict
+                    "value" $value "node" $node "path" $path "name" $name "depth" $depth) }}
+                {{ $value = $memberRes.value }}
+                {{ range $memberRes.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+                {{ range $memberRes.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
+                {{ range $memberRes.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
+                {{ range $memberRes.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+            {{ else if and $node.children (in (slice "maplist" "slice") $kind) }}
+                {{ $elements := slice }}
+                {{ range $index, $element := $value }}
+                    {{ if reflect.IsMap $element }}
+                        {{ $memberRes := partial "inline/validate-members.html" (dict
+                            "value" $element "node" $node
+                            "path" (printf "%s[%d]" $path $index) "name" $name "depth" $depth) }}
+                        {{ $elements = $elements | append $memberRes.value }}
+                        {{ range $memberRes.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+                        {{ range $memberRes.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
+                        {{ range $memberRes.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
+                        {{ range $memberRes.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+                    {{ else }}
+                        {{ $newmsg = $newmsg | append (printf "[%s] argument '%s[%d]': expected map element, got '%T'" $name $path $index $element) }}
+                        {{ $elements = $elements | append $element }}
+                    {{ end }}
+                {{ end }}
+                {{ $value = $elements }}
+            {{ end }}
+
+            {{ $outcome = dict "value" $value "errmsg" $errmsg "newmsg" $newmsg "warnmsg" $warnmsg "defaulted" $defaulted }}
+        {{ end }}
+    {{ end }}
+
+    {{ return $outcome }}
+{{ end }}
+
+{{ define "_partials/inline/validate-members.html" }}
+    {{/* validate the members of one map value against node.children; fills member defaults */}}
+    {{ $value := .value }}
+    {{ $node := .node }}
+    {{ $path := .path }}
+    {{ $name := .name }}
+    {{ $depth := .depth }}
+    {{ $errmsg := slice }}
+    {{ $newmsg := slice }}
+    {{ $warnmsg := slice }}
+    {{ $defaulted := slice }}
+    {{ $out := dict }}
+
+    {{ range $memberKey, $memberVal := $value }}
+        {{ $childNode := index $node.children $memberKey }}
+        {{ $declaredKey := $memberKey }}
+        {{ if not $childNode }}
+            {{/* content uses snake_case (bookshop) while members are declared kebab-case, or vice versa */}}
+            {{ $match := findRESubmatch "^(_*)(.*)$" (string $memberKey) }}
+            {{ $body := index $match 0 2 }}
+            {{ $alt := print (index $match 0 1) (cond (strings.Contains $body "_") (replaceRE "_" "-" $body) (replaceRE "-" "_" $body)) }}
+            {{ with index $node.children $alt }}
+                {{ $childNode = . }}
+                {{ $declaredKey = $alt }}
+            {{ end }}
+        {{ end }}
+        {{ if not $childNode }}
+            {{ $newmsg = $newmsg | append (printf "[%s] argument '%s': unsupported attribute '%s'" $name $path $memberKey) }}
+            {{ $out = merge $out (dict (string $memberKey) $memberVal) }}
+        {{ else }}
+            {{ $childRes := partial "inline/validate-node.html" (dict
+                "value" $memberVal "node" $childNode
+                "path" (printf "%s.%s" $path $declaredKey)
+                "name" $name "depth" (add $depth 1)
+                "provided" (ne $memberVal nil)) }}
+            {{ range $childRes.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+            {{ range $childRes.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
+            {{ range $childRes.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
+            {{ range $childRes.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+            {{ if ne $childRes.value nil }}
+                {{ $out = merge $out (dict $declaredKey $childRes.value) }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{/* fill defaults for members the caller omitted entirely */}}
+    {{ range $memberKey, $childNode := $node.children }}
+        {{ $snake := replaceRE "-" "_" $memberKey }}
+        {{ if and (not (isset $out $memberKey)) (not (isset $value $memberKey)) (not (isset $value $snake)) }}
+            {{ $childRes := partial "inline/validate-node.html" (dict
+                "value" nil "node" $childNode
+                "path" (printf "%s.%s" $path $memberKey)
+                "name" $name "depth" (add $depth 1) "provided" false) }}
+            {{ if ne $childRes.value nil }}
+                {{ $out = merge $out (dict $memberKey $childRes.value) }}
+                {{ range $childRes.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{ return (dict "value" $out "errmsg" $errmsg "newmsg" $newmsg "warnmsg" $warnmsg "defaulted" $defaulted) }}
+{{ end }}
+
+{{/* main body */}}
+{{ $structure := .structure }}
+{{ $bookshop := .bookshop }}
+{{ $child := .child }}
+{{ $named := .named | default true }}
+{{ $args := .args | default dict }}
+{{ $group := .group }}
+{{ $strict := ne .strict false }}
+
+{{ $errmsg := slice }}
+{{ $newmsg := slice }}
+{{ $warnmsg := slice }}
+{{ $defaulted := slice }}
+{{ $out := dict }}
+{{ $name := or $structure $bookshop }}
+
+{{ $compiled := partial "utilities/ArgsSchema.html" (dict "structure" $structure "bookshop" $bookshop "child" $child) }}
+{{ if $compiled.err }}
+    {{ range $compiled.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+{{ else }}
+    {{ $schema := $compiled.schema }}
+
+    {{/* map positional arguments to their declared names */}}
+    {{ $provided := dict }}
+    {{ if $named }}
+        {{ $provided = $args }}
+    {{ else }}
+        {{ range $index, $val := $args }}
+            {{ with index $compiled.positions (string $index) }}
+                {{ $provided = merge $provided (dict . $val) }}
+            {{ else }}
+                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument at index %d (value: '%s')" $name $index $val) }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{/* normalize provided keys to declared names; collect all unknown-argument errors */}}
+    {{ $normalized := dict }}
+    {{ range $key, $val := $provided }}
+        {{ if eq $key "_default" }}
+            {{ $defaulted = $defaulted | append $val }}
+        {{ else }}
+            {{ $declared := string $key }}
+            {{ if and (not (isset $schema $declared)) $bookshop }}
+                {{ $match := findRESubmatch "^(_*)(.*)$" $declared }}
+                {{ $body := index $match 0 2 }}
+                {{ $alt := print (index $match 0 1) (cond (strings.Contains $body "_") (replaceRE "_" "-" $body) (replaceRE "-" "_" $body)) }}
+                {{ if isset $schema $alt }}{{ $declared = $alt }}{{ end }}
+            {{ end }}
+            {{ if and $bookshop (strings.Contains (string $key) "-") (isset $schema $declared) }}
+                {{ $warnmsg = $warnmsg | append (printf "[%s] argument '%s': prefer snake_case '%s'" $name $key (replaceRE "-" "_" (string $key))) }}
+            {{ end }}
+            {{ if not (isset $schema $declared) }}
+                {{ $errmsg = $errmsg | append (printf "[%s] unsupported argument '%s'" $name $key) }}
+            {{ else }}
+                {{ $normalized = merge $normalized (dict $declared $val) }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{/* validate every schema argument and enforce required ones */}}
+    {{ range $key, $node := $schema }}
+        {{ $isProvided := isset $normalized $key }}
+        {{ $val := index $normalized $key }}
+        {{ $res := partial "inline/validate-node.html" (dict
+            "value" $val "node" $node "path" $key "name" $name
+            "depth" 0 "provided" (and $isProvided (ne $val nil))) }}
+        {{ range $res.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+        {{ range $res.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
+        {{ range $res.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
+        {{ range $res.defaulted }}{{ $defaulted = $defaulted | append . }}{{ end }}
+        {{ if ne $res.value nil }}
+            {{ $out = merge $out (dict $node.camelKey $res.value) }}
+        {{ end }}
+
+        {{ $skip := false }}
+        {{ if and $group $node.group }}{{ $skip = not (in $node.group $group) }}{{ end }}
+        {{ if and (not $skip) (not $node.optional) (not $isProvided) }}
+            {{ $errmsg = $errmsg | append (printf "[%s] argument '%s': expected value" $name $key) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ if $strict }}
+    {{ range $newmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
+{{ else }}
+    {{ range $newmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
+{{ end }}
+{{ return (dict
+    "args" $out
+    "err" (gt (len $errmsg) 0)
+    "errmsg" $errmsg
+    "warnmsg" $warnmsg
+    "defaulted" $defaulted
+) }}

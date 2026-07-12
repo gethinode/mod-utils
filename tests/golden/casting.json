@@ -1,5 +1,14 @@
 {
   "bool-arg-real-bool": {
+    "args": {
+      "args": {
+        "flag": true
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -9,6 +18,17 @@
     }
   },
   "empty-string-float": {
+    "args": {
+      "args": {
+        "ratioValue": ""
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'ratio-value': expected type 'float', got 'string' with value ''"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -19,6 +39,17 @@
     }
   },
   "falsy-wrong-type-skips-validation": {
+    "args": {
+      "args": {
+        "count": false
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'bool' with value 'false'"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "count": false,
       "default": [],
@@ -28,6 +59,17 @@
     }
   },
   "generic-dict-as-map": {
+    "args": {
+      "args": {
+        "data": {
+          "anything": "goes"
+        }
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -38,6 +80,19 @@
     }
   },
   "generic-dict-as-maplist": {
+    "args": {
+      "args": {
+        "data": [
+          {
+            "anything": "goes"
+          }
+        ]
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -48,6 +103,19 @@
     }
   },
   "generic-slice": {
+    "args": {
+      "args": {
+        "itemsList": [
+          1,
+          "two",
+          true
+        ]
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -66,6 +134,15 @@
     }
   },
   "int-to-string": {
+    "args": {
+      "args": {
+        "label": "7"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
@@ -76,6 +153,15 @@
     }
   },
   "real-float-value": {
+    "args": {
+      "args": {
+        "ratioValue": 1.5
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -86,6 +172,15 @@
     }
   },
   "string-to-bool": {
+    "args": {
+      "args": {
+        "flag": true
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -95,6 +190,15 @@
     }
   },
   "string-to-float": {
+    "args": {
+      "args": {
+        "ratioValue": 1.5
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": false,
@@ -105,6 +209,15 @@
     }
   },
   "string-to-int": {
+    "args": {
+      "args": {
+        "count": 42
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
     "initargs": {
       "count": 42,
       "default": [],
@@ -114,6 +227,17 @@
     }
   },
   "wrong-type-errors": {
+    "args": {
+      "args": {
+        "count": "abc"
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'string' with value 'abc'"
+      ],
+      "warnmsg": []
+    },
     "initargs": {
       "default": [],
       "err": true,
