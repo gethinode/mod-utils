@@ -1,0 +1,25 @@
+{{- /*
+    Composes Bootstrap padding utility classes for one axis of a GetPadding
+    result. Opt-in mobile support: when the padding dict carries a mobile
+    value for the axis (and it differs from the regular value), emits
+    "<prefix>-<mobile> <prefix>-md-<regular>"; otherwise emits
+    "<prefix>-<regular>" — byte-identical to the pre-mobile output.
+
+    Arguments:
+    - padding: dict returned by utilities/GetPadding.html
+    - axis:    "x" (default) or "y"
+    - prefix:  "px", "py", "pb", or "pt"; defaults to "px" for x, "py" for y
+*/ -}}
+{{- $padding := .padding -}}
+{{- $axis := .axis | default "x" -}}
+{{- $prefix := .prefix | default (cond (eq $axis "x") "px" "py") -}}
+{{- $regular := int (index $padding $axis) -}}
+{{- $mobileKey := printf "mobile%s" (upper $axis) -}}
+{{- $classes := printf "%s-%d" $prefix $regular -}}
+{{- if isset $padding $mobileKey -}}
+    {{- $mobile := int (index $padding $mobileKey) -}}
+    {{- if ne $mobile $regular -}}
+        {{- $classes = printf "%s-%d %s-md-%d" $prefix $mobile $prefix $regular -}}
+    {{- end -}}
+{{- end -}}
+{{- return $classes -}}
