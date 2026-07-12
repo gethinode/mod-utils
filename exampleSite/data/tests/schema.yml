@@ -1,0 +1,20 @@
+cases:
+  - name: scalar-structure
+    api: schema
+    structure: test-cast
+  - name: nested-structure
+    api: schema
+    structure: test-nested
+  - name: child-merge
+    api: schema
+    structure: test-stack
+    child: test-card
+  - name: bookshop-blueprint
+    api: schema
+    bookshop: test-hero
+  - name: compile-errors
+    api: schema
+    structure: test-cycle
+  - name: positions
+    api: schema
+    structure: test-required

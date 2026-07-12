@@ -1,0 +1,215 @@
+<!--
+    Copyright © 2026 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+-->
+
+{{/*
+    Compile the argument schema of a structure or bookshop component into a self-contained,
+    recursive schema tree. The result is a pure function of the site's data files; invoke through
+    partialCached keyed by the (structure, bookshop, child) triple. See the plan/spec for the
+    node shape.
+*/}}
+
+{{ define "_partials/inline/camel-key.html" }}
+    {{ $match := findRESubmatch "^(_*)(.*)$" . }}
+    {{ $prefix := index $match 0 1 }}
+    {{ $body := replaceRE "_" "-" (index $match 0 2) }}
+    {{ $result := "" }}
+    {{ range $index, $word := split $body "-" }}
+        {{ if gt $index 0 }}
+            {{ $result = print $result (strings.FirstUpper $word) }}
+        {{ else }}
+            {{ $result = strings.ToLower $word }}
+        {{ end }}
+    {{ end }}
+    {{ return print $prefix $result }}
+{{ end }}
+
+{{ define "_partials/inline/compile-node.html" }}
+    {{ $key := .key }}
+    {{ $val := .val }}
+    {{ $arguments := .arguments }}
+    {{ $typesData := .typesData }}
+    {{ $stack := .stack }}
+    {{ $path := .path }}
+    {{ $errmsg := slice }}
+    {{/* stays empty (falsy under 'with', same as nil) when the type is missing below */}}
+    {{ $node := dict }}
+
+    {{/* normalize the key for the global lookup: snake_case → kebab-case, keep leading underscores */}}
+    {{ $match := findRESubmatch "^(_*)(.*)$" $key }}
+    {{ $normKey := print (index $match 0 1) (replaceRE "_" "-" (index $match 0 2)) }}
+
+    {{/* merge the global definition with inline overrides from the structure file or blueprint */}}
+    {{ $def := index $arguments $normKey | default dict }}
+    {{ if reflect.IsMap $val }}
+        {{ $def = merge $def $val }}
+    {{ else if and (ne $val nil) (not (reflect.IsSlice $val)) }}
+        {{ $def = merge $def (dict "default" $val) }}
+    {{ end }}
+
+    {{ if not $def.type }}
+        {{ $errmsg = $errmsg | append (printf "schema: missing type for '%s'" $path) }}
+    {{ else }}
+        {{ $declared := slice | append $def.type }}
+        {{ $accepts := slice }}
+        {{ $kind := "scalar" }}
+        {{ $children := dict }}
+        {{ $udtType := "" }}
+        {{ $udts := 0 }}
+
+        {{ range $type := $declared }}
+            {{ if in (slice "string" "path" "select" "url") $type }}
+                {{ $accepts = $accepts | append "string" }}
+            {{ else if eq $type "bool" }}
+                {{ $accepts = $accepts | append "bool" }}
+            {{ else if in (slice "int" "int64") $type }}
+                {{ $accepts = $accepts | append "int" }}
+            {{ else if in (slice "float" "float64") $type }}
+                {{ $accepts = $accepts | append "float" "int" }}
+            {{ else if eq $type "slice" }}
+                {{ $kind = "list" }}
+                {{ $accepts = $accepts | append "slice" "maplist" }}
+            {{ else if eq $type "dict" }}
+                {{/* intentional fix over legacy: a generic dict accepts a map or a slice of maps; the legacy alias matched neither */}}
+                {{ $kind = "dict" }}
+                {{ $accepts = $accepts | append "map" "maplist" }}
+            {{ else }}
+                {{ $shape := index $typesData $type }}
+                {{ if eq $shape nil }}
+                    {{ $errmsg = $errmsg | append (printf "schema: unknown type '%s' for '%s'" $type $path) }}
+                {{ else if in $stack $type }}
+                    {{ $errmsg = $errmsg | append (printf "schema: circular type reference '%s' for '%s'" $type $path) }}
+                {{ else }}
+                    {{ $udts = add $udts 1 }}
+                    {{ $members := $shape }}
+                    {{ if reflect.IsSlice $shape }}
+                        {{ $kind = "list" }}
+                        {{ $accepts = $accepts | append "slice" "maplist" }}
+                        {{ $members = index $shape 0 | default dict }}
+                    {{ else }}
+                        {{ $kind = "dict" }}
+                        {{ $accepts = $accepts | append "map" }}
+                    {{ end }}
+                    {{ if eq $udts 1 }}
+                        {{ $udtType = $type }}
+                        {{ range $member, $memberVal := $members }}
+                            {{ $child := partial "inline/compile-node.html" (dict
+                                "key"       $member
+                                "val"       $memberVal
+                                "arguments" $arguments
+                                "typesData" $typesData
+                                "stack"     ($stack | append $type)
+                                "path"      (printf "%s.%s" $path $member)
+                            ) }}
+                            {{ $errmsg = $errmsg | append $child.errmsg }}
+                            {{ with $child.node }}{{ $children = merge $children (dict $member .) }}{{ end }}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+
+        {{/* a union of multiple user-defined types is shape-checked only, not recursed */}}
+        {{ if gt $udts 1 }}{{ $children = dict }}{{ $udtType = "" }}{{ end }}
+
+        {{ $node = dict
+            "name"     $key
+            "camelKey" (partial "inline/camel-key.html" $key)
+            "types"    $declared
+            "accepts"  (uniq $accepts)
+            "kind"     $kind
+            "optional" (default false $def.optional)
+        }}
+        {{ if $children }}{{ $node = merge $node (dict "children" $children "udtType" $udtType) }}{{ end }}
+        {{ if ne $def.default nil }}{{ $node = merge $node (dict "default" $def.default) }}{{ end }}
+        {{ with $def.config }}{{ $node = merge $node (dict "config" .) }}{{ end }}
+        {{ with $def.options }}{{ $node = merge $node (dict "options" .) }}{{ end }}
+        {{ if isset $def "position" }}{{ $node = merge $node (dict "position" $def.position) }}{{ end }}
+        {{ with $def.group }}{{ $node = merge $node (dict "group" (slice | append .)) }}{{ end }}
+        {{ with $def.deprecated }}{{ $node = merge $node (dict "deprecated" (string .)) }}{{ end }}
+        {{ with $def.alternative }}{{ $node = merge $node (dict "alternative" .) }}{{ end }}
+        {{ with $def.release }}{{ $node = merge $node (dict "release" .) }}{{ end }}
+        {{ with $def.parent }}{{ $node = merge $node (dict "parent" .) }}{{ end }}
+        {{ with $def.comment }}{{ $node = merge $node (dict "comment" .) }}{{ end }}
+    {{ end }}
+
+    {{ return (dict "node" $node "errmsg" $errmsg) }}
+{{ end }}
+
+{{/* main body */}}
+{{ $structure := .structure }}
+{{ $bookshop := .bookshop }}
+{{ $child := .child }}
+{{ $errmsg := slice }}
+
+{{ $arguments := ((index site.Data.structures "_arguments") | default dict).arguments | default dict }}
+{{ $typesData := ((index site.Data.structures "_types") | default dict).types | default dict }}
+
+{{/* assemble the raw argument map from the structure file or the bookshop blueprint + sidecar */}}
+{{ $raw := dict }}
+{{ if $structure }}
+    {{ $raw = ((index site.Data.structures $structure) | default dict).arguments | default dict }}
+{{ else if $bookshop }}
+    {{ $component := index (site.Data.structures.components | default dict) $bookshop | default dict }}
+    {{ $raw = (index $component (printf "%s.bookshop" $bookshop) | default dict).blueprint | default dict }}
+    {{ $raw = merge $raw (dict "_bookshop_name" nil "_ordinal" nil "id" nil) }}
+    {{ $sidecar := ((index $component $bookshop) | default dict).arguments | default dict }}
+    {{ range $key, $def := $sidecar }}
+        {{ if reflect.IsMap $def }}
+            {{ $snakeKey := replaceRE "-" "_" $key }}
+            {{ $target := cond (isset $raw $snakeKey) $snakeKey $key }}
+            {{ $existing := index $raw $target }}
+            {{ if not (reflect.IsMap $existing) }}
+                {{/* intentional fix over legacy: a scalar blueprint value is the default — keep it */}}
+                {{ $existing = cond (eq $existing nil) dict (dict "default" $existing) }}
+            {{ end }}
+            {{ $raw = merge $raw (dict $target (merge $existing $def)) }}
+        {{ end }}
+    {{ end }}
+{{ else }}
+    {{ $errmsg = $errmsg | append "schema: missing value for param 'structure' or 'bookshop'" }}
+{{ end }}
+
+{{/* merge parent-flagged arguments from the child structure, stripping their defaults */}}
+{{ if $child }}
+    {{ $extra := ((index site.Data.structures $child) | default dict).arguments }}
+    {{ if not $extra }}
+        {{ $errmsg = $errmsg | append (printf "schema: missing definitions: %s" $child) }}
+    {{ else }}
+        {{ range $key, $val := $extra }}
+            {{ if and (reflect.IsMap $val) $val.parent }}
+                {{ $clean := dict }}
+                {{ range $k, $v := $val }}
+                    {{ if ne $k "default" }}{{ $clean = merge $clean (dict $k $v) }}{{ end }}
+                {{ end }}
+                {{ $raw = merge $raw (dict $key $clean) }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{/* compile each argument into a schema node */}}
+{{ $schema := dict }}
+{{ $positions := dict }}
+{{ $name := or $structure $bookshop }}
+{{ range $key, $val := $raw }}
+    {{ $result := partial "inline/compile-node.html" (dict
+        "key"       $key
+        "val"       $val
+        "arguments" $arguments
+        "typesData" $typesData
+        "stack"     slice
+        "path"      (printf "%s.%s" $name $key)
+    ) }}
+    {{ $errmsg = $errmsg | append $result.errmsg }}
+    {{ with $result.node }}
+        {{ $schema = merge $schema (dict $key .) }}
+        {{ if isset . "position" }}
+            {{ $positions = merge $positions (dict (string .position) $key) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ return (dict "schema" $schema "positions" $positions "err" (gt (len $errmsg) 0) "errmsg" $errmsg) }}

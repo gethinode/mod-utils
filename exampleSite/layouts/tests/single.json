@@ -7,15 +7,25 @@
 {{- $data := index site.Data.tests $group | default .Params -}}
 {{- $results := dict -}}
 {{- range $case := $data.cases -}}
-    {{- $params := dict
-        "structure" ($case.structure | default "")
-        "args"      $case.args
-        "named"     (ne $case.named false)
-    -}}
-    {{- with $case.bookshop }}{{ $params = merge $params (dict "bookshop" . "structure" "") }}{{ end -}}
-    {{- with $case.child }}{{ $params = merge $params (dict "child" .) }}{{ end -}}
-    {{- with $case.group }}{{ $params = merge $params (dict "group" .) }}{{ end -}}
-    {{- $legacy := partial "utilities/InitArgs.html" $params -}}
-    {{- $results = merge $results (dict $case.name (dict "initargs" $legacy)) -}}
+    {{- $entry := dict -}}
+    {{- if eq $case.api "schema" -}}
+        {{- $compiled := partial "utilities/ArgsSchema.html" (dict
+            "structure" ($case.structure | default "")
+            "bookshop"  ($case.bookshop | default "")
+            "child"     ($case.child | default "")
+        ) -}}
+        {{- $entry = dict "schema" $compiled -}}
+    {{- else -}}
+        {{- $params := dict
+            "structure" ($case.structure | default "")
+            "args"      $case.args
+            "named"     (ne $case.named false)
+        -}}
+        {{- with $case.bookshop }}{{ $params = merge $params (dict "bookshop" . "structure" "") }}{{ end -}}
+        {{- with $case.child }}{{ $params = merge $params (dict "child" .) }}{{ end -}}
+        {{- with $case.group }}{{ $params = merge $params (dict "group" .) }}{{ end -}}
+        {{- $entry = dict "initargs" (partial "utilities/InitArgs.html" $params) -}}
+    {{- end -}}
+    {{- $results = merge $results (dict $case.name $entry) -}}
 {{- end -}}
 {{- jsonify (dict "indent" "  ") $results -}}

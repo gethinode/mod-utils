@@ -113,3 +113,6 @@ types:
     url:
 
   # --- test-only types below this marker ---
+  test-node:
+    title:
+    member-without-global-def:

@@ -1,0 +1,4 @@
+---
+title: schema
+outputs: ["json"]
+---

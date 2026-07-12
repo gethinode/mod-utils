@@ -1,0 +1,857 @@
+{
+  "bookshop-blueprint": {
+    "schema": {
+      "err": true,
+      "errmsg": [
+        "schema: unknown type 'template.HTML' for 'test-hero.heading.content'",
+        [
+          "schema: unknown type 'hstring.RenderedString' for 'test-hero.heading.title'",
+          "schema: unknown type 'hstring.HTML' for 'test-hero.heading.title'",
+          "schema: unknown type 'template.HTML' for 'test-hero.heading.title'"
+        ]
+      ],
+      "positions": {},
+      "schema": {
+        "_bookshop_name": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "_bookshopName",
+          "comment": "Alias for _bookshop_name.",
+          "group": [
+            "partial"
+          ],
+          "kind": "scalar",
+          "name": "_bookshop_name",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        },
+        "_ordinal": {
+          "accepts": [
+            "int"
+          ],
+          "camelKey": "_ordinal",
+          "comment": "Zero-based position of the bookshop component within the page's component hierarchy.",
+          "group": [
+            "partial"
+          ],
+          "kind": "scalar",
+          "name": "_ordinal",
+          "optional": true,
+          "types": [
+            "int"
+          ]
+        },
+        "heading": {
+          "accepts": [
+            "map"
+          ],
+          "camelKey": "heading",
+          "children": {
+            "align": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "align",
+              "comment": "Alignment of the headline, content, or icon.",
+              "default": "start",
+              "kind": "scalar",
+              "name": "align",
+              "optional": true,
+              "options": {
+                "values": [
+                  "start",
+                  "center",
+                  "end"
+                ]
+              },
+              "types": [
+                "select"
+              ]
+            },
+            "arrangement": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "arrangement",
+              "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+              "config": "style.title.arrangement",
+              "default": "above",
+              "kind": "scalar",
+              "name": "arrangement",
+              "optional": true,
+              "options": {
+                "values": [
+                  "above",
+                  "first"
+                ]
+              },
+              "types": [
+                "select"
+              ]
+            },
+            "content": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "content",
+              "comment": "Section content displayed below the title.",
+              "kind": "scalar",
+              "name": "content",
+              "optional": true,
+              "types": [
+                "string",
+                "template.HTML"
+              ]
+            },
+            "preheading": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "preheading",
+              "comment": "Preheading of the section heading.",
+              "kind": "scalar",
+              "name": "preheading",
+              "optional": true,
+              "types": [
+                "string"
+              ]
+            },
+            "size": {
+              "accepts": [
+                "int"
+              ],
+              "camelKey": "size",
+              "comment": "Display size of the headline.",
+              "config": "style.title.size",
+              "default": 4,
+              "kind": "scalar",
+              "name": "size",
+              "optional": true,
+              "options": {
+                "max": 6,
+                "min": 1
+              },
+              "types": [
+                "int"
+              ]
+            },
+            "title": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "title",
+              "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+              "kind": "scalar",
+              "name": "title",
+              "optional": true,
+              "types": [
+                "string",
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ]
+            },
+            "width": {
+              "accepts": [
+                "int"
+              ],
+              "camelKey": "width",
+              "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+              "default": 8,
+              "kind": "scalar",
+              "name": "width",
+              "optional": true,
+              "options": {
+                "max": 12,
+                "min": 1
+              },
+              "types": [
+                "int"
+              ]
+            }
+          },
+          "comment": "Heading of the content block, including a preheading and content element.",
+          "kind": "dict",
+          "name": "heading",
+          "optional": false,
+          "types": [
+            "heading"
+          ],
+          "udtType": "heading"
+        },
+        "id": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "id",
+          "comment": "Unique identifier of the current element.",
+          "kind": "scalar",
+          "name": "id",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        },
+        "link_type": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "linkType",
+          "comment": "Style of the link.",
+          "default": "button",
+          "kind": "scalar",
+          "name": "link_type",
+          "optional": true,
+          "options": {
+            "values": [
+              "button",
+              "link"
+            ]
+          },
+          "types": [
+            "select"
+          ]
+        },
+        "show_more": {
+          "accepts": [
+            "bool"
+          ],
+          "camelKey": "showMore",
+          "default": false,
+          "kind": "scalar",
+          "name": "show_more",
+          "optional": true,
+          "types": [
+            "bool"
+          ]
+        },
+        "width": {
+          "accepts": [
+            "int"
+          ],
+          "camelKey": "width",
+          "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+          "default": 8,
+          "kind": "scalar",
+          "name": "width",
+          "optional": true,
+          "options": {
+            "max": 12,
+            "min": 1
+          },
+          "types": [
+            "int"
+          ]
+        }
+      }
+    }
+  },
+  "child-merge": {
+    "schema": {
+      "err": false,
+      "errmsg": [],
+      "positions": {},
+      "schema": {
+        "hook": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "hook",
+          "comment": "Render hook for the element's partial.",
+          "kind": "scalar",
+          "name": "hook",
+          "optional": true,
+          "parent": "cascade",
+          "types": [
+            "string"
+          ]
+        },
+        "ratio": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "ratio",
+          "comment": "Ratio of the media asset. When the asset is an image, it is resized and cropped (not applicable to vector graphics). For video assets, the padding of the embedded frame is adjusted. When set to auto, the original aspect ratio is used.",
+          "kind": "scalar",
+          "name": "ratio",
+          "optional": true,
+          "options": {
+            "values": [
+              "1x1",
+              "3x1",
+              "3x2",
+              "4x3",
+              "16x9",
+              "21x9",
+              "auto"
+            ]
+          },
+          "parent": "merge",
+          "types": [
+            "string"
+          ]
+        },
+        "title": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "title",
+          "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+          "kind": "scalar",
+          "name": "title",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        }
+      }
+    }
+  },
+  "compile-errors": {
+    "schema": {
+      "err": true,
+      "errmsg": [
+        "schema: unknown type 'no-such-type' for 'test-cycle.bogus-typed'",
+        "schema: missing type for 'test-cycle.root-node.member-without-global-def'",
+        "schema: unknown type 'hstring.RenderedString' for 'test-cycle.root-node.title'",
+        "schema: unknown type 'hstring.HTML' for 'test-cycle.root-node.title'",
+        "schema: unknown type 'template.HTML' for 'test-cycle.root-node.title'"
+      ],
+      "positions": {},
+      "schema": {
+        "bogus-typed": {
+          "accepts": [],
+          "camelKey": "bogusTyped",
+          "kind": "scalar",
+          "name": "bogus-typed",
+          "optional": true,
+          "types": [
+            "no-such-type"
+          ]
+        },
+        "root-node": {
+          "accepts": [
+            "map"
+          ],
+          "camelKey": "rootNode",
+          "children": {
+            "title": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "title",
+              "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+              "kind": "scalar",
+              "name": "title",
+              "optional": true,
+              "types": [
+                "string",
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ]
+            }
+          },
+          "kind": "dict",
+          "name": "root-node",
+          "optional": true,
+          "types": [
+            "test-node"
+          ],
+          "udtType": "test-node"
+        }
+      }
+    }
+  },
+  "nested-structure": {
+    "schema": {
+      "err": true,
+      "errmsg": [
+        "schema: unknown type 'template.HTML' for 'test-nested.heading.content'",
+        [
+          "schema: unknown type 'hstring.RenderedString' for 'test-nested.heading.title'",
+          "schema: unknown type 'hstring.HTML' for 'test-nested.heading.title'",
+          "schema: unknown type 'template.HTML' for 'test-nested.heading.title'"
+        ],
+        "schema: unknown type 'template.HTML' for 'test-nested.locations.instructions.description'",
+        "schema: unknown type 'hstring.RenderedString' for 'test-nested.locations.instructions.title'",
+        "schema: unknown type 'hstring.HTML' for 'test-nested.locations.instructions.title'",
+        "schema: unknown type 'template.HTML' for 'test-nested.locations.instructions.title'",
+        [
+          "schema: unknown type 'hstring.RenderedString' for 'test-nested.locations.title'",
+          "schema: unknown type 'hstring.HTML' for 'test-nested.locations.title'",
+          "schema: unknown type 'template.HTML' for 'test-nested.locations.title'"
+        ]
+      ],
+      "positions": {},
+      "schema": {
+        "heading": {
+          "accepts": [
+            "map"
+          ],
+          "camelKey": "heading",
+          "children": {
+            "align": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "align",
+              "comment": "Alignment of the headline, content, or icon.",
+              "default": "start",
+              "kind": "scalar",
+              "name": "align",
+              "optional": true,
+              "options": {
+                "values": [
+                  "start",
+                  "center",
+                  "end"
+                ]
+              },
+              "types": [
+                "select"
+              ]
+            },
+            "arrangement": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "arrangement",
+              "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+              "config": "style.title.arrangement",
+              "default": "above",
+              "kind": "scalar",
+              "name": "arrangement",
+              "optional": true,
+              "options": {
+                "values": [
+                  "above",
+                  "first"
+                ]
+              },
+              "types": [
+                "select"
+              ]
+            },
+            "content": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "content",
+              "comment": "Section content displayed below the title.",
+              "kind": "scalar",
+              "name": "content",
+              "optional": true,
+              "types": [
+                "string",
+                "template.HTML"
+              ]
+            },
+            "preheading": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "preheading",
+              "comment": "Preheading of the section heading.",
+              "kind": "scalar",
+              "name": "preheading",
+              "optional": true,
+              "types": [
+                "string"
+              ]
+            },
+            "size": {
+              "accepts": [
+                "int"
+              ],
+              "camelKey": "size",
+              "comment": "Display size of the headline.",
+              "config": "style.title.size",
+              "default": 4,
+              "kind": "scalar",
+              "name": "size",
+              "optional": true,
+              "options": {
+                "max": 6,
+                "min": 1
+              },
+              "types": [
+                "int"
+              ]
+            },
+            "title": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "title",
+              "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+              "kind": "scalar",
+              "name": "title",
+              "optional": true,
+              "types": [
+                "string",
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ]
+            },
+            "width": {
+              "accepts": [
+                "int"
+              ],
+              "camelKey": "width",
+              "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+              "default": 8,
+              "kind": "scalar",
+              "name": "width",
+              "optional": true,
+              "options": {
+                "max": 12,
+                "min": 1
+              },
+              "types": [
+                "int"
+              ]
+            }
+          },
+          "comment": "Heading of the content block, including a preheading and content element.",
+          "kind": "dict",
+          "name": "heading",
+          "optional": true,
+          "types": [
+            "heading"
+          ],
+          "udtType": "heading"
+        },
+        "locations": {
+          "accepts": [
+            "slice",
+            "maplist"
+          ],
+          "camelKey": "locations",
+          "children": {
+            "address": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "address",
+              "comment": "Address information.",
+              "kind": "scalar",
+              "name": "address",
+              "optional": false,
+              "types": [
+                "string"
+              ]
+            },
+            "anchor": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "anchor",
+              "comment": "Anchor of the image's crop box, defaults to anchor value set in `imaging` section of the site configuration (usually `Smart`).",
+              "kind": "scalar",
+              "name": "anchor",
+              "optional": true,
+              "options": {
+                "values": [
+                  "TopLeft",
+                  "Top",
+                  "TopRight",
+                  "Left",
+                  "Center",
+                  "Right",
+                  "BottomLeft",
+                  "Bottom",
+                  "BottomRight",
+                  "Smart"
+                ]
+              },
+              "types": [
+                "select"
+              ]
+            },
+            "image": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "image",
+              "comment": "Image to include in the content block or section heading.",
+              "kind": "scalar",
+              "name": "image",
+              "optional": true,
+              "types": [
+                "string"
+              ]
+            },
+            "instructions": {
+              "accepts": [
+                "slice",
+                "maplist"
+              ],
+              "camelKey": "instructions",
+              "children": {
+                "description": {
+                  "accepts": [
+                    "string"
+                  ],
+                  "camelKey": "description",
+                  "comment": "Description of the element.",
+                  "kind": "scalar",
+                  "name": "description",
+                  "optional": true,
+                  "types": [
+                    "string",
+                    "template.HTML"
+                  ]
+                },
+                "title": {
+                  "accepts": [
+                    "string"
+                  ],
+                  "camelKey": "title",
+                  "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+                  "kind": "scalar",
+                  "name": "title",
+                  "optional": true,
+                  "types": [
+                    "string",
+                    "hstring.RenderedString",
+                    "hstring.HTML",
+                    "template.HTML"
+                  ]
+                }
+              },
+              "comment": "Instructions how to reach a location using a specific transport method.",
+              "kind": "list",
+              "name": "instructions",
+              "optional": true,
+              "types": [
+                "instructions"
+              ],
+              "udtType": "instructions"
+            },
+            "mode": {
+              "accepts": [
+                "bool"
+              ],
+              "camelKey": "mode",
+              "comment": "Flag indicating if the media asset should support color modes. If set, the element searches for images having a matching color-mode suffix such as `-light` or `-dark`.",
+              "default": false,
+              "kind": "scalar",
+              "name": "mode",
+              "optional": true,
+              "types": [
+                "bool"
+              ]
+            },
+            "phone": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "phone",
+              "comment": "Phone number.",
+              "kind": "scalar",
+              "name": "phone",
+              "optional": true,
+              "types": [
+                "string"
+              ]
+            },
+            "title": {
+              "accepts": [
+                "string"
+              ],
+              "camelKey": "title",
+              "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+              "kind": "scalar",
+              "name": "title",
+              "optional": true,
+              "types": [
+                "string",
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ]
+            }
+          },
+          "comment": "Office location data.",
+          "kind": "list",
+          "name": "locations",
+          "optional": true,
+          "types": [
+            "locations"
+          ],
+          "udtType": "locations"
+        },
+        "title": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "title",
+          "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+          "kind": "scalar",
+          "name": "title",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        }
+      }
+    }
+  },
+  "positions": {
+    "schema": {
+      "err": false,
+      "errmsg": [],
+      "positions": {
+        "0": "name",
+        "1": "kind"
+      },
+      "schema": {
+        "flag": {
+          "accepts": [
+            "bool"
+          ],
+          "camelKey": "flag",
+          "kind": "scalar",
+          "name": "flag",
+          "optional": true,
+          "types": [
+            "bool"
+          ]
+        },
+        "kind": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "kind",
+          "kind": "scalar",
+          "name": "kind",
+          "optional": true,
+          "position": 1,
+          "types": [
+            "string"
+          ]
+        },
+        "name": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "name",
+          "comment": "Name of the code snippet, used to identify the relevant section of the input file.",
+          "kind": "scalar",
+          "name": "name",
+          "optional": false,
+          "position": 0,
+          "types": [
+            "string"
+          ]
+        },
+        "partial-only": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "partialOnly",
+          "group": [
+            "partial"
+          ],
+          "kind": "scalar",
+          "name": "partial-only",
+          "optional": false,
+          "types": [
+            "string"
+          ]
+        }
+      }
+    }
+  },
+  "scalar-structure": {
+    "schema": {
+      "err": false,
+      "errmsg": [],
+      "positions": {},
+      "schema": {
+        "count": {
+          "accepts": [
+            "int"
+          ],
+          "camelKey": "count",
+          "kind": "scalar",
+          "name": "count",
+          "optional": true,
+          "types": [
+            "int"
+          ]
+        },
+        "data": {
+          "accepts": [
+            "map",
+            "maplist"
+          ],
+          "camelKey": "data",
+          "comment": "Path of the input data relative to the site's data folder. Supported data formats include `JSON`, `TOML`, `YAML`, and `XML`. You can omit the file extension.",
+          "kind": "dict",
+          "name": "data",
+          "optional": true,
+          "types": [
+            "dict"
+          ]
+        },
+        "flag": {
+          "accepts": [
+            "bool"
+          ],
+          "camelKey": "flag",
+          "kind": "scalar",
+          "name": "flag",
+          "optional": true,
+          "types": [
+            "bool"
+          ]
+        },
+        "items-list": {
+          "accepts": [
+            "slice",
+            "maplist"
+          ],
+          "camelKey": "itemsList",
+          "kind": "list",
+          "name": "items-list",
+          "optional": true,
+          "types": [
+            "slice"
+          ]
+        },
+        "label": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "label",
+          "comment": "Assistive label of the element.",
+          "kind": "scalar",
+          "name": "label",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        },
+        "ratio-value": {
+          "accepts": [
+            "float",
+            "int"
+          ],
+          "camelKey": "ratioValue",
+          "kind": "scalar",
+          "name": "ratio-value",
+          "optional": true,
+          "types": [
+            "float"
+          ]
+        }
+      }
+    }
+  }
+}
