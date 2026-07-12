@@ -1,0 +1,11 @@
+comment: >-
+  Test fixture for nested user-defined types. 'heading' is a dict UDT with defaulted
+  members; 'locations' nests a second UDT ('instructions') for depth-3 coverage.
+arguments:
+  heading:
+    optional: true
+  locations:
+    optional: true
+  title:
+    type: string
+    optional: true

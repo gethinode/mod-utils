@@ -1,156 +1,53 @@
-<!-- 
-    Copyright © 2025 The Hinode Team / Mark Dumay. All rights reserved.
+<!--
+    Copyright © 2025 - 2026 The Hinode Team / Mark Dumay. All rights reserved.
     Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
     Visit gethinode.com/license for more details.
 -->
 
-{{/* Inline partial to retrieve the type definition of the provided key (without recursion) */}}
-{{ define "_partials/inline/type-definition.html" }}
-    {{/* Convert key name from snake case to kebab case, except for leading underscores. */}}
-    {{/* Examples: */}}
-    {{/*  - "link_type" → "link-type" */}}
-    {{/*  - "_link_type" → "_link-type" */}}
-    {{/*  - "__link_type" → "__link-type" */}}
-    {{ $match := findRESubmatch "^(_*)(.*)$" .key }}                              
-    {{ $key := print (index $match 0 1) (replaceRE "_" "-" (index $match 0 2)) }} 
-    {{ $val := .val }}
-    {{ $arguments := .arguments }}
-    {{ $types := .types }}
-    
-    {{ $def := index $arguments $key }}
-    {{ $udt := "" }}
-    {{ $reflect := "" }}
-    {{ $reserved := slice "bool" "int" "int64" "float" "float64" "string" "dict" "slice" }}
-    {{ $errorMsg := slice }}
+{{/*
+    Compatibility shim over utilities/ArgsSchema.html. Reproduces the legacy return shape
+    {types, udt, err, errmsg, warnmsg}. Deprecated: new code should consume ArgsSchema directly.
+*/}}
 
-    {{ if and $def $def.type }}
-        {{ $aliases := slice | append $def.type }}
-        {{ range $alias := $aliases }}
-            {{ with index $types $alias }}
-                <!-- Reduce child elements to slice of argument names -->
-                {{ $args := slice }}
-                {{ $reflect = printf "%T" . }}
-                {{ if reflect.IsMap . }}
-                    {{ range $k, $_ := . }}
-                        {{ $args = $args | append $k }}
-                    {{ end }}
-                {{ else if reflect.IsSlice . }}
-                    {{ with index . 0 }}
-                        {{ range $k, $_ := . }}
-                            {{ $args = $args | append $k }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
-                
-                <!-- Retrieve type definition for each argument -->
-                {{ $definitions := dict }}
-                {{ $definitions := merge $definitions (dict "_reflect" $reflect) }}
-                {{ range $args }}
-                    {{ $type := partial "inline/type-definition.html" (dict "key" . "arguments" $arguments "types" $types) }}
-                    {{ if and $type $type.definition }}
-                        {{ $definitions = merge $definitions (dict . $type.definition) }}
-                    {{ else }}
-                        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s.%s'" $key . ) -}}
-                    {{ end }}
-                {{ end }}
-
-                {{ $udt = dict $alias $definitions }}
-            {{ end }}
-        {{ end }}
+{{ define "_partials/inline/legacy-def.html" }}
+    {{ $node := . }}
+    {{ $type := $node.types }}
+    {{ if eq (len $node.types) 1 }}{{ $type = index $node.types 0 }}{{ end }}
+    {{ $def := dict "type" $type "optional" $node.optional }}
+    {{ range $field := slice "default" "config" "options" "position" "deprecated" "alternative" "release" "parent" "comment" }}
+        {{ if isset $node $field }}{{ $def = merge $def (dict $field (index $node $field)) }}{{ end }}
     {{ end }}
-
-    {{ $merged := or $def dict }}
-    {{ if reflect.IsMap $val }}
-        {{ $merged = merge $merged $val }}
-    {{ else if and $val (not (reflect.IsSlice $val)) }}
-        {{ $merged = merge $merged (dict "default" $val) }}
+    {{ with $node.group }}
+        {{ $group := . }}
+        {{ if eq (len .) 1 }}{{ $group = index . 0 }}{{ end }}
+        {{ $def = merge $def (dict "group" $group) }}
     {{ end }}
-    {{ if not $merged.type }}
-        {{- $errorMsg = $errorMsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s'" $key  ) -}}
-    {{ end }}
-
-    {{ return (dict "definition" $merged "udt" $udt "errmsg" $errorMsg) }}
+    {{ return $def }}
 {{ end }}
 
-{{/* Initalize arguments and local variables */}}
-{{ $error := false }}
-{{ $errmsg := slice }}
-{{ $warnmsg := slice }}
-{{ $params := dict }}
-{{ $definitions := dict }}
+{{ $structure := .structure | default "" }}
+{{ $bookshop := .bookshop | default "" }}
+{{ $child := .child | default "" }}
+
+{{ $compiled := partialCached "utilities/ArgsSchema.html" (dict
+    "structure" $structure
+    "bookshop"  $bookshop
+    "child"     $child
+) $structure $bookshop $child }}
+
+{{ $types := dict }}
 {{ $udt := dict }}
-
-{{ $structure := .structure }}
-{{ $bookshop := .bookshop }}
-{{ $group := .group }}
-{{ $child := .child }}
-
-{{ if and (not $structure) (not $bookshop) }}
-    {{- $errmsg = $errmsg | append (printf "partial [utilities/InitTypes.html] - Missing value for param 'structure' or 'bookshop'") -}}
-    {{ $error = true }}
-{{ end }}
-
-{{/* Initalize the type structure */}}
-{{ if not $error }}
-    {{ $args := dict }}
-    {{ $arguments := index (index site.Data.structures "_arguments") "arguments" }}
-    {{ $types := index (index site.Data.structures "_types") "types" }}
-
-    {{/* Initalize the regular or bookshop argument structure */}}
-    {{ if $structure }}
-        {{ $args = (index site.Data.structures $structure).arguments | default dict }}
-    {{ else }}
-        {{ $args = index (index (index site.Data.structures.components $bookshop) (printf "%s.bookshop" $bookshop)) "blueprint" | default dict }}
-        {{ $args = merge $args (dict "_bookshop_name" nil "_ordinal" nil "id" nil) }}
-        {{/* Load augmented sidecar (e.g. preview.yml) if present */}}
-        {{ $sidecarData := index (index site.Data.structures.components $bookshop) $bookshop | default dict }}
-        {{ range $key, $sidecarArgDef := ($sidecarData.arguments | default dict) }}
-            {{ if reflect.IsMap $sidecarArgDef }}
-                {{/* Convert kebab sidecar key to snake_case to match blueprint key format */}}
-                {{ $snakeKey := replaceRE "-" "_" $key }}
-                {{ $existing := index $args $snakeKey | default (index $args $key) | default dict }}
-                {{ if not (reflect.IsMap $existing) }}{{ $existing = dict }}{{ end }}
-                {{/* Prefer snake key if it exists in blueprint, otherwise use as-is */}}
-                {{ $targetKey := cond (isset $args $snakeKey) $snakeKey $key }}
-                {{ $args = merge $args (dict $targetKey (merge $existing $sidecarArgDef)) }}
-            {{ end }}
+{{ range $key, $node := $compiled.schema }}
+    {{ $types = merge $types (dict $key (partial "inline/legacy-def.html" $node)) }}
+    {{ if $node.children }}
+        {{ $reflect := "map[string]interface {}" }}
+        {{ if eq $node.kind "list" }}{{ $reflect = "[]interface {}" }}{{ end }}
+        {{ $members := dict "_reflect" $reflect }}
+        {{ range $member, $childNode := $node.children }}
+            {{ $members = merge $members (dict $member (partial "inline/legacy-def.html" $childNode)) }}
         {{ end }}
-    {{ end }}
-
-    {{/* Merge any child arguments */}}
-    {{ if $child }}
-        {{ $extra_def := (index site.Data.structures $child).arguments }}
-        {{ if not $extra_def }}
-            {{- $errmsg = $errmsg | append (printf "partial [utilities/InitTypes.html] - Missing definitions: %s" $child) -}}
-            {{ $error =  true }}
-        {{ else }}
-            {{ range $key, $val := $extra_def }}
-                {{ if and $val $val.parent }}
-                    {{ $newval := dict }}
-                    {{ range $k, $v := $val }}
-                        {{ if ne $k "default" }}{{ $newval = merge $newval (dict $k $v) }}{{ end }}
-                    {{ end}}
-                    {{ $args = merge $args (dict $key $newval) }}
-                {{ end }}
-            {{ end }}
-        {{ end }}
-    {{ end }}
-
-    {{/* Initialize the arguments and their type definitions recursively */}}
-    {{ range $key, $v := $args }}
-        {{ $type := partial "inline/type-definition.html" (dict "key" $key "val" $v "args" $args "arguments" $arguments "types" $types "structure" $structure) }}
-        {{ $errmsg = $errmsg | append $type.errmsg }}
-        {{ if and $type $type.definition $type.definition.type }}
-            {{ $definitions = merge $definitions (dict $key $type.definition) }}
-            {{ with $type.udt }}
-                {{ $udt = merge $udt . }}
-            {{ end }}
-        {{ else }}
-            {{- $errmsg = $errmsg | append (printf "partial [utilities/InitTypes.html] - Missing type for '%s' in '%s'" $key (or $structure $bookshop) ) -}}
-            {{ $error =  true }}
-        {{ end }}
+        {{ $udt = merge $udt (dict $node.udtType $members) }}
     {{ end }}
 {{ end }}
 
-{{ $params = merge $params (dict "types" $definitions "udt" $udt "err" $error "errmsg" $errmsg "warnmsg" $warnmsg) }}
-{{ return $params }}
+{{ return (dict "types" $types "udt" $udt "err" $compiled.err "errmsg" $compiled.errmsg "warnmsg" slice) }}

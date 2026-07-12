@@ -2,6 +2,11 @@ baseURL = 'http://example.org/'
 languageCode = 'en-us'
 title = 'Test site for mod-utils'
 
+[params.test]
+  enabled = true
+  disabled = false
+  label = "from-site-params"
+
 [module]
   replacements = 'github.com/gethinode/mod-utils -> ../..'
   [[module.imports]]
@@ -12,3 +17,6 @@ title = 'Test site for mod-utils'
   [[module.imports.mounts]]
     source = "layouts"
     target = "layouts"
+  [[module.imports.mounts]]
+    source = "data"
+    target = "data"

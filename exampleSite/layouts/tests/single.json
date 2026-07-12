@@ -1,0 +1,39 @@
+{{- /*
+    Test runner: renders the InitArgs result envelope for every case in the group's case file
+    (data/tests/<group>.yml) or, when the page defines cases in frontmatter, from .Params.cases.
+    Output is canonical JSON (jsonify sorts map keys) compared against tests/golden/<group>.json.
+*/ -}}
+{{- $group := .File.ContentBaseName -}}
+{{- $data := index site.Data.tests $group | default .Params -}}
+{{- $results := dict -}}
+{{- range $case := $data.cases -}}
+    {{- $entry := dict -}}
+    {{- if eq $case.api "schema" -}}
+        {{- $compiled := partial "utilities/ArgsSchema.html" (dict
+            "structure" ($case.structure | default "")
+            "bookshop"  ($case.bookshop | default "")
+            "child"     ($case.child | default "")
+        ) -}}
+        {{- $entry = dict "schema" $compiled -}}
+    {{- else if eq $case.api "inittypes" -}}
+        {{- $entry = dict "inittypes" (partial "utilities/InitTypes.html" (dict
+            "structure" ($case.structure | default "")
+            "bookshop"  ($case.bookshop | default "")
+            "child"     ($case.child | default "")
+        )) -}}
+    {{- else -}}
+        {{- $params := dict
+            "structure" ($case.structure | default "")
+            "args"      $case.args
+            "named"     (ne $case.named false)
+        -}}
+        {{- with $case.bookshop }}{{ $params = merge $params (dict "bookshop" . "structure" "") }}{{ end -}}
+        {{- with $case.child }}{{ $params = merge $params (dict "child" .) }}{{ end -}}
+        {{- with $case.group }}{{ $params = merge $params (dict "group" .) }}{{ end -}}
+        {{- $entry = dict "initargs" (partial "utilities/InitArgs.html" $params) -}}
+        {{- $strict := partial "utilities/Args.html" (merge $params (dict "strict" true)) -}}
+        {{- $entry = merge $entry (dict "args" $strict) -}}
+    {{- end -}}
+    {{- $results = merge $results (dict $case.name $entry) -}}
+{{- end -}}
+{{- jsonify (dict "indent" "  ") $results -}}

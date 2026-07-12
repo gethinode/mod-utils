@@ -1,0 +1,266 @@
+{
+  "bookshop-prefix-via-structure": {
+    "args": {
+      "args": {},
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[bookshop-test-hero] unsupported argument 'heading'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "link_type",
+        "show_more",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "linkType": "button",
+      "link_type": "button",
+      "showMore": false,
+      "show_more": false,
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "cloudcannon-explicit-false": {
+    "args": {
+      "args": {
+        "_bookshopName": "test-hero",
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "linkType": "button",
+        "showMore": false,
+        "width": 0
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "link_type"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-hero] argument 'width': value '0' out of range [1, 12]"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-hero] argument 'width': value '0' out of range [1, 12]"
+      ],
+      "warnmsg": []
+    }
+  },
+  "cloudcannon-null-heavy": {
+    "args": {
+      "args": {
+        "_bookshopName": "test-hero",
+        "_ordinal": 0,
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "linkType": "button",
+        "showMore": false,
+        "width": 8
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "link_type",
+        "show_more",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "_bookshopName": "test-hero",
+      "_bookshop_name": "test-hero",
+      "_ordinal": 0,
+      "default": [
+        "link_type",
+        "show_more",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "linkType": "button",
+      "link_type": "button",
+      "showMore": false,
+      "show_more": false,
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "kebab-case-warns": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "linkType": "link",
+        "showMore": false,
+        "width": 8
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "show_more",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": [
+        "[test-hero] argument 'link-type': prefer snake_case 'link_type'"
+      ]
+    },
+    "initargs": {
+      "default": [
+        "show_more",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "linkType": "link",
+      "link_type": "link",
+      "showMore": false,
+      "show_more": false,
+      "warnmsg": [
+        "[test-hero] argument 'link-type': prefer snake_case 'link_type'"
+      ],
+      "width": 8
+    }
+  },
+  "snake-case-args": {
+    "args": {
+      "args": {
+        "_bookshopName": "test-hero",
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "linkType": "link",
+        "showMore": true,
+        "width": 8
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "_bookshopName": "test-hero",
+      "_bookshop_name": "test-hero",
+      "default": [
+        "width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "linkType": "link",
+      "link_type": "link",
+      "showMore": true,
+      "show_more": true,
+      "warnmsg": [],
+      "width": 8
+    }
+  },
+  "unknown-bookshop-arg": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "linkType": "button",
+        "showMore": false,
+        "width": 8
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "link_type",
+        "show_more",
+        "width"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-hero] unsupported argument 'bogus'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-hero] unsupported argument 'bogus'"
+      ],
+      "warnmsg": []
+    }
+  }
+}

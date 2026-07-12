@@ -1,0 +1,10 @@
+cases:
+  - name: plain-arg
+    structure: test-envelope
+    args:
+      plain: hello
+  # BUG(5): the user's value for 'default' is clobbered by the bookkeeping merge
+  - name: default-arg-collision
+    structure: test-envelope
+    args:
+      default: user-value

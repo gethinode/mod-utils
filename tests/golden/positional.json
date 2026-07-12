@@ -1,0 +1,64 @@
+{
+  "both-positions": {
+    "args": {
+      "args": {
+        "kind": "beta",
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "kind": "beta",
+      "name": "alpha",
+      "warnmsg": []
+    }
+  },
+  "excess-position-errors": {
+    "args": {
+      "args": {
+        "kind": "beta",
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-required] unsupported argument at index 2 (value: 'gamma')"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "kind": "beta",
+      "name": "alpha",
+      "warnmsg": [
+        "[test-required] unsupported argument at index 2 (value: 'gamma')"
+      ]
+    }
+  },
+  "first-position-only": {
+    "args": {
+      "args": {
+        "name": "alpha"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "name": "alpha",
+      "warnmsg": []
+    }
+  }
+}

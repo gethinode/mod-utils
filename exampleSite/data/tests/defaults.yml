@@ -1,0 +1,17 @@
+cases:
+  - name: static-default-applied
+    structure: test-default
+    args: {}
+  - name: static-default-overridden
+    structure: test-default
+    args: {static-label: custom}
+  - name: config-present-wins
+    structure: test-default
+    args: {}
+  # BUG(4): site param explicitly false falls through to the static default (or-based lookup)
+  - name: config-false-fallthrough
+    structure: test-default
+    args: {}
+  - name: deprecated-warns
+    structure: test-default
+    args: {legacy-arg: old}

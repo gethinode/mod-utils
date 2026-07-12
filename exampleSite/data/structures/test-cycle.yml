@@ -1,0 +1,12 @@
+comment: >-
+  Fixture for schema compile errors: a UDT member without a global argument definition
+  ('schema: missing type') and an unknown type name ('schema: unknown type').
+  A true circular type reference cannot be constructed from test-only data (members resolve
+  through the module's global _arguments.yml); the compiler's stack guard is defensive.
+arguments:
+  root-node:
+    type: test-node
+    optional: true
+  bogus-typed:
+    type: no-such-type
+    optional: true

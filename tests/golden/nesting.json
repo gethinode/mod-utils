@@ -1,0 +1,286 @@
+{
+  "absent-udt-shape-fill": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "depth-three-nesting": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "width": 8
+        },
+        "locations": [
+          {
+            "instructions": [
+              {
+                "description": "Use lot B",
+                "title": "Parking"
+              }
+            ],
+            "mode": false,
+            "title": "Office"
+          }
+        ]
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width",
+        "locations[0].mode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
+      },
+      "locations": [
+        {
+          "instructions": [
+            {
+              "description": "Use lot B",
+              "title": "Parking"
+            }
+          ],
+          "mode": false,
+          "title": "Office"
+        }
+      ],
+      "warnmsg": []
+    }
+  },
+  "heading-valid": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "center",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "center",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "nested-null-members": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "nested-unknown-key-passes": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "typo-key": "oops",
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-nested] argument 'heading': unsupported attribute 'typo-key'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "typo-key": "oops",
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": [
+        "[test-nested] argument 'heading': unsupported attribute 'typo-key'"
+      ]
+    }
+  },
+  "nested-wrong-type-passes": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "42",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-nested] argument 'heading.align': unexpected value '42'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "42",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": [
+        "[test-nested] argument 'heading.align': unexpected value '42'"
+      ]
+    }
+  },
+  "udt-list-empty": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "start",
+          "arrangement": "above",
+          "size": 4,
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.align",
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "start",
+        "arrangement": "above",
+        "size": 4,
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  }
+}

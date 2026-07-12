@@ -1,0 +1,20 @@
+comment: Test fixture for type casting, scalar validation, and generic collection types.
+arguments:
+  flag:
+    type: bool
+    optional: true
+  count:
+    type: int
+    optional: true
+  ratio-value:
+    type: float
+    optional: true
+  label:
+    type: string
+    optional: true
+  data:
+    type: dict
+    optional: true
+  items-list:
+    type: slice
+    optional: true

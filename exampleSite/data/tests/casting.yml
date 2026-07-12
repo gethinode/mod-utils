@@ -1,0 +1,53 @@
+cases:
+  - name: string-to-bool
+    structure: test-cast
+    args: {flag: "true"}
+  - name: string-to-int
+    structure: test-cast
+    args: {count: "42"}
+  - name: string-to-float
+    structure: test-cast
+    args: {ratio-value: "1.5"}
+  - name: int-to-string
+    structure: test-cast
+    args: {label: 7}
+  - name: bool-arg-real-bool
+    structure: test-cast
+    args: {flag: true}
+  # BUG(3): explicit false skips type validation entirely — a bool false into an int arg passes
+  - name: falsy-wrong-type-skips-validation
+    structure: test-cast
+    args: {count: false}
+  # Latent defect: a composite value against a scalar type (e.g. count: [1, 2]) CRASHES the
+  # whole Hugo build — InitArgs.html:154 feeds the raw value to findRE, which cannot cast
+  # '[]interface {}' to string ("error calling findRE: unable to cast ..."). That crash cannot
+  # be pinned in a golden (the site never renders), so this case uses a non-numeric string to
+  # pin the reachable wrong-type error path instead.
+  - name: wrong-type-errors
+    structure: test-cast
+    args: {count: "abc"}
+  # Latent quirk: type 'float' expects reflect name 'float', but real floats reflect as 'float64'
+  - name: real-float-value
+    structure: test-cast
+    args: {ratio-value: 1.5}
+  # Latent quirk: the legacy float regex matches the empty string
+  - name: empty-string-float
+    structure: test-cast
+    args: {ratio-value: ""}
+  # Latent defect: a plain YAML map reflects as 'map[string]interface {}', which matches
+  # neither 'dict' nor its alias '[]map[string]interface {}' — so the plain map form errors today.
+  - name: generic-dict-as-map
+    structure: test-cast
+    args:
+      data: {anything: goes}
+  # Latent defect: the legacy 'dict' alias ([]map[string]interface {}) never matches real
+  # YAML data (Hugo parses lists as []interface {}), so the slice-of-maps form errors today.
+  - name: generic-dict-as-maplist
+    structure: test-cast
+    args:
+      data:
+        - anything: goes
+  - name: generic-slice
+    structure: test-cast
+    args:
+      items-list: [1, "two", true]

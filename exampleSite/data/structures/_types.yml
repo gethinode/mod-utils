@@ -1,0 +1,118 @@
+# NOTE: this file SHADOWS the module's data/structures/_types.yml for exampleSite builds
+# (project data files take precedence per file). Keep the production entries in sync when
+# the module file changes, and append test-only types below the marker.
+
+types:
+  background:
+    backdrop:
+    color:
+    subtle:
+    class:
+  card:
+    color:
+    subtle:
+    class:
+  heading:
+    preheading:
+    title:
+    content:
+    align:
+    arrangement:
+    width:
+    size:
+  illustration:
+    image:
+    justify:
+    caption:
+    caption-url:
+    icon:
+    ratio:
+    class:
+    anchor:
+    mode:
+    width:
+    image-overlay:
+    hook:
+  instructions:
+    - title:
+      description:
+  locations:
+    - title:
+      address:
+      phone:
+      image:
+      mode:
+      anchor:
+      instructions:
+  cta:
+    title:
+    url:
+    label:
+  input:
+    section:
+    nested:
+    keywords:
+    categories:
+    tags:
+    reverse:
+    sort:
+  items:
+    - title:
+      description:
+      href:
+      level:
+  elements:
+    - title:
+      icon:
+      image:
+      mode:
+      content:
+  links:
+    - title:
+      url:
+      download:
+      icon:
+      force:
+      order:
+  messages:
+    - title:
+      icon:
+      content:
+      link:
+      label:
+  more:
+    title:
+    link:
+    link-type:
+    icon:
+  options:
+    max:
+    min:
+    values:
+  styles:
+    - ratio:
+      orientation:
+      portrait:
+      width:
+  video:
+    provider:
+    account:
+    id:
+    autoplay:
+    query-args:
+  testimonials:
+    - logo:
+      content:
+      client:
+      link:
+  client:
+    contact:
+    role:
+    image:
+    mode:
+    url:
+
+  # --- test-only types below this marker ---
+  test-node:
+    title:
+    member-without-global-def:

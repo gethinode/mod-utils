@@ -1,0 +1,59 @@
+{
+  "child-args-cascade": {
+    "args": {
+      "args": {
+        "hook": "custom-hook",
+        "title": "Stack"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "hook": "custom-hook",
+      "title": "Stack",
+      "warnmsg": []
+    }
+  },
+  "child-default-stripped": {
+    "args": {
+      "args": {
+        "title": "Stack"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "title": "Stack",
+      "warnmsg": []
+    }
+  },
+  "child-non-parent-arg-rejected": {
+    "args": {
+      "args": {},
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-stack] unsupported argument 'ignored-non-parent'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-stack] unsupported argument 'ignored-non-parent'"
+      ],
+      "warnmsg": []
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "params-typed-nested-map": {
+    "args": {
+      "args": {
+        "heading": {
+          "align": "center",
+          "arrangement": "above",
+          "size": 4,
+          "title": "Hello",
+          "width": 8
+        },
+        "locations": []
+      },
+      "defaulted": [
+        "heading.arrangement",
+        "heading.size",
+        "heading.width"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "heading": {
+        "align": "center",
+        "arrangement": "above",
+        "size": 4,
+        "title": "Hello",
+        "width": 8
+      },
+      "locations": [],
+      "warnmsg": []
+    }
+  },
+  "params-typed-scalars": {
+    "args": {
+      "args": {
+        "count": 42,
+        "flag": true
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "count": 42,
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "flag": true,
+      "warnmsg": []
+    }
+  }
+}

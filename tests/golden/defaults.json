@@ -1,0 +1,222 @@
+{
+  "config-false-fallthrough": {
+    "args": {
+      "args": {
+        "fromConfig": "from-site-params",
+        "fromConfigFalse": false,
+        "fromConfigMissing": "static-fallback",
+        "fromConfigTrue": true,
+        "staticLabel": "fallback"
+      },
+      "defaulted": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "from-config": "from-site-params",
+      "from-config-false": false,
+      "from-config-missing": "static-fallback",
+      "from-config-true": true,
+      "fromConfig": "from-site-params",
+      "fromConfigFalse": false,
+      "fromConfigMissing": "static-fallback",
+      "fromConfigTrue": true,
+      "static-label": "fallback",
+      "staticLabel": "fallback",
+      "warnmsg": []
+    }
+  },
+  "config-present-wins": {
+    "args": {
+      "args": {
+        "fromConfig": "from-site-params",
+        "fromConfigFalse": false,
+        "fromConfigMissing": "static-fallback",
+        "fromConfigTrue": true,
+        "staticLabel": "fallback"
+      },
+      "defaulted": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "from-config": "from-site-params",
+      "from-config-false": false,
+      "from-config-missing": "static-fallback",
+      "from-config-true": true,
+      "fromConfig": "from-site-params",
+      "fromConfigFalse": false,
+      "fromConfigMissing": "static-fallback",
+      "fromConfigTrue": true,
+      "static-label": "fallback",
+      "staticLabel": "fallback",
+      "warnmsg": []
+    }
+  },
+  "deprecated-warns": {
+    "args": {
+      "args": {
+        "fromConfig": "from-site-params",
+        "fromConfigFalse": false,
+        "fromConfigMissing": "static-fallback",
+        "fromConfigTrue": true,
+        "legacyArg": "old",
+        "staticLabel": "fallback"
+      },
+      "defaulted": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": [
+        "[test-default] argument 'legacy-arg': deprecated in v1.2.0, use 'static-label' instead"
+      ]
+    },
+    "initargs": {
+      "default": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "from-config": "from-site-params",
+      "from-config-false": false,
+      "from-config-missing": "static-fallback",
+      "from-config-true": true,
+      "fromConfig": "from-site-params",
+      "fromConfigFalse": false,
+      "fromConfigMissing": "static-fallback",
+      "fromConfigTrue": true,
+      "legacy-arg": "old",
+      "legacyArg": "old",
+      "static-label": "fallback",
+      "staticLabel": "fallback",
+      "warnmsg": [
+        "[test-default] argument 'legacy-arg': deprecated in v1.2.0, use 'static-label' instead"
+      ]
+    }
+  },
+  "static-default-applied": {
+    "args": {
+      "args": {
+        "fromConfig": "from-site-params",
+        "fromConfigFalse": false,
+        "fromConfigMissing": "static-fallback",
+        "fromConfigTrue": true,
+        "staticLabel": "fallback"
+      },
+      "defaulted": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true",
+        "static-label"
+      ],
+      "err": false,
+      "errmsg": [],
+      "from-config": "from-site-params",
+      "from-config-false": false,
+      "from-config-missing": "static-fallback",
+      "from-config-true": true,
+      "fromConfig": "from-site-params",
+      "fromConfigFalse": false,
+      "fromConfigMissing": "static-fallback",
+      "fromConfigTrue": true,
+      "static-label": "fallback",
+      "staticLabel": "fallback",
+      "warnmsg": []
+    }
+  },
+  "static-default-overridden": {
+    "args": {
+      "args": {
+        "fromConfig": "from-site-params",
+        "fromConfigFalse": false,
+        "fromConfigMissing": "static-fallback",
+        "fromConfigTrue": true,
+        "staticLabel": "custom"
+      },
+      "defaulted": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "from-config",
+        "from-config-false",
+        "from-config-missing",
+        "from-config-true"
+      ],
+      "err": false,
+      "errmsg": [],
+      "from-config": "from-site-params",
+      "from-config-false": false,
+      "from-config-missing": "static-fallback",
+      "from-config-true": true,
+      "fromConfig": "from-site-params",
+      "fromConfigFalse": false,
+      "fromConfigMissing": "static-fallback",
+      "fromConfigTrue": true,
+      "static-label": "custom",
+      "staticLabel": "custom",
+      "warnmsg": []
+    }
+  }
+}

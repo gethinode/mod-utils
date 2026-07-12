@@ -1,0 +1,17 @@
+comment: Test fixture for required, positional, and group-scoped arguments.
+arguments:
+  name:
+    type: string
+    optional: false
+    position: 0
+  kind:
+    type: string
+    optional: true
+    position: 1
+  partial-only:
+    type: string
+    optional: false
+    group: partial
+  flag:
+    type: bool
+    optional: true

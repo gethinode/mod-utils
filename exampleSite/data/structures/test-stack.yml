@@ -1,0 +1,5 @@
+comment: Test parent structure used together with the test-card child structure.
+arguments:
+  title:
+    type: string
+    optional: true

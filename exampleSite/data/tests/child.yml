@@ -1,0 +1,14 @@
+cases:
+  - name: child-args-cascade
+    structure: test-stack
+    child: test-card
+    args: {title: Stack, hook: custom-hook}
+  # child arg defaults are stripped when merged (InitTypes drops 'default' for parent args)
+  - name: child-default-stripped
+    structure: test-stack
+    child: test-card
+    args: {title: Stack}
+  - name: child-non-parent-arg-rejected
+    structure: test-stack
+    child: test-card
+    args: {ignored-non-parent: nope}

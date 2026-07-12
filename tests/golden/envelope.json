@@ -1,0 +1,37 @@
+{
+  "default-arg-collision": {
+    "args": {
+      "args": {
+        "default": "user-value"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "plain-arg": {
+    "args": {
+      "args": {
+        "plain": "hello"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "plain": "hello",
+      "warnmsg": []
+    }
+  }
+}

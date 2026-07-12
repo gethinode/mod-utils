@@ -1,0 +1,15 @@
+comment: Sidecar for the test hero component.
+arguments:
+  heading:
+    optional: false
+  link-type:
+    type: select
+    optional: true
+    options:
+      values: [button, link]
+  show-more:
+    type: bool
+    optional: true
+  width:
+    type: int
+    optional: true

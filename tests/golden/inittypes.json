@@ -1,0 +1,355 @@
+{
+  "bookshop-component": {
+    "inittypes": {
+      "err": false,
+      "errmsg": [],
+      "types": {
+        "_bookshop_name": {
+          "comment": "Alias for _bookshop_name.",
+          "group": "partial",
+          "optional": true,
+          "type": "string"
+        },
+        "_ordinal": {
+          "comment": "Zero-based position of the bookshop component within the page's component hierarchy.",
+          "group": "partial",
+          "optional": true,
+          "type": "int"
+        },
+        "heading": {
+          "comment": "Heading of the content block, including a preheading and content element.",
+          "optional": false,
+          "type": "heading"
+        },
+        "id": {
+          "comment": "Unique identifier of the current element.",
+          "optional": true,
+          "type": "string"
+        },
+        "link_type": {
+          "comment": "Style of the link.",
+          "default": "button",
+          "optional": true,
+          "options": {
+            "values": [
+              "button",
+              "link"
+            ]
+          },
+          "type": "select"
+        },
+        "show_more": {
+          "default": false,
+          "optional": true,
+          "type": "bool"
+        },
+        "width": {
+          "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+          "default": 8,
+          "optional": true,
+          "options": {
+            "max": 12,
+            "min": 1
+          },
+          "type": "int"
+        }
+      },
+      "udt": {
+        "heading": {
+          "_reflect": "map[string]interface {}",
+          "align": {
+            "comment": "Alignment of the headline, content, or icon.",
+            "default": "start",
+            "optional": true,
+            "options": {
+              "values": [
+                "start",
+                "center",
+                "end"
+              ]
+            },
+            "type": "select"
+          },
+          "arrangement": {
+            "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+            "config": "style.title.arrangement",
+            "default": "above",
+            "optional": true,
+            "options": {
+              "values": [
+                "above",
+                "first"
+              ]
+            },
+            "type": "select"
+          },
+          "content": {
+            "comment": "Section content displayed below the title.",
+            "optional": true,
+            "type": [
+              "string",
+              "template.HTML"
+            ]
+          },
+          "preheading": {
+            "comment": "Preheading of the section heading.",
+            "optional": true,
+            "type": "string"
+          },
+          "size": {
+            "comment": "Display size of the headline.",
+            "config": "style.title.size",
+            "default": 4,
+            "optional": true,
+            "options": {
+              "max": 6,
+              "min": 1
+            },
+            "type": "int"
+          },
+          "title": {
+            "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+            "optional": true,
+            "type": [
+              "string",
+              "hstring.RenderedString",
+              "hstring.HTML",
+              "template.HTML"
+            ]
+          },
+          "width": {
+            "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+            "default": 8,
+            "optional": true,
+            "options": {
+              "max": 12,
+              "min": 1
+            },
+            "type": "int"
+          }
+        }
+      },
+      "warnmsg": []
+    }
+  },
+  "child-merge": {
+    "inittypes": {
+      "err": false,
+      "errmsg": [],
+      "types": {
+        "hook": {
+          "comment": "Render hook for the element's partial.",
+          "optional": true,
+          "parent": "cascade",
+          "type": "string"
+        },
+        "ratio": {
+          "comment": "Ratio of the media asset. When the asset is an image, it is resized and cropped (not applicable to vector graphics). For video assets, the padding of the embedded frame is adjusted. When set to auto, the original aspect ratio is used.",
+          "optional": true,
+          "parent": "merge",
+          "type": "string"
+        },
+        "title": {
+          "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+          "optional": true,
+          "type": "string"
+        }
+      },
+      "udt": {},
+      "warnmsg": []
+    }
+  },
+  "nested-structure": {
+    "inittypes": {
+      "err": false,
+      "errmsg": [],
+      "types": {
+        "heading": {
+          "comment": "Heading of the content block, including a preheading and content element.",
+          "optional": true,
+          "type": "heading"
+        },
+        "locations": {
+          "comment": "Office location data.",
+          "optional": true,
+          "type": "locations"
+        },
+        "title": {
+          "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+          "optional": true,
+          "type": "string"
+        }
+      },
+      "udt": {
+        "heading": {
+          "_reflect": "map[string]interface {}",
+          "align": {
+            "comment": "Alignment of the headline, content, or icon.",
+            "default": "start",
+            "optional": true,
+            "options": {
+              "values": [
+                "start",
+                "center",
+                "end"
+              ]
+            },
+            "type": "select"
+          },
+          "arrangement": {
+            "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+            "config": "style.title.arrangement",
+            "default": "above",
+            "optional": true,
+            "options": {
+              "values": [
+                "above",
+                "first"
+              ]
+            },
+            "type": "select"
+          },
+          "content": {
+            "comment": "Section content displayed below the title.",
+            "optional": true,
+            "type": [
+              "string",
+              "template.HTML"
+            ]
+          },
+          "preheading": {
+            "comment": "Preheading of the section heading.",
+            "optional": true,
+            "type": "string"
+          },
+          "size": {
+            "comment": "Display size of the headline.",
+            "config": "style.title.size",
+            "default": 4,
+            "optional": true,
+            "options": {
+              "max": 6,
+              "min": 1
+            },
+            "type": "int"
+          },
+          "title": {
+            "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+            "optional": true,
+            "type": [
+              "string",
+              "hstring.RenderedString",
+              "hstring.HTML",
+              "template.HTML"
+            ]
+          },
+          "width": {
+            "comment": "Column width of the element. For embedded elements, the width is relative to the parent's container.",
+            "default": 8,
+            "optional": true,
+            "options": {
+              "max": 12,
+              "min": 1
+            },
+            "type": "int"
+          }
+        },
+        "locations": {
+          "_reflect": "[]interface {}",
+          "address": {
+            "comment": "Address information.",
+            "optional": false,
+            "type": "string"
+          },
+          "anchor": {
+            "comment": "Anchor of the image's crop box, defaults to anchor value set in `imaging` section of the site configuration (usually `Smart`).",
+            "optional": true,
+            "options": {
+              "values": [
+                "TopLeft",
+                "Top",
+                "TopRight",
+                "Left",
+                "Center",
+                "Right",
+                "BottomLeft",
+                "Bottom",
+                "BottomRight",
+                "Smart"
+              ]
+            },
+            "type": "select"
+          },
+          "image": {
+            "comment": "Image to include in the content block or section heading.",
+            "optional": true,
+            "type": "string"
+          },
+          "instructions": {
+            "comment": "Instructions how to reach a location using a specific transport method.",
+            "optional": true,
+            "type": "instructions"
+          },
+          "mode": {
+            "comment": "Flag indicating if the media asset should support color modes. If set, the element searches for images having a matching color-mode suffix such as `-light` or `-dark`.",
+            "default": false,
+            "optional": true,
+            "type": "bool"
+          },
+          "phone": {
+            "comment": "Phone number.",
+            "optional": true,
+            "type": "string"
+          },
+          "title": {
+            "comment": "Title of the element. If the element references a (local) page, the title overrides the referenced page's title.",
+            "optional": true,
+            "type": [
+              "string",
+              "hstring.RenderedString",
+              "hstring.HTML",
+              "template.HTML"
+            ]
+          }
+        }
+      },
+      "warnmsg": []
+    }
+  },
+  "scalar-structure": {
+    "inittypes": {
+      "err": false,
+      "errmsg": [],
+      "types": {
+        "count": {
+          "optional": true,
+          "type": "int"
+        },
+        "data": {
+          "comment": "Path of the input data relative to the site's data folder. Supported data formats include `JSON`, `TOML`, `YAML`, and `XML`. You can omit the file extension.",
+          "optional": true,
+          "type": "dict"
+        },
+        "flag": {
+          "optional": true,
+          "type": "bool"
+        },
+        "items-list": {
+          "optional": true,
+          "type": "slice"
+        },
+        "label": {
+          "comment": "Assistive label of the element.",
+          "optional": true,
+          "type": "string"
+        },
+        "ratio-value": {
+          "optional": true,
+          "type": "float"
+        }
+      },
+      "udt": {},
+      "warnmsg": []
+    }
+  }
+}

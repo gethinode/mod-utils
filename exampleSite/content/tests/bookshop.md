@@ -1,0 +1,4 @@
+---
+title: Bookshop
+outputs: ["json"]
+---

@@ -1,0 +1,14 @@
+comment: Test child structure exercising the 'child' parameter of InitArgs.
+arguments:
+  hook:
+    type: string
+    optional: true
+    parent: cascade
+    default: child-default
+  ratio:
+    type: string
+    optional: true
+    parent: merge
+  ignored-non-parent:
+    type: string
+    optional: true

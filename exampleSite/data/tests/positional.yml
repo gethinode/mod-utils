@@ -1,0 +1,16 @@
+cases:
+  - name: both-positions
+    structure: test-required
+    named: false
+    group: shortcode
+    args: ["alpha", "beta"]
+  - name: first-position-only
+    structure: test-required
+    named: false
+    group: shortcode
+    args: ["alpha"]
+  - name: excess-position-errors
+    structure: test-required
+    named: false
+    group: shortcode
+    args: ["alpha", "beta", "gamma"]

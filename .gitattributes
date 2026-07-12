@@ -1,0 +1,2 @@
+# Golden test files are byte-compared against Hugo output; never convert their line endings.
+tests/golden/*.json text eol=lf
