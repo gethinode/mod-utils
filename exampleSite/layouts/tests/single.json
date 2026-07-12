@@ -15,6 +15,12 @@
             "child"     ($case.child | default "")
         ) -}}
         {{- $entry = dict "schema" $compiled -}}
+    {{- else if eq $case.api "inittypes" -}}
+        {{- $entry = dict "inittypes" (partial "utilities/InitTypes.html" (dict
+            "structure" ($case.structure | default "")
+            "bookshop"  ($case.bookshop | default "")
+            "child"     ($case.child | default "")
+        )) -}}
     {{- else -}}
         {{- $params := dict
             "structure" ($case.structure | default "")

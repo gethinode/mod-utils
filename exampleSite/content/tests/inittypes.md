@@ -1,0 +1,4 @@
+---
+title: inittypes
+outputs: ["json"]
+---

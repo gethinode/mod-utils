@@ -1,0 +1,14 @@
+cases:
+  - name: scalar-structure
+    api: inittypes
+    structure: test-cast
+  - name: nested-structure
+    api: inittypes
+    structure: test-nested
+  - name: bookshop-component
+    api: inittypes
+    bookshop: test-hero
+  - name: child-merge
+    api: inittypes
+    structure: test-stack
+    child: test-card
