@@ -25,11 +25,15 @@
     {{ return $def }}
 {{ end }}
 
-{{ $compiled := partial "utilities/ArgsSchema.html" (dict
-    "structure" (.structure | default "")
-    "bookshop"  (.bookshop | default "")
-    "child"     (.child | default "")
-) }}
+{{ $structure := .structure | default "" }}
+{{ $bookshop := .bookshop | default "" }}
+{{ $child := .child | default "" }}
+
+{{ $compiled := partialCached "utilities/ArgsSchema.html" (dict
+    "structure" $structure
+    "bookshop"  $bookshop
+    "child"     $child
+) $structure $bookshop $child }}
 
 {{ $types := dict }}
 {{ $udt := dict }}

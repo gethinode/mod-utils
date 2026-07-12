@@ -296,7 +296,7 @@
 {{ $out := dict }}
 {{ $name := or $structure $bookshop }}
 
-{{ $compiled := partial "utilities/ArgsSchema.html" (dict "structure" $structure "bookshop" $bookshop "child" $child) }}
+{{ $compiled := partialCached "utilities/ArgsSchema.html" (dict "structure" $structure "bookshop" $bookshop "child" $child) (or $structure "") (or $bookshop "") (or $child "") }}
 {{ if $compiled.err }}
     {{ range $compiled.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
 {{ else }}

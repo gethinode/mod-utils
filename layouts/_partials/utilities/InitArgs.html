@@ -46,7 +46,7 @@
     {{ $warnmsg = $res.warnmsg }}
 
     {{ if not $error }}
-        {{ $compiled := partial "utilities/ArgsSchema.html" (dict "structure" $structure "bookshop" $bookshop "child" $child) }}
+        {{ $compiled := partialCached "utilities/ArgsSchema.html" (dict "structure" $structure "bookshop" $bookshop "child" $child) (or $structure "") (or $bookshop "") (or $child "") }}
         {{ range $key, $node := $compiled.schema }}
             {{ $val := index $res.args $node.camelKey }}
             {{ if ne $val nil }}
