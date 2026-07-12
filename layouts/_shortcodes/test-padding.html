@@ -5,3 +5,7 @@
 <p>equal: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "mobileX" 5) "axis" "x") }}</p>
 <p>zero: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "x" 5 "mobileX" 0) "axis" "x") }}</p>
 <p>pb: {{ partial "utilities/PaddingClasses.html" (dict "padding" (dict "y" 4 "mobileY" 2) "axis" "y" "prefix" "pb") }}</p>
+{{- $zt := partial "utilities/GetPadding.html" (dict "section" "zerotest") -}}
+<p>zerotest: {{ partial "utilities/PaddingClasses.html" (dict "padding" $zt "axis" "x") }}</p>
+{{- $ft := partial "utilities/GetPadding.html" (dict "section" "fallbacktest") -}}
+<p>fallbacktest x: {{ $ft.x }} mobileX: {{ $ft.mobileX }} classes: {{ partial "utilities/PaddingClasses.html" (dict "padding" $ft "axis" "x") }}</p>
