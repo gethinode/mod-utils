@@ -1,7 +1,7 @@
 # Design: Argument and Type System Redesign (core + shim)
 
 - **Date:** 2026-07-12
-- **Status:** Draft — pending user review
+- **Status:** Implemented (phases 0–4)
 - **Scope:** mod-utils v5 (`InitArgs.html`, `InitTypes.html`, and supporting data files)
 - **Consumers affected:** ~160 call sites across Hinode, mod-blocks, and 13+ other
   modules; docs generation (`args.md` shortcode in Hinode); Bookshop blueprint and
@@ -360,3 +360,86 @@ consistent with how mod-utils has rolled out stricter validation historically.
    (all-null blueprints, snake_case, implicit args) and the `child` structure path;
    all new files respect the expose-glob placement rule (§1.3); live editing
    verified manually on a CloudCannon-connected site before the phase-3 release.
+
+## 8. Deviation log (phases 0–4, as executed)
+
+Recorded during implementation (Tasks 6–10); each item is a deviation from this spec's literal
+wording, not a change to its intent. See `.superpowers/sdd/progress.md` and
+`.superpowers/sdd/task-{6,7,8,9}-report.md` for full detail.
+
+1. **Hugo single-return-per-define restriction.** The pinned toolchain (hugo-extended 0.164.0)
+   rejects a second `{{ return }}` in the same `define` block — including on an unreached branch
+   — with `wrong number of args for return: want 0 got 1`. Every partial in this design that the
+   spec sketches with multiple early-exit returns (`compile-node.html`, `validate-node.html`,
+   `site-param.html`'s bare-`nil` assignment) was restructured to a single unconditional trailing
+   `return`, using guard variables and if/else branch assignment instead of early exits. No
+   semantics changed — verified by byte-identical goldens for every case not targeted by an
+   intentional fix.
+
+2. **Element-wise message appends.** Hugo's `append` template function only flattens a single
+   appended slice into an accumulator when the accumulator's concrete Go type matches the
+   appended slice's type. A whole-slice `$acc = $acc | append $child.errmsg` silently nests
+   instead of flattening once a zero-error member (contributing an untyped empty slice) is
+   interleaved, in key order, with error-producing members (contributing a concretely-typed
+   `[]string`) — breaking the documented "flat `[]string`" contract for `errmsg`/`warnmsg`.
+   Every accumulation site in `ArgsSchema.html`, `Args.html`, and their inline `define`s uses an
+   explicit `range`/`append` loop instead of a whole-slice `append`.
+
+3. **Reflect-type passthrough via a `reflects` node field, instead of erroring on Go type
+   names.** Real data declares union types that include bare Go reflect-type strings (the global
+   `title`/`content`/`description` definitions: `hstring.RenderedString`, `hstring.HTML`,
+   `template.HTML`; `log.details`: `[]string`, `[]interface {}`; `icon.type`: `uint64`). Rather
+   than treating every non-primitive-alias, non-UDT type name as a schema compile error,
+   `ArgsSchema.html` collects names containing `.`, `[`, or `*` into an optional node field
+   `reflects` ([]string, declared order) and matches them verbatim against `printf "%T"` at
+   validation time — legacy parity. Dot/bracket/asterisk-less barewords still error as genuine
+   unknown-type typos. Without this, most real Hinode structures (anything reusing the global
+   `title`, or `log.yml` itself — used by every warning/error call in the ecosystem) would fail
+   to compile.
+
+4. **Cycle fixture impossible from test-only data.** The golden harness could not construct a
+   genuine circular user-defined-type reference (a UDT referencing itself or an ancestor) purely
+   from test-only fixture data without a production structure change out of scope for this
+   effort. The compiler's cycle-detection stack guard is therefore verified by code inspection
+   and an isolated, uncommitted repro rather than an end-to-end golden case, and remains
+   defensive rather than regression-tested.
+
+5. **Excess-positional findings are warnings-first in shim mode (spec criterion 5 governed).**
+   The plan originally pre-authorized excess positional arguments as an error-classified golden
+   diff. During the Task 8 Hinode smoke test this broke `mod-fontawesome`'s `fas`/`fab`/`icon`
+   shortcodes (they intentionally forward extra positions they already handle themselves). Per
+   acceptance criterion 5 ("Hinode … build with zero new *errors* through the shim path"), this
+   was overruled: excess-positional findings are now classified as newly-detectable
+   (warnings-first) like the other new problem classes, promoted to errors only on the strict
+   (`Args.html`, `strict: true`) path.
+
+6. **Four core fixes surfaced by the Hinode smoke test (Task 8), beyond that task's literal
+   scope, because they blocked real content from building:**
+   - The numeric range/min-max check's falsy exemption was removed — legacy never exempted `0`
+     from range checks (only the type check has a legacy-documented falsy skip, defect 3); the
+     exemption had been copy-pasted onto the range check too.
+   - Reflect-type-name detection was broadened from dot-only to dot/bracket/asterisk-containing
+     names, so composite/pointer Go types (`[]string`, `map[string]interface {}`,
+     `*resources.resourceAdapter`) pass through instead of erroring.
+   - The integer alias set was extended to `uint`/`uint8..64` (previously only `int`/`int64`
+     were recognized), matching `inline/value-kind.html`'s existing "int" kind grouping.
+   - Same-named global/local arguments that redeclare `type` to something unrelated now merge
+     from a clean slate (global `default`/`config`/`options` stripped before merging the local
+     override) instead of leaking the global's value-resolution fields across an unrelated type
+     — this was a hard `errorf`-level build crash on every Hinode page via the navbar's
+     `button-size`/`size` collision.
+
+7. **The legacy `dict` type alias never matched real data — its replacement is a fix, not a
+   preserved quirk.** Early plan language described the legacy `dict` alias
+   (`[]map[string]interface {}`) as a "quirk kept on purpose." End-to-end characterization
+   (Task 2) showed it matched neither a real Go map nor a slice of maps passed by any real
+   caller — both forms produced a hard build crash via `findRE`. The redesigned `dict` kind
+   (accepting `map` or `maplist`) is a deliberate, intentional fix, not legacy-quirk
+   preservation.
+
+8. **False/0 defaults are now applied — legacy never applied them.** Legacy's
+   `or $def.config $def.default` fallback treats `false`/`0` as falsy and silently skips them in
+   favor of no default at all (defect 4's sibling on the static-default path, not just the
+   `config` path). The redesign resolves defaults via `isset`, so a static `default: false` or
+   `default: 0` now actually applies — visible as a golden flip wherever a component declares a
+   falsy default (e.g. Bookshop's `show_more`).
