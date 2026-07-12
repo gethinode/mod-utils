@@ -8,7 +8,10 @@
     Compile the argument schema of a structure or bookshop component into a self-contained,
     recursive schema tree. The result is a pure function of the site's data files; invoke through
     partialCached keyed by the (structure, bookshop, child) triple. See the plan/spec for the
-    node shape.
+    node shape. In addition to the fields documented there, a node carries an optional
+    "reflects" field: a []string of raw package-qualified Go reflect-type names (e.g.
+    "template.HTML") declared in the data files, matched verbatim against printf "%T" at
+    validation time.
 */}}
 
 {{ define "_partials/inline/camel-key.html" }}
@@ -58,6 +61,7 @@
         {{ $children := dict }}
         {{ $udtType := "" }}
         {{ $udts := 0 }}
+        {{ $reflects := slice }}
 
         {{ range $type := $declared }}
             {{ if in (slice "string" "path" "select" "url") $type }}
@@ -78,7 +82,13 @@
             {{ else }}
                 {{ $shape := index $typesData $type }}
                 {{ if eq $shape nil }}
-                    {{ $errmsg = $errmsg | append (printf "schema: unknown type '%s' for '%s'" $type $path) }}
+                    {{ if strings.Contains $type "." }}
+                        {{/* package-qualified Go reflect-type name (e.g. template.HTML): pass through
+                             verbatim for a printf "%T" match at validation time, as legacy did */}}
+                        {{ $reflects = $reflects | append $type }}
+                    {{ else }}
+                        {{ $errmsg = $errmsg | append (printf "schema: unknown type '%s' for '%s'" $type $path) }}
+                    {{ end }}
                 {{ else if in $stack $type }}
                     {{ $errmsg = $errmsg | append (printf "schema: circular type reference '%s' for '%s'" $type $path) }}
                 {{ else }}
@@ -103,7 +113,9 @@
                                 "stack"     ($stack | append $type)
                                 "path"      (printf "%s.%s" $path $member)
                             ) }}
-                            {{ $errmsg = $errmsg | append $child.errmsg }}
+                            {{/* element-wise append: appending a whole slice nests instead of
+                                 flattening once the accumulator's concrete type diverges */}}
+                            {{ range $child.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
                             {{ with $child.node }}{{ $children = merge $children (dict $member .) }}{{ end }}
                         {{ end }}
                     {{ end }}
@@ -123,6 +135,7 @@
             "optional" (default false $def.optional)
         }}
         {{ if $children }}{{ $node = merge $node (dict "children" $children "udtType" $udtType) }}{{ end }}
+        {{ if $reflects }}{{ $node = merge $node (dict "reflects" $reflects) }}{{ end }}
         {{ if ne $def.default nil }}{{ $node = merge $node (dict "default" $def.default) }}{{ end }}
         {{ with $def.config }}{{ $node = merge $node (dict "config" .) }}{{ end }}
         {{ with $def.options }}{{ $node = merge $node (dict "options" .) }}{{ end }}
@@ -203,7 +216,8 @@
         "stack"     slice
         "path"      (printf "%s.%s" $name $key)
     ) }}
-    {{ $errmsg = $errmsg | append $result.errmsg }}
+    {{/* element-wise append: see note in compile-node.html */}}
+    {{ range $result.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
     {{ with $result.node }}
         {{ $schema = merge $schema (dict $key .) }}
         {{ if isset . "position" }}

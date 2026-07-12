@@ -1,15 +1,8 @@
 {
   "bookshop-blueprint": {
     "schema": {
-      "err": true,
-      "errmsg": [
-        "schema: unknown type 'template.HTML' for 'test-hero.heading.content'",
-        [
-          "schema: unknown type 'hstring.RenderedString' for 'test-hero.heading.title'",
-          "schema: unknown type 'hstring.HTML' for 'test-hero.heading.title'",
-          "schema: unknown type 'template.HTML' for 'test-hero.heading.title'"
-        ]
-      ],
+      "err": false,
+      "errmsg": [],
       "positions": {},
       "schema": {
         "_bookshop_name": {
@@ -101,6 +94,9 @@
               "kind": "scalar",
               "name": "content",
               "optional": true,
+              "reflects": [
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "template.HTML"
@@ -147,6 +143,11 @@
               "kind": "scalar",
               "name": "title",
               "optional": true,
+              "reflects": [
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "hstring.RenderedString",
@@ -315,10 +316,7 @@
       "err": true,
       "errmsg": [
         "schema: unknown type 'no-such-type' for 'test-cycle.bogus-typed'",
-        "schema: missing type for 'test-cycle.root-node.member-without-global-def'",
-        "schema: unknown type 'hstring.RenderedString' for 'test-cycle.root-node.title'",
-        "schema: unknown type 'hstring.HTML' for 'test-cycle.root-node.title'",
-        "schema: unknown type 'template.HTML' for 'test-cycle.root-node.title'"
+        "schema: missing type for 'test-cycle.root-node.member-without-global-def'"
       ],
       "positions": {},
       "schema": {
@@ -347,6 +345,11 @@
               "kind": "scalar",
               "name": "title",
               "optional": true,
+              "reflects": [
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "hstring.RenderedString",
@@ -368,24 +371,8 @@
   },
   "nested-structure": {
     "schema": {
-      "err": true,
-      "errmsg": [
-        "schema: unknown type 'template.HTML' for 'test-nested.heading.content'",
-        [
-          "schema: unknown type 'hstring.RenderedString' for 'test-nested.heading.title'",
-          "schema: unknown type 'hstring.HTML' for 'test-nested.heading.title'",
-          "schema: unknown type 'template.HTML' for 'test-nested.heading.title'"
-        ],
-        "schema: unknown type 'template.HTML' for 'test-nested.locations.instructions.description'",
-        "schema: unknown type 'hstring.RenderedString' for 'test-nested.locations.instructions.title'",
-        "schema: unknown type 'hstring.HTML' for 'test-nested.locations.instructions.title'",
-        "schema: unknown type 'template.HTML' for 'test-nested.locations.instructions.title'",
-        [
-          "schema: unknown type 'hstring.RenderedString' for 'test-nested.locations.title'",
-          "schema: unknown type 'hstring.HTML' for 'test-nested.locations.title'",
-          "schema: unknown type 'template.HTML' for 'test-nested.locations.title'"
-        ]
-      ],
+      "err": false,
+      "errmsg": [],
       "positions": {},
       "schema": {
         "heading": {
@@ -445,6 +432,9 @@
               "kind": "scalar",
               "name": "content",
               "optional": true,
+              "reflects": [
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "template.HTML"
@@ -491,6 +481,11 @@
               "kind": "scalar",
               "name": "title",
               "optional": true,
+              "reflects": [
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "hstring.RenderedString",
@@ -602,6 +597,9 @@
                   "kind": "scalar",
                   "name": "description",
                   "optional": true,
+                  "reflects": [
+                    "template.HTML"
+                  ],
                   "types": [
                     "string",
                     "template.HTML"
@@ -616,6 +614,11 @@
                   "kind": "scalar",
                   "name": "title",
                   "optional": true,
+                  "reflects": [
+                    "hstring.RenderedString",
+                    "hstring.HTML",
+                    "template.HTML"
+                  ],
                   "types": [
                     "string",
                     "hstring.RenderedString",
@@ -669,6 +672,11 @@
               "kind": "scalar",
               "name": "title",
               "optional": true,
+              "reflects": [
+                "hstring.RenderedString",
+                "hstring.HTML",
+                "template.HTML"
+              ],
               "types": [
                 "string",
                 "hstring.RenderedString",
