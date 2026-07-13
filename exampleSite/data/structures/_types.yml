@@ -101,6 +101,7 @@ types:
     media-id:
     autoplay:
     query-args:
+    color:
   testimonials:
     - logo:
       content:
