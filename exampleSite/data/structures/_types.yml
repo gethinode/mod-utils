@@ -18,11 +18,15 @@ types:
     content:
     align:
     arrangement:
-    width:
+    # no inherited default: consuming partials supply their own width fallback
+    # (hero derives 8, section-title spans the full column) as in v5
+    width: { default: }
     size:
   illustration:
     image:
-    justify:
+    # no inherited default: hero-image centers by default and only applies
+    # md justification when explicitly set, as in v5
+    justify: { default: }
     caption:
     caption-url:
     icon:
@@ -30,7 +34,9 @@ types:
     class:
     anchor:
     mode:
-    width:
+    # no inherited default: the global width default (8) is meant for text
+    # columns and shrinks images; partials fall back to a full column as in v5
+    width: { default: }
     image-overlay:
     hook:
   instructions:
@@ -74,8 +80,10 @@ types:
       download:
       icon:
       force:
-      order:
-      outline:
+      # no inherited defaults: downstream partials layer their own (download.yml
+      # sets outline/order; section context supplies order) as in v5
+      order: { default: }
+      outline: { default: }
   messages:
     - title:
       icon:
@@ -93,9 +101,11 @@ types:
     values:
   styles:
     - ratio:
-      orientation:
-      portrait:
-      width:
+      # no inherited defaults: per-style overrides fall back to the card-group
+      # context values (inline/style.html) as in v5
+      orientation: { default: }
+      portrait: { default: }
+      width: { default: }
   video:
     provider:
     account:

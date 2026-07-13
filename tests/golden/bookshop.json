@@ -21,8 +21,7 @@
         "align": "start",
         "arrangement": "above",
         "size": 4,
-        "title": "Hello",
-        "width": 8
+        "title": "Hello"
       },
       "linkType": "button",
       "link_type": "button",
@@ -40,8 +39,7 @@
           "align": "start",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "linkType": "button",
         "showMore": false,
@@ -51,7 +49,6 @@
         "heading.align",
         "heading.arrangement",
         "heading.size",
-        "heading.width",
         "link_type"
       ],
       "err": true,
@@ -78,8 +75,7 @@
           "align": "start",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "linkType": "button",
         "showMore": false,
@@ -89,7 +85,6 @@
         "heading.align",
         "heading.arrangement",
         "heading.size",
-        "heading.width",
         "link_type",
         "show_more",
         "width"
@@ -113,8 +108,7 @@
         "align": "start",
         "arrangement": "above",
         "size": 4,
-        "title": "Hello",
-        "width": 8
+        "title": "Hello"
       },
       "linkType": "button",
       "link_type": "button",
@@ -131,8 +125,7 @@
           "align": "start",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "linkType": "link",
         "showMore": false,
@@ -142,7 +135,6 @@
         "heading.align",
         "heading.arrangement",
         "heading.size",
-        "heading.width",
         "show_more",
         "width"
       ],
@@ -163,8 +155,7 @@
         "align": "start",
         "arrangement": "above",
         "size": 4,
-        "title": "Hello",
-        "width": 8
+        "title": "Hello"
       },
       "linkType": "link",
       "link_type": "link",
@@ -184,8 +175,7 @@
           "align": "start",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "linkType": "link",
         "showMore": true,
@@ -195,7 +185,6 @@
         "heading.align",
         "heading.arrangement",
         "heading.size",
-        "heading.width",
         "width"
       ],
       "err": false,
@@ -214,8 +203,7 @@
         "align": "start",
         "arrangement": "above",
         "size": 4,
-        "title": "Hello",
-        "width": 8
+        "title": "Hello"
       },
       "linkType": "link",
       "link_type": "link",
@@ -232,8 +220,7 @@
           "align": "start",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "linkType": "button",
         "showMore": false,
@@ -243,7 +230,6 @@
         "heading.align",
         "heading.arrangement",
         "heading.size",
-        "heading.width",
         "link_type",
         "show_more",
         "width"
