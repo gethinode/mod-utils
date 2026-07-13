@@ -63,6 +63,7 @@ types:
       image:
       mode:
       content:
+      link:
   links:
     - title:
       url:
