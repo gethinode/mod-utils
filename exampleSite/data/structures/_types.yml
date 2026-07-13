@@ -74,6 +74,7 @@ types:
       icon:
       force:
       order:
+      outline:
   messages:
     - title:
       icon:
