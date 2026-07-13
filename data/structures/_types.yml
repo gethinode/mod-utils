@@ -94,6 +94,7 @@ types:
     provider:
     account:
     id:
+    media-id:
     autoplay:
     query-args:
   testimonials:
@@ -101,6 +102,7 @@ types:
       content:
       client:
       link:
+      icon:
   client:
     contact:
     role:
