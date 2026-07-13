@@ -6,15 +6,13 @@
           "align": "center",
           "arrangement": "above",
           "size": 4,
-          "title": "Hello",
-          "width": 8
+          "title": "Hello"
         },
         "locations": []
       },
       "defaulted": [
         "heading.arrangement",
-        "heading.size",
-        "heading.width"
+        "heading.size"
       ],
       "err": false,
       "errmsg": [],
@@ -28,8 +26,7 @@
         "align": "center",
         "arrangement": "above",
         "size": 4,
-        "title": "Hello",
-        "width": 8
+        "title": "Hello"
       },
       "locations": [],
       "warnmsg": []
