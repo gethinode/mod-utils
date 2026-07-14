@@ -1,0 +1,34 @@
+{{/*
+    Returns a page-unique, build-stable element id of the form "<prefix>-<n>", counting from 1.
+
+    Use this instead of hashing `now` (which changes the id on every build, so a page carrying the
+    component never renders byte-identically) and instead of `.Ordinal` (which restarts at 0 inside
+    an embedded RenderString, as the `example` shortcode performs, so ids collide).
+
+    The counter lives in the page's Store, namespaced per prefix, so each component type counts
+    independently. Gaps are expected and harmless: Hugo renders a page's content more than once
+    (the search index calls `.Plain`), and a discarded pass consumes a value without emitting an id.
+
+    A DOM id need only be unique within the document that carries it, so no attempt is made to be
+    unique across pages.
+
+    Arguments:
+      prefix  (string, required)  the id's leading segment, e.g. "panel"
+      page    (optional)          the page to anchor the counter to; defaults to the current page
+*/}}
+
+{{- $prefix := .prefix -}}
+{{- if not $prefix -}}
+    {{- errorf "partial [utilities/UniqueID.html] - missing required argument 'prefix'" -}}
+{{- end -}}
+
+{{- $page := .page -}}
+{{- if not $page -}}
+    {{- $page = page -}}
+{{- end -}}
+
+{{- $key := printf "hinode-uid-%s" $prefix -}}
+{{- $count := add (or ($page.Store.Get $key) 0) 1 -}}
+{{- $page.Store.Set $key $count -}}
+
+{{- return printf "%s-%d" $prefix $count -}}
