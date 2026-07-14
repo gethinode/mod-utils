@@ -1688,8 +1688,7 @@ arguments:
     type: bool
     optional: true
     comment: >-
-      Toggle the last column to wrap to a new row on smaller devices. This
-      setting is not compatible with data tables.
+      Toggle the last column to wrap to a new row on smaller devices.
   wrapper:
     type: string
     optional: true
