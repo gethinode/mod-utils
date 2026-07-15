@@ -1,16 +1,30 @@
 {{/*
-    Returns a page-unique, build-stable element id of the form "<prefix>-<n>", counting from 1.
+    Returns a page-unique, build-stable element id of the form "<prefix>-UID-<n>", counting from 1.
 
     Use this instead of hashing `now` (which changes the id on every build, so a page carrying the
     component never renders byte-identically) and instead of `.Ordinal` (which restarts at 0 inside
     an embedded RenderString, as the `example` shortcode performs, so ids collide).
 
     The counter lives in the page's Store, namespaced per prefix, so each component type counts
-    independently. Gaps are expected and harmless: Hugo renders a page's content more than once
-    (the search index calls `.Plain`), and a discarded pass consumes a value without emitting an id.
+    independently. The counter is contiguous: every call consumes and emits one value. A caller may
+    still drop the id it was handed (Hinode's `nav.html`, for instance, renders no dropdown element
+    for `tab-type: buttons`), which leaves an apparent gap in the rendered document - the value was
+    used, just not on an element that carries an id.
+
+    The literal "UID" segment is deliberate and load-bearing: it keeps these ids out of the space
+    Hugo's `anchorize` can occupy. Hugo derives heading anchors with `autoHeadingIDType = 'github'`,
+    which lowercases and reduces the heading to [a-z0-9-_], and de-duplicates repeated headings by
+    appending "-1", "-2", ... A page with two "FAQ" headings therefore emits `faq` and `faq-1`, which
+    would collide head-on with a bare `faq-1` container id - Bootstrap resolves `data-bs-parent`
+    with `querySelector`, which would then bind the accordion to the heading. An uppercase segment
+    is unreachable for `anchorize`, so the collision cannot occur. Do not "simplify" it away.
 
     A DOM id need only be unique within the document that carries it, so no attempt is made to be
     unique across pages.
+
+    The counter is read and written non-atomically. That is safe as used, since Hugo renders a given
+    page's templates on a single goroutine - but never hand this partial a page other than the one
+    being rendered, as two concurrently rendered pages sharing a counter would race.
 
     Arguments:
       prefix  (string, required)  the id's leading segment, e.g. "panel"
@@ -31,4 +45,4 @@
 {{- $count := add (or ($page.Store.Get $key) 0) 1 -}}
 {{- $page.Store.Set $key $count -}}
 
-{{- return printf "%s-%d" $prefix $count -}}
+{{- return printf "%s-UID-%d" $prefix $count -}}
