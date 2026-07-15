@@ -362,9 +362,20 @@
         {{ $isProvided := isset $normalized $key }}
         {{ $val := index $normalized $key }}
         {{ $wasProvided := and $isProvided (ne $val nil) }}
-        {{ $res := partial "inline/validate-node.html" (dict
-            "value" $val "node" $node "path" $key "name" $name
-            "depth" 0 "provided" $wasProvided) }}
+        {{ $res := dict }}
+        {{ if $isProvided }}
+            {{ $res = partial "inline/validate-node.html" (dict
+                "value" $val "node" $node "path" $key "name" $name
+                "depth" 0 "provided" $wasProvided) }}
+        {{ else }}
+            {{/* an absent key's validation is a constant per (structure, bookshop, child, key):
+                 it reads only the compiled node and site.Params (via inline/site-param.html for
+                 'config:' defaults) — never page state. partialCached is per-language, so
+                 language-scoped site.Params lookups stay correct. */}}
+            {{ $res = partialCached "inline/validate-node.html" (dict
+                "value" $val "node" $node "path" $key "name" $name
+                "depth" 0 "provided" $wasProvided) (or $structure "") (or $bookshop "") (or $child "") $key }}
+        {{ end }}
         {{ range $res.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
         {{ range $res.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
         {{ range $res.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
