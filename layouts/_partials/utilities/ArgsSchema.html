@@ -264,4 +264,18 @@
     {{ end }}
 {{ end }}
 
-{{ return (dict "schema" $schema "positions" $positions "err" (gt (len $errmsg) 0) "errmsg" $errmsg) }}
+{{/* precompute each key's absent-value validation outcome (value nil, provided false): it is a
+     constant per (structure, bookshop, child, key), reading only the compiled node and
+     site.Params (via inline/site-param.html for 'config:' defaults) — never page state.
+     Args.html indexes this map instead of re-validating absent keys on every call. This makes
+     the envelope depend on site.Params in addition to the site's data files; partialCached is
+     per-language, so language-scoped lookups stay correct. */}}
+{{ $absent := dict }}
+{{ range $key, $node := $schema }}
+    {{ $res := partial "inline/validate-node.html" (dict
+        "value" nil "node" $node "path" $key "name" $name
+        "depth" 0 "provided" false) }}
+    {{ $absent = merge $absent (dict $key $res) }}
+{{ end }}
+
+{{ return (dict "schema" $schema "positions" $positions "absent" $absent "err" (gt (len $errmsg) 0) "errmsg" $errmsg) }}

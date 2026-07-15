@@ -1,6 +1,71 @@
 {
   "bookshop-blueprint": {
     "schema": {
+      "absent": {
+        "_bookshop_name": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "_ordinal": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "heading": {
+          "defaulted": [
+            "heading.align",
+            "heading.arrangement",
+            "heading.size"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": {
+            "align": "start",
+            "arrangement": "above",
+            "size": 4
+          },
+          "warnmsg": []
+        },
+        "id": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "link_type": {
+          "defaulted": [
+            "link_type"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": "button",
+          "warnmsg": []
+        },
+        "show_more": {
+          "defaulted": [
+            "show_more"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": false,
+          "warnmsg": []
+        },
+        "width": {
+          "defaulted": [
+            "width"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": 8,
+          "warnmsg": []
+        }
+      },
       "err": false,
       "errmsg": [],
       "positions": {},
@@ -251,6 +316,29 @@
   },
   "child-merge": {
     "schema": {
+      "absent": {
+        "hook": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "ratio": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "title": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
       "err": false,
       "errmsg": [],
       "positions": {},
@@ -301,6 +389,22 @@
   },
   "compile-errors": {
     "schema": {
+      "absent": {
+        "bogus-typed": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "root-node": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
       "err": true,
       "errmsg": [
         "schema: unknown type 'no-such-type' for 'test-cycle.bogus-typed'",
@@ -359,6 +463,37 @@
   },
   "nested-structure": {
     "schema": {
+      "absent": {
+        "heading": {
+          "defaulted": [
+            "heading.align",
+            "heading.arrangement",
+            "heading.size"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": {
+            "align": "start",
+            "arrangement": "above",
+            "size": 4
+          },
+          "warnmsg": []
+        },
+        "locations": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": [],
+          "warnmsg": []
+        },
+        "title": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
       "err": false,
       "errmsg": [],
       "positions": {},
@@ -699,6 +834,36 @@
   },
   "positions": {
     "schema": {
+      "absent": {
+        "flag": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "kind": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "name": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "partial-only": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
       "err": false,
       "errmsg": [],
       "positions": {
@@ -765,6 +930,50 @@
   },
   "scalar-structure": {
     "schema": {
+      "absent": {
+        "count": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "data": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "flag": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "items-list": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "label": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
+        "ratio-value": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
       "err": false,
       "errmsg": [],
       "positions": {},
