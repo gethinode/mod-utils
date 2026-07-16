@@ -362,9 +362,16 @@
         {{ $isProvided := isset $normalized $key }}
         {{ $val := index $normalized $key }}
         {{ $wasProvided := and $isProvided (ne $val nil) }}
-        {{ $res := partial "inline/validate-node.html" (dict
-            "value" $val "node" $node "path" $key "name" $name
-            "depth" 0 "provided" $wasProvided) }}
+        {{ $res := dict }}
+        {{ if $isProvided }}
+            {{ $res = partial "inline/validate-node.html" (dict
+                "value" $val "node" $node "path" $key "name" $name
+                "depth" 0 "provided" $wasProvided) }}
+        {{ else }}
+            {{/* an absent key's validation is a constant per (structure, bookshop, child, key);
+                 read the outcome precomputed in the cached ArgsSchema.html envelope */}}
+            {{ $res = index $compiled.absent $key }}
+        {{ end }}
         {{ range $res.errmsg }}{{ $errmsg = $errmsg | append . }}{{ end }}
         {{ range $res.newmsg }}{{ $newmsg = $newmsg | append . }}{{ end }}
         {{ range $res.warnmsg }}{{ $warnmsg = $warnmsg | append . }}{{ end }}
