@@ -1,12 +1,31 @@
-<!-- 
-    Purges any HTML comments from raw content, if applicable. The partial supports the following arguments:
+<!--
+    Renders raw Markdown input as a content fragment, optionally purging HTML comments first.
+    Since the render-once release, Hinode serves page bodies from Hugo's cached .Content; this
+    partial remains the render path for fragments only. The partial supports the following
+    arguments:
     "page"          Required page context, used to render shortcodes properly.
-    "raw"           Raw page content, e.g. .Page.RawContent.
+    "raw"           Raw fragment content, e.g. a trimmed .RawContent or a shortcode's .Inner.
+
+    The site parameter `debugging.purgeHTMLComments` is deprecated: page bodies no longer flow
+    through this partial, so the parameter cannot keep its input-side meaning — it now affects
+    fragments only. The purge branch keeps working for fragments in this release and will be
+    removed in mod-utils v7. Use Hugo's `ignoreLogs = ['warning-goldmark-raw-html']` site
+    setting to suppress the Goldmark raw-HTML warning instead. The deprecation warning is
+    gated behind the site parameter `debugging.showDeprecations` while in-org sites still set
+    the parameter, so that site authors are not warned about configuration they inherited.
 -->
 
 {{ $page := .page -}}
 {{ $raw := .raw -}}
 {{- if site.Params.debugging.purgeHTMLComments -}}
+    {{- if site.Params.debugging.showDeprecations -}}
+        {{- partial "utilities/LogWarn.html" (dict
+            "partial" "utilities/ProcessContent.html"
+            "warnid"  "warn-deprecated-purge-html-comments"
+            "msg"     "Parameter 'debugging.purgeHTMLComments' is deprecated and will be removed in v7, use ignoreLogs = ['warning-goldmark-raw-html'] instead"
+            "file"    $page.File
+        ) -}}
+    {{- end -}}
     {{- $raw = replaceRE "<!--(.|\n)*?-->" "" $raw -}}
 {{- end -}}
 {{ $content := emojify $raw | $page.RenderString }}
