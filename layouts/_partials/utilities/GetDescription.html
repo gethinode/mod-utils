@@ -5,7 +5,7 @@
         "partial" "utilities/description.html" 
         "msg" "Invalid arguments"
         "details" $args.errmsg
-        "file" page.File
+        "file" (or $args.page page).File
     )}}
 {{ end }}
 
