@@ -1,0 +1,18 @@
+{{/*
+    Returns the site's base URL path for the current language, e.g. "/" for a site served from
+    the domain root and "/docs/" for a site served from a subdirectory. The language prefix is
+    stripped from the home page's relative permalink: on a multilingual site (or a site with
+    defaultContentLanguageInSubdir enabled) the home permalink carries the language as a
+    trailing path segment ("/fr/", "/docs/fr/"), which trims to the shared base path; when the
+    language is served from the root the trim is a no-op.
+
+    The partial depends exclusively on site state (site.Language.Lang and
+    site.Home.RelPermalink) and takes no page input, so its result is identical for every page
+    within a language. Invoke it as `partialCached "utilities/GetBaseURL.html" site` to amortize
+    the cost across the build; partialCached caches per language automatically.
+
+    Arguments: none (the context argument serves as the cache key only; pass `site`).
+*/}}
+
+{{- $lang := site.Language.Lang -}}
+{{- return strings.TrimSuffix (printf "%s/" $lang) site.Home.RelPermalink -}}
