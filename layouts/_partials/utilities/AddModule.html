@@ -1,13 +1,47 @@
+{{/*
+    Registers a module as a dependency of the given page. The page's stylesheet and script
+    handlers include the assets of registered modules when rendering the page.
+
+    The accumulated "dependencies" slice is written to both the page's Scratch and Store.
+    The Scratch entry is the current home consumed by existing themes; the Store entry is its
+    successor, as Hugo guarantees Store values set during content rendering remain available
+    to templates rendered afterwards. The dual-write is transitional: consumers migrate to the
+    Store entry, after which the Scratch entry will be removed in the next major release.
+
+    Registration must land on the page that owns the content being rendered. Relying on the
+    global page context is unreliable: when a foreign render (such as an RSS feed or search
+    index touching .Content) triggers the content render, the global context is the foreign
+    page. Callers should therefore always pass the owning page explicitly. Omitting the page
+    argument is deprecated: it falls back to the global page context for one release, after
+    which the argument becomes required. The deprecation warning is gated behind the site
+    parameter `debugging.showDeprecations` while known callers still omit the argument, so
+    that site authors are not warned about calls they cannot fix themselves.
+
+    Arguments:
+      module  (string, required)  name of the module to register, e.g. "lightbox"
+      page    (page)              the page to register the module on; omitting it is
+                                  deprecated and falls back to the global page context
+*/}}
+
 {{- $page := .page -}}
 {{- if not $page -}}
+	{{- if site.Params.debugging.showDeprecations -}}
+		{{- partial "utilities/LogWarn.html" (dict
+			"partial" "utilities/AddModule.html"
+			"warnid"  "warn-deprecated-arguments"
+			"msg"     "Argument 'page' is missing: deprecated, pass the owning page explicitly"
+			"file"    page.File
+		) -}}
+	{{- end -}}
 	{{- $page = page -}}
 {{- end -}}
 {{ with .module }}
-	{{- $dependencies := $page.Scratch.Get "dependencies" -}}
+	{{- $dependencies := or ($page.Scratch.Get "dependencies") ($page.Store.Get "dependencies") -}}
 	{{- if reflect.IsSlice $dependencies -}}
 		{{- $dependencies = $dependencies | append . | uniq -}}
 	{{ else }}
 		{{- $dependencies = slice . -}}
 	{{ end }}
 	{{- $page.Scratch.Set "dependencies" $dependencies -}}
+	{{- $page.Store.Set "dependencies" $dependencies -}}
 {{ end }}
