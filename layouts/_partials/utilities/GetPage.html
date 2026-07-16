@@ -1,8 +1,12 @@
 {{- $ref := "" -}}
 {{- $anchor := "" -}}
 
+{{/* Attribute errors to the caller-provided page when it is file-backed; the global page
+    context identifies the render that triggered this call, which may be a foreign page
+    (e.g. an output format touching another page's .Content). */}}
 {{ $origin := "" }}
-{{ with page.File }}{{ $origin = .Path }}{{ else }}{{ $origin = page.File }}{{ end }}
+{{ with page.File }}{{ $origin = .Path }}{{ end }}
+{{ with .page }}{{ with .File }}{{ $origin = .Path }}{{ end }}{{ end }}
 
 {{ $url := .url }}
 {{ if not $url }}
