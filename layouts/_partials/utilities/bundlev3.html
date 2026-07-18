@@ -1,0 +1,259 @@
+{{/*
+    Copyright © 2022 - 2026 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+*/}}
+
+{{/*
+    Bundles a selection of script files into a single output file using js.Build (esbuild).
+    The partial mirrors the interface and collection semantics of bundlev2.html (which
+    remains available as the concatenation lane) and generates a virtual entry file that
+    is compiled by js.Build.
+
+    Matched files are classified into three groups:
+     1. Globals - files listed in the `globals` argument (asset path -> window property
+        name). UMD distributions do not register their window global when bundled by
+        esbuild (the CommonJS interop captures the exports instead). Each configured file
+        is imported as a namespace (`import * as __globalN from '<path>'`) and assigned to
+        the requested window property in the entry body. These import statements are
+        emitted first, in map-key sort order. Files listed in `globals` are excluded from
+        template processing and from the plain import list.
+     2. Imports - files not processed as a Go template (see `skip-template` and
+        `enable-template`). Emitted as side-effect imports (`import '<path>'`) in
+        name-sorted order, resolved against Hugo's merged assets filesystem.
+     3. Inlined files - files processed with resources.ExecuteAsTemplate. Resources
+        produced by ExecuteAsTemplate are NOT part of the assets filesystem and CANNOT be
+        imported by the generated entry. Their executed content is therefore inlined into
+        the entry text itself, in name-sorted order, each preceded by an
+        `// inlined: <name>` marker.
+
+    Execution order of the resulting bundle: esbuild hoists all import statements, so all
+    imported modules execute BEFORE any inline entry code. The effective order is:
+     1. the modules of the configured globals (map-key sort order);
+     2. the plain imported modules (name-sorted order);
+     3. the entry body: the window-property assignments for the configured globals,
+        followed by the inlined file contents (name-sorted order).
+    Note that the window-property assignments are entry-body statements: they run after
+    ALL imported modules have executed. A file that reads a configured window global at
+    load time must therefore be part of the inlined (templated) group.
+
+    Matched `.js` files are compiled to an iife-format bundle ("bundle"); matched `.mjs`
+    files are compiled through their own generated entry to an esm-format bundle
+    ("module"). Either value is an empty inline resource when there is nothing to bundle
+    (no imports and no inline code beyond comments), allowing callers to skip empty
+    bundles. Minification is applied by esbuild in production environments; callers
+    remain responsible for fingerprinting. Side effect: js.Build writes an editor helper
+    file `jsconfig.json` to the assets folder of the project.
+*/}}
+
+{{/* Define inline partials */}}
+{{- define "_partials/inline/bundlev3/relpath.html" -}}
+    {{/* Import path from the generated entry (in folder .dir) to asset .name */}}
+    {{- $result := "" -}}
+    {{- if or (eq .dir ".") (eq .dir "") -}}
+        {{- $result = printf "./%s" .name -}}
+    {{- else if hasPrefix .name (printf "%s/" .dir) -}}
+        {{- $result = printf "./%s" (strings.TrimPrefix (printf "%s/" .dir) .name) -}}
+    {{- else -}}
+        {{- $result = printf "%s%s" (strings.Repeat (len (split .dir "/")) "../") .name -}}
+    {{- end -}}
+    {{- return $result -}}
+{{- end -}}
+
+{{- define "_partials/inline/bundlev3/build.html" -}}
+    {{/* Assemble the entry text for a group of files and compile it with js.Build */}}
+    {{- $args := .args -}}
+    {{- $filename := .filename -}}
+    {{- $globals := .globals -}}
+    {{- $imports := .imports -}}
+    {{- $inline := .inline -}}
+
+    {{- $entryDir := path.Dir $filename -}}
+    {{- $lines := slice -}}
+    {{- $assignments := slice -}}
+
+    {{/* Namespace imports and window assignments for the configured globals, in map-key
+        sort order (Go template map iteration is key-sorted) */}}
+    {{- range $file, $prop := $globals -}}
+        {{- $id := printf "__global%d" (len $assignments) -}}
+        {{- $path := partial "inline/bundlev3/relpath.html" (dict "dir" $entryDir "name" $file) -}}
+        {{- $lines = $lines | append (printf "import * as %s from '%s';" $id $path) -}}
+        {{- $assignments = $assignments | append (printf "window.%s = %s && %s.default ? %s.default : %s;" $prop $id $id $id $id) -}}
+    {{- end -}}
+
+    {{/* Side-effect imports of the non-templated files, in name-sorted order */}}
+    {{- range $imports -}}
+        {{- $path := partial "inline/bundlev3/relpath.html" (dict "dir" $entryDir "name" .) -}}
+        {{- $lines = $lines | append (printf "import '%s';" $path) -}}
+    {{- end -}}
+
+    {{/* Entry body: window assignments first, then the inlined templated content in
+        name-sorted order. Each block is terminated with an explicit `;` statement to
+        avoid unintended expression continuation across files (e.g. a file ending in
+        `})()` followed by a file starting with `(function`) */}}
+    {{- $lines = $lines | append $assignments -}}
+    {{- range $inline -}}
+        {{- $lines = $lines | append (printf "// inlined: %s" .name) (string .content) ";" -}}
+    {{- end -}}
+
+    {{/* Empty-bundle guard: return an empty inline resource when the entry contains no
+        imports and no inline code beyond comments, so callers can skip the bundle */}}
+    {{- $inlineCode := "" -}}
+    {{- range $inline -}}{{ $inlineCode = printf "%s\n%s" $inlineCode .content }}{{- end -}}
+    {{- $inlineCode = $inlineCode | replaceRE `(?m)//[^\n]*` "" | replaceRE `(?s)/\*.*?\*/` "" | strings.TrimSpace -}}
+
+    {{- $bundle := "" -}}
+    {{- if or (gt (len $globals) 0) (gt (len $imports) 0) (gt (len $inlineCode) 0) -}}
+        {{- $opts := dict
+            "targetPath" $filename
+            "format"     .format
+            "target"     $args.target
+            "minify"     hugo.IsProduction
+        -}}
+        {{- with $args.externals }}{{ $opts = merge $opts (dict "externals" .) }}{{ end -}}
+        {{- with $args.params }}{{ $opts = merge $opts (dict "params" .) }}{{ end -}}
+        {{- if $args.sourcemap }}{{ $opts = merge $opts (dict "sourceMap" "linked") }}{{ end -}}
+
+        {{- $entryName := path.Join $entryDir (printf "__entry-%s-%s" $args.page.Language.Lang (path.Base $filename)) -}}
+        {{- $bundle = resources.FromString $entryName (delimit $lines "\n") | js.Build $opts -}}
+    {{- else -}}
+        {{- $bundle = resources.FromString $filename "" -}}
+    {{- end -}}
+    {{- return $bundle -}}
+{{- end -}}
+
+{{/* Initialize arguments */}}
+{{- $args := partial "utilities/InitArgs.html" (dict "structure" "bundlev3" "args" .) -}}
+{{- if or $args.err $args.warnmsg -}}
+    {{- partial (cond $args.err "utilities/LogErr.html" "utilities/LogWarn.html") (dict
+        "partial" "utilities/bundlev3.html"
+        "warnid"  "warn-invalid-arguments"
+        "msg"     "Invalid arguments"
+        "details" ($args.errmsg | append $args.warnmsg)
+        "file"    (or $args.page page).File
+    ) -}}
+{{- end -}}
+
+{{/* Initialize local arguments */}}
+{{- $match := $args.match -}}
+{{- $basepath := strings.TrimSuffix "/" $args.basepath -}}
+{{- $ext := trim (path.Ext (trim $match "{}")) "." | default "*js" -}}
+{{- if not $ext -}}
+    {{- errorf "partial [utilities/bundlev3.html] - Cannot derive file extension of match pattern: %s" $match -}}
+{{- end -}}
+{{/* Normalize the globals keys: resource names carry a leading slash on newer Hugo
+    versions, while the argument is documented without one — accept both */}}
+{{- $globals := dict -}}
+{{- range $key, $val := $args.globals | default dict -}}
+    {{- $globals = merge $globals (dict (strings.TrimPrefix "/" $key) $val) -}}
+{{- end -}}
+
+{{/* Initialize return variables */}}
+{{ $bundle := "" }}
+{{ $modBundle := "" }}
+
+{{/* Main code */}}
+{{- if not $args.err -}}
+    {{- if $args.modules -}}
+        {{- $match = trim $match "{}" -}}
+        {{- $matches := slice $match -}}
+        {{- range $index, $mod := $args.modules -}}
+            {{- if $args.all }}
+                {{- $matches = $matches | append (printf "%s/%s/**.%s" $basepath $mod $ext) -}}
+            {{- else -}}
+                {{- $matches = $matches | append (printf "%s/%s.%s" $basepath $mod $ext) -}}
+            {{- end -}}
+        {{- end -}}
+        {{- $match = printf "{%s}" (trim (delimit $matches ",") ",") }}
+    {{- end -}}
+
+    {{ $matches := resources.Match $match }}
+    {{ $templates := cond $args.enableTemplate (resources.Match $args.enableTemplate) dict }}
+    {{ $files := slice }}
+    {{ range $index, $file := $matches }}
+        {{ $add := (dict "name" (strings.TrimSuffix (path.Ext $file.Name) $file.Name) "resource" $file ) }}
+        {{ $files = $files | append $add }}
+    {{ end }}
+
+    {{/* Classify the matched files into globals, plain imports, and inlined templated
+        content, split between the iife (.js) and esm (.mjs) bundles */}}
+    {{ $jsGlobals := dict }}
+    {{ $jsImports := slice }}
+    {{ $jsInline := slice }}
+    {{ $modGlobals := dict }}
+    {{ $modImports := slice }}
+    {{ $modInline := slice }}
+    {{ $files = sort $files "name" }}
+    {{- range $index, $file := $files -}}
+        {{/* Normalize the resource name: newer Hugo versions return names with a
+            leading slash, which would break the relative import paths */}}
+        {{ $name := strings.TrimPrefix "/" $file.resource.Name }}
+        {{ $isMod := hasSuffix (lower $name) ".mjs" }}
+        {{ $winProp := index $globals $name }}
+
+        {{ if $winProp }}
+            {{ if $isMod }}
+                {{ $modGlobals = merge $modGlobals (dict $name $winProp) }}
+            {{ else }}
+                {{ $jsGlobals = merge $jsGlobals (dict $name $winProp) }}
+            {{ end }}
+        {{ else }}
+            {{ $process := false }}
+            {{ range $templates }}
+                {{ if eq (strings.TrimPrefix "/" .Name) $name }}
+                    {{ $process = true }}
+                    {{ break }}
+                {{ end }}
+            {{ end }}
+
+            {{ if or $process (not $args.skipTemplate) }}
+                {{- $res := resources.ExecuteAsTemplate (path.Join $args.page.Language.Lang $name) $args.page $file.resource -}}
+                {{ $add := dict "name" $name "content" $res.Content }}
+                {{ if $isMod }}{{ $modInline = $modInline | append $add }}{{ else }}{{ $jsInline = $jsInline | append $add }}{{ end }}
+            {{ else }}
+                {{ if $isMod }}{{ $modImports = $modImports | append $name }}{{ else }}{{ $jsImports = $jsImports | append $name }}{{ end }}
+            {{ end }}
+        {{ end }}
+    {{- end -}}
+
+    {{/* Warn about configured globals that did not match any bundled file */}}
+    {{- range $file, $prop := $globals -}}
+        {{- if not (or (isset $jsGlobals $file) (isset $modGlobals $file)) -}}
+            {{ warnf "partial [utilities/bundlev3.html] - Global '%s' (window.%s) does not match any bundled file of '%s'" $file $prop $args.filename }}
+        {{- end -}}
+    {{- end -}}
+
+    {{- if $args.debugging -}}
+        {{ warnf "Processing pattern for '%s': %s" $args.filename $match }}
+        {{- range $file, $prop := merge $jsGlobals $modGlobals -}}
+            {{- warnf " - Exposing global: %s -> window.%s" $file $prop }}
+        {{- end -}}
+        {{- range append $jsImports $modImports -}}
+            {{- warnf " - Importing file: %s" . }}
+        {{- end -}}
+        {{- range append $jsInline $modInline -}}
+            {{- warnf " - Inlining file: %s" .name }}
+        {{- end -}}
+    {{- end -}}
+
+    {{ $bundle = partial "inline/bundlev3/build.html" (dict
+        "args"     $args
+        "filename" $args.filename
+        "format"   "iife"
+        "globals"  $jsGlobals
+        "imports"  $jsImports
+        "inline"   $jsInline
+    ) }}
+
+    {{ $modFilename := printf "%s.mjs" (strings.TrimSuffix (path.Ext $args.filename) $args.filename) }}
+    {{ $modBundle = partial "inline/bundlev3/build.html" (dict
+        "args"     $args
+        "filename" $modFilename
+        "format"   "esm"
+        "globals"  $modGlobals
+        "imports"  $modImports
+        "inline"   $modInline
+    ) }}
+{{- end -}}
+
+{{- return (dict "bundle" $bundle "module" $modBundle) -}}

@@ -194,6 +194,47 @@ behavior changes in ways that can affect rendered output and build logs.
    - New warnings (see the rollout section above) may appear in your build logs; they are
      non-blocking in v6 and indicate call sites to clean up before v7.
 
+## Script bundling
+
+The module provides two script-bundling engines that share the same collection semantics
+(match pattern or module expansion over `basepath`, name-sorted processing, a `.js`/`.mjs`
+split returned as `{bundle, module}`, and per-file Go-template processing controlled by
+`skip-template`/`enable-template`):
+
+- **`utilities/bundlev2.html`** — the concatenation lane. Matched files are (optionally)
+  executed as Go templates and concatenated with `resources.Concat`. This engine remains
+  available and unchanged.
+- **`utilities/bundlev3.html`** — the js.Build (esbuild) lane. The partial generates a
+  virtual entry file and compiles it with `js.Build`. The `bundle` result is an
+  iife-format build of the matched `.js` files; the `module` result is an esm-format
+  build of the matched `.mjs` files (an empty inline resource when nothing matches).
+
+`bundlev3` accepts every `bundlev2` argument (`page`, `match`, `filename`, `modules`,
+`all`, `basepath`, `skip-template`, `enable-template`, `debugging`) plus:
+
+| Argument | Type | Description |
+|----------|------|-------------|
+| `globals` | dict | Map of asset paths to window property names, e.g. `js/modules/bootstrap/bootstrap.bundle.js: bootstrap`. UMD distributions do not register their window global when bundled by esbuild; each listed file is imported as a namespace ahead of all other imports and assigned to the given window property. |
+| `externals` | []string | Import paths marked as external in esbuild, e.g. `worker_threads` for distributions with a Node-guarded `require`. |
+| `params` | dict | Dictionary passed to `js.Build`; bundled files can `import ... from '@params'`. |
+| `target` | string | Language target passed to `js.Build` (default `es2022`). |
+| `sourcemap` | bool | Emit a linked source map; intended for non-production environments. |
+
+Ordering semantics: files processed as a Go template cannot be imported (resources
+produced by `resources.ExecuteAsTemplate` are not part of the assets filesystem), so
+their executed content is inlined into the entry text; other files are imported from
+the assets filesystem. Since esbuild hoists imports, the effective execution order is:
+the `globals` modules (map-key sort order), the plain imported modules (name-sorted),
+then the entry body — the window-global assignments followed by the inlined file
+contents (name-sorted). A file that reads a configured window global at load time must
+be part of the inlined (templated) group.
+
+Minification is applied by esbuild in production environments (callers should not minify
+again); callers remain responsible for fingerprinting. `js.Build` writes an editor
+helper file `jsconfig.json` to the project's assets folder as a side effect. Use
+`bundlev2` when plain concatenation or template-only processing is required; use
+`bundlev3` for tree-shaken, scoped bundles with import resolution.
+
 ## Contributing
 
 This module uses [semantic-release][semantic-release] to automate the release of new versions. The package uses `husky` and `commitlint` to ensure commit messages adhere to the [Conventional Commits][conventionalcommits] specification. You can run `npx git-cz` from the terminal to help prepare the commit message.
