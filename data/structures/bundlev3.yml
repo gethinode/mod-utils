@@ -1,0 +1,89 @@
+comment: >-
+  Bundles a selection of script files into a single file using js.Build
+  (esbuild). Mirrors the collection semantics of `bundle` (bundlev2) and adds
+  esbuild-specific arguments.
+group: partial
+arguments:
+  page:
+  match:
+    type: string
+    optional: true
+    comment: Filename or glob pattern of the source file(s) to bundle.
+  filename:
+    type: string
+    optional: false
+    comment: Filename of the target bundle.
+  modules:
+    type: "[]string"
+    optional: true
+    comment: >-
+      Names of the modules to bundle. When `all` is set, a glob pattern
+      consisting of the `basepath`, module name, and default extension is added.
+      Else, a single file is matched.
+  all:
+    type: bool
+    optional: true
+    comment: >-
+      Flag to indicate the module should include a glob pattern to match all
+      nested files.
+  skip-template:
+    type: bool
+    optional: true
+    comment: >-
+      Flag to indicate the matched files should not be processed using
+      `resources.ExecuteAsTemplate`. Set this to true when encountering
+      processing issues due to syntax conflicts. Files processed as a template
+      are inlined into the generated entry file; other files are imported from
+      the assets filesystem instead.
+  enable-template:
+    type: string
+    optional: true
+    comment: >-
+      Glob pattern to define which source files should be processed as Hugo
+      template. The pattern takes precedence over `skip-template`.
+  basepath:
+    type: string
+    optional: true
+    comment: >-
+      Base path to use when defining a module glob pattern. See `modules` for
+      more details.
+  globals:
+    type: dict
+    optional: true
+    comment: >-
+      Map of matched asset paths to window property names, e.g.
+      `js/modules/bootstrap/bootstrap.bundle.js: bootstrap`. UMD distributions
+      do not register their window global when bundled by esbuild; each file
+      listed here is imported as a namespace ahead of all other imports and
+      assigned to the given window property in the entry body. Files listed
+      here are excluded from template processing and inlining.
+  externals:
+    type: "[]string"
+    optional: true
+    comment: >-
+      Import paths to mark as external in esbuild (passed through to js.Build),
+      e.g. `worker_threads` for distributions with a Node-guarded require.
+  params:
+    type: dict
+    optional: true
+    comment: >-
+      Dictionary passed to js.Build; bundled files can import these values
+      from `@params`.
+  target:
+    type: string
+    optional: true
+    default: es2022
+    comment: Language target passed to js.Build.
+  sourcemap:
+    type: bool
+    optional: true
+    comment: >-
+      Flag to generate a linked source map for the bundle. Intended for
+      non-production environments; minification is applied automatically in
+      production environments instead.
+  debugging:
+    type: bool
+    optional: true
+    comment: >-
+      Flag to display how the source files are processed (exposed as global,
+      imported, or inlined).
