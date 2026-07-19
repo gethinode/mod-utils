@@ -11,13 +11,14 @@
     is compiled by js.Build.
 
     Matched files are classified into three groups:
-     1. Globals - files listed in the `globals` argument (asset path -> window property
-        name). UMD distributions do not register their window global when bundled by
-        esbuild (the CommonJS interop captures the exports instead). Each configured file
-        is imported as a namespace (`import * as __globalN from '<path>'`) and assigned to
-        the requested window property in the entry body. These import statements are
-        emitted first, in map-key sort order. Files listed in `globals` are excluded from
-        template processing and from the plain import list.
+     1. Globals - files listed in the `globals` argument, an array of tables each with a
+        `path` (asset path) and `name` (window property name). UMD distributions do not
+        register their window global when bundled by esbuild (the CommonJS interop
+        captures the exports instead). Each configured file is imported as a namespace
+        (`import * as __globalN from '<path>'`) and assigned to the requested window
+        property in the entry body. These import statements are emitted first, in
+        map-key sort order (internally keyed by path). Files listed in `globals` are
+        excluded from template processing and from the plain import list.
      2. Imports - files not processed as a Go template (see `skip-template` and
         `enable-template`). Emitted as side-effect imports (`import '<path>'`) in
         name-sorted order, resolved against Hugo's merged assets filesystem.
@@ -141,11 +142,20 @@
 {{- if not $ext -}}
     {{- errorf "partial [utilities/bundlev3.html] - Cannot derive file extension of match pattern: %s" $match -}}
 {{- end -}}
-{{/* Normalize the globals keys: resource names carry a leading slash on newer Hugo
-    versions, while the argument is documented without one — accept both */}}
+{{/* Build the internal globals map (asset path -> window property). The argument is
+    the array-of-tables form [{path, name}], but a legacy path-keyed map is still
+    accepted so a newer mod-utils keeps working under an older reader that passes a
+    map. Resource names carry a leading slash on newer Hugo versions, while the
+    argument is documented without one — accept both. */}}
 {{- $globals := dict -}}
-{{- range $key, $val := $args.globals | default dict -}}
-    {{- $globals = merge $globals (dict (strings.TrimPrefix "/" $key) $val) -}}
+{{- if reflect.IsMap $args.globals -}}
+    {{- range $key, $val := $args.globals -}}
+        {{- $globals = merge $globals (dict (strings.TrimPrefix "/" $key) $val) -}}
+    {{- end -}}
+{{- else -}}
+    {{- range $args.globals | default slice -}}
+        {{- $globals = merge $globals (dict (strings.TrimPrefix "/" .path) .name) -}}
+    {{- end -}}
 {{- end -}}
 
 {{/* Initialize return variables */}}
