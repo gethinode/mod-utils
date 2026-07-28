@@ -70,6 +70,8 @@ types:
       mode:
       content:
       link:
+      label:
+      url:
   links:
     - title:
       url:
