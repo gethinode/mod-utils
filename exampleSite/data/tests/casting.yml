@@ -51,3 +51,12 @@ cases:
     structure: test-cast
     args:
       items-list: [1, "two", true]
+  # Whole-number floats cast losslessly to int (JSON round-trips — e.g. frontmatter
+  # injected by CloudCannon's visual editor — deliver every number as float64).
+  - name: whole-float-to-int
+    structure: test-cast
+    args: {count: 42.0}
+  # Fractional floats still fail the int type check.
+  - name: fractional-float-to-int
+    structure: test-cast
+    args: {count: 42.5}

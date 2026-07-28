@@ -133,6 +133,14 @@
                 {{ $value = float $value }}
                 {{ $kind = "float" }}
             {{ end }}
+        {{ else if and (eq $kind "float") (in $node.accepts "int") (not (in $node.accepts "float")) (eq (float (int $value)) (float $value)) }}
+            {{/* whole-number floats cast losslessly to int. Data that round-trips through
+                 JSON — notably page frontmatter injected by CloudCannon's visual editor
+                 (Bookshop live rendering) — arrives with every number as float64, so an
+                 int argument would otherwise reject values the YAML source declares as
+                 plain integers. Fractional values still fail the type check below. */}}
+            {{ $value = int $value }}
+            {{ $kind = "int" }}
         {{ else if and (in $node.accepts "string") (in (slice "bool" "int" "float") $kind) (not (in $node.accepts $kind)) }}
             {{ $value = string $value }}
             {{ $kind = "string" }}

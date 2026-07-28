@@ -62,6 +62,27 @@
       ]
     }
   },
+  "fractional-float-to-int": {
+    "args": {
+      "args": {
+        "count": 42.5
+      },
+      "defaulted": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'float64' with value '42.5'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": true,
+      "errmsg": [
+        "[test-cast] argument 'count': expected type 'int', got 'float64' with value '42.5'"
+      ],
+      "warnmsg": []
+    }
+  },
   "generic-dict-as-map": {
     "args": {
       "args": {
@@ -216,6 +237,24 @@
     }
   },
   "string-to-int": {
+    "args": {
+      "args": {
+        "count": 42
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "count": 42,
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "whole-float-to-int": {
     "args": {
       "args": {
         "count": 42
