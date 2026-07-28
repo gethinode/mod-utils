@@ -1,0 +1,196 @@
+{
+  "camel-declared-defaulted": {
+    "args": {
+      "args": {
+        "logoAlign": "start",
+        "overlayMode": "dark"
+      },
+      "defaulted": [
+        "logo-align",
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "logo-align",
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "logo-align": "start",
+      "logoAlign": "start",
+      "overlayMode": "dark",
+      "warnmsg": []
+    }
+  },
+  "camel-declared-provided": {
+    "args": {
+      "args": {
+        "logoAlign": "start",
+        "overlayMode": "light"
+      },
+      "defaulted": [
+        "logo-align"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "logo-align"
+      ],
+      "err": false,
+      "errmsg": [],
+      "logo-align": "start",
+      "logoAlign": "start",
+      "overlayMode": "light",
+      "warnmsg": []
+    }
+  },
+  "kebab-declared-provided": {
+    "args": {
+      "args": {
+        "logoAlign": "center",
+        "overlayMode": "dark"
+      },
+      "defaulted": [
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "logo-align": "center",
+      "logoAlign": "center",
+      "overlayMode": "dark",
+      "warnmsg": []
+    }
+  },
+  "lowercase-declared-provided": {
+    "args": {
+      "args": {
+        "logoAlign": "start",
+        "overlayMode": "dark",
+        "plainkey": "value"
+      },
+      "defaulted": [
+        "logo-align",
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [
+        "logo-align",
+        "overlayMode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "logo-align": "start",
+      "logoAlign": "start",
+      "overlayMode": "dark",
+      "plainkey": "value",
+      "warnmsg": []
+    }
+  },
+  "schema-camel-keys": {
+    "schema": {
+      "absent": {
+        "logo-align": {
+          "defaulted": [
+            "logo-align"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": "start",
+          "warnmsg": []
+        },
+        "overlayMode": {
+          "defaulted": [
+            "overlayMode"
+          ],
+          "errmsg": [],
+          "newmsg": [],
+          "value": "dark",
+          "warnmsg": []
+        },
+        "plainkey": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        }
+      },
+      "err": false,
+      "errmsg": [],
+      "positions": {},
+      "schema": {
+        "logo-align": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "logoAlign",
+          "default": "start",
+          "kind": "scalar",
+          "name": "logo-align",
+          "optional": true,
+          "options": {
+            "values": [
+              "start",
+              "center",
+              "end"
+            ]
+          },
+          "types": [
+            "select"
+          ]
+        },
+        "overlayMode": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "overlayMode",
+          "default": "dark",
+          "kind": "scalar",
+          "name": "overlayMode",
+          "optional": true,
+          "options": {
+            "values": [
+              "light",
+              "dark",
+              "none"
+            ]
+          },
+          "types": [
+            "select"
+          ]
+        },
+        "plainkey": {
+          "accepts": [
+            "string"
+          ],
+          "camelKey": "plainkey",
+          "kind": "scalar",
+          "name": "plainkey",
+          "optional": true,
+          "types": [
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}
