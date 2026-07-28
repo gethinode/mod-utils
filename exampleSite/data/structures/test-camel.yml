@@ -1,0 +1,19 @@
+comment: >-
+  Test fixture for arguments DECLARED in camelCase (regression: camel-key used to lowercase
+  the whole first word, storing provided values under a key consumers never read).
+arguments:
+  overlayMode:
+    type: select
+    optional: true
+    default: dark
+    options:
+      values: [light, dark, none]
+  logo-align:
+    type: select
+    optional: true
+    default: start
+    options:
+      values: [start, center, end]
+  plainkey:
+    type: string
+    optional: true

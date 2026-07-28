@@ -30,7 +30,11 @@
         {{ if gt $index 0 }}
             {{ $result = print $result (strings.FirstUpper $word) }}
         {{ else }}
-            {{ $result = strings.ToLower $word }}
+            {{/* lowercase only the first rune: a key DECLARED in camelCase (e.g.
+                 `overlayMode`) must keep its interior capitals, otherwise provided
+                 values are stored under a camelKey (`overlaymode`) that consuming
+                 partials never read and silently fall back to defaults */}}
+            {{ $result = print (strings.ToLower (substr $word 0 1)) (substr $word 1) }}
         {{ end }}
     {{ end }}
     {{ return print $prefix $result }}

@@ -1,0 +1,4 @@
+---
+title: camelcase
+outputs: ["json"]
+---

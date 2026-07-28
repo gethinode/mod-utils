@@ -1,0 +1,21 @@
+cases:
+  # Regression: a value provided under a camelCase-DECLARED key must surface under that key
+  # (camelKey == declared key), not be silently replaced by the schema default.
+  - name: camel-declared-provided
+    structure: test-camel
+    args: {overlayMode: light}
+  - name: camel-declared-defaulted
+    structure: test-camel
+    args: {}
+  # Contrast: kebab-declared keys keep their existing camelization (logo-align -> logoAlign).
+  - name: kebab-declared-provided
+    structure: test-camel
+    args: {logo-align: center}
+  # All-lowercase declared keys are unaffected.
+  - name: lowercase-declared-provided
+    structure: test-camel
+    args: {plainkey: value}
+  # The compiled schema exposes the camelKeys directly.
+  - name: schema-camel-keys
+    structure: test-camel
+    api: schema
