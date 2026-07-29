@@ -78,6 +78,10 @@ types:
       download:
       icon:
       force:
+      # no inherited default of its own: cue is declared optional without a
+      # default in _arguments.yml, so an absent value stays absent and the
+      # consuming partial applies main.externalLinks.cue
+      cue:
       # no inherited defaults: downstream partials layer their own (download.yml
       # sets outline/order; section context supplies order) as in v5
       order: { default: }
