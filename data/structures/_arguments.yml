@@ -431,7 +431,11 @@ arguments:
     type: bool
     default: false
     optional: true
-    comment: Flag indicating if the element should be rendered fullscreen.
+    comment: >-
+      Flag indicating if the element should be rendered as a cover section,
+      filling most of the viewport height. Defaults to 88vh rather than the
+      full 100vh, so the next section peeks above the fold; see the site
+      settings `main.sectionHeight` and `main.maxSectionHeight`.
   cta:
     type: cta
     optional: true
