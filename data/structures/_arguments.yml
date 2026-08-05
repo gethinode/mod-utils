@@ -648,6 +648,22 @@ arguments:
     optional: true
     comment: >-
       Heading of the content block, including a preheading and content element.
+  heading-class:
+    type: string
+    optional: true
+    comment: >-
+      Class attributes of the heading element, applied only when a heading level
+      renders one. Replaces the margin reset that otherwise keeps a title raised
+      by heading-level aligned with the div it succeeds. Pass an empty string to
+      leave the element on its own styling.
+  heading-level:
+    type: int
+    optional: true
+    comment: >-
+      Heading level of the title, from 1 (h1) to 6 (h6). Set 0 to render a div
+      instead of a heading. Content blocks receive a level from the page that
+      renders them, so the first titled block of a page without a page header
+      becomes its h1.
   heading-style:
     type: select
     optional: true
