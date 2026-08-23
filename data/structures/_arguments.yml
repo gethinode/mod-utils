@@ -1718,6 +1718,16 @@ arguments:
     optional: true
     comment: >-
       Toggle the last column to wrap to a new row on smaller devices.
+  wrap-cols:
+    type: string
+    optional: true
+    comment: >-
+      Comma-separated column count per rendered row when wrapping, summing to the
+      table's column count. Folds a record across more than two rows on small
+      devices, for example "2,4,1". Only the first group keeps one cell per
+      column; later groups collapse into a single spanning cell. Requires wrap; a
+      list that does not sum to the column count falls back to wrapping the last
+      column only.
   wrapper:
     type: string
     optional: true
