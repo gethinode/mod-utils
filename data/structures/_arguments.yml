@@ -560,6 +560,15 @@ arguments:
     comment: >-
       Zero-indexed column number whose text content is matched against the active
       filter value. Defaults to 1. Only used when filter is set.
+  filter-responsive:
+    type: bool
+    optional: true
+    default: false
+    comment: >-
+      Whether the filter button group collapses into a dropdown below the site's
+      main breakpoint, for groups too wide to fit a narrow viewport. Defaults to
+      false, so the button group renders at every width. Only used when filter is
+      set, and has no effect when the main breakpoint is xs.
   fluid:
     type: bool
     optional: true
