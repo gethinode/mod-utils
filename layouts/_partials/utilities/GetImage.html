@@ -68,8 +68,19 @@
         {{ $img = "" -}}
     {{ end -}}
 {{ else -}}
-    {{- partial "utilities/LogWarn.html" (dict 
-        "partial" "utilities/GetImage.html" 
+    <!--
+        A missing image is a warning by default, because referencing one supplied
+        outside the build — a CDN path, an asset added at deploy time — is
+        legitimate. Sites that would rather not publish a dead <img> at all set
+        params.debugging.failOnMissingImage to turn it into a build failure.
+
+        Local sources only. A remote image is never expected on disk, and its
+        absence here can just as easily mean the host was briefly unreachable —
+        escalating that would make the build depend on a third party being up.
+    -->
+    {{- $strict := and (site.Params.debugging.failOnMissingImage | default false) (not $remote) -}}
+    {{- partial (cond $strict "utilities/LogErr.html" "utilities/LogWarn.html") (dict
+        "partial" "utilities/GetImage.html"
         "warnid"  "warn-missing-image"
         "msg"     "Missing image"
         "details" (printf "Cannot find image resource %q" $url)
