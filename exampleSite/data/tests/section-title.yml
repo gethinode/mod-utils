@@ -1,0 +1,15 @@
+cases:
+  - name: slot-arguments-provided
+    structure: test-section-title
+    args:
+      heading-id: page-title
+      content-id: page-description
+      action-id: page-action
+      always-render-action: true
+      action-align: start
+  - name: slot-arguments-defaulted
+    structure: test-section-title
+    args: {}
+  - name: slot-alignment-invalid
+    structure: test-section-title
+    args: {action-align: baseline}

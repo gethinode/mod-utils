@@ -39,6 +39,20 @@ arguments:
     editors:
       - name: cc
         type: url
+  action-align:
+    type: select
+    optional: true
+    default: center
+    comment: Vertical alignment of content in an action row.
+    options:
+      values:
+        - start
+        - center
+        - end
+  action-id:
+    type: string
+    optional: true
+    comment: Unique identifier of an action slot.
   active:
     type: bool
     optional: true
@@ -78,6 +92,11 @@ arguments:
     optional: true
     comment: >-
       Flag to make accordion items stay open when another item is opened.
+  always-render-action:
+    type: bool
+    optional: true
+    default: false
+    comment: Flag to render an action slot even when its content is empty.
   anchor:
     type: select
     optional: true
@@ -396,6 +415,10 @@ arguments:
     editors:
       - name: cc
         type: textarea
+  content-id:
+    type: string
+    optional: true
+    comment: Unique identifier of a section content element.
   content-style:
     type: string
     optional: true
@@ -665,6 +688,10 @@ arguments:
       renders one. Replaces the margin reset that otherwise keeps a title raised
       by heading-level aligned with the div it succeeds. Pass an empty string to
       leave the element on its own styling.
+  heading-id:
+    type: string
+    optional: true
+    comment: Unique identifier of a heading element.
   heading-level:
     type: int
     optional: true
