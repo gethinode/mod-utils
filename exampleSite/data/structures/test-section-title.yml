@@ -1,0 +1,7 @@
+comment: Test fixture for the shared section-title slot arguments.
+arguments:
+  heading-id:
+  content-id:
+  action-id:
+  always-render-action:
+  action-align:
