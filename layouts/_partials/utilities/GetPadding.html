@@ -18,13 +18,13 @@
 {{- $mobileY := "" -}}
 
 {{- $padding := index site.Params $section -}}
-{{- if $padding.padding.x }}
+{{- if isset $padding.padding "x" }}
     {{ $paddingX = $padding.padding.x }}
 {{- else if isset site.Params.main.padding "x" }}
     {{ $paddingX = site.Params.main.padding.x }}
 {{ end -}}
 
-{{- if $padding.padding.y }}
+{{- if isset $padding.padding "y" }}
     {{ $paddingY = $padding.padding.y }}
 {{- else if isset site.Params.main.padding "y" }}
     {{ $paddingY = site.Params.main.padding.y }}
