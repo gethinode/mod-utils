@@ -5,3 +5,21 @@ allowBuilds:
   # add more only when a postinstall failure is investigated and trusted
 minimumReleaseAgeExclude:
   - "@gethinode/*"
+
+# Force-patch transitive dependencies flagged by `pnpm audit`.
+# adm-zip: hugo-extended pins ^0.5.17; force >=0.6.1 to cover the
+#   crafted-ZIP allocation DoS (GHSA-xcpc-8h2w-3j85) and destination-symlink
+#   overwrite (GHSA-vwc7-r8mq-g2x9).
+# brace-expansion: rimraf > glob > minimatch resolves vulnerable 5.0.6; keep
+#   the override on major 5 and require the patched >=5.0.9 release.
+# fast-uri: commitlint > ajv resolves vulnerable 3.1.5; keep the override on
+#   major 3 and require the patched >=3.1.6 release.
+# js-yaml: cosmiconfig resolves vulnerable 4.3.1; keep the override on major 4
+#   and require the patched >=4.3.2 release.
+# Drop each override once the upstream dependency ranges resolve patched
+# versions without assistance.
+overrides:
+  adm-zip: ">=0.6.1"
+  brace-expansion@5: "^5.0.9"
+  fast-uri@3: "^3.1.6"
+  js-yaml@4: "^4.3.2"
