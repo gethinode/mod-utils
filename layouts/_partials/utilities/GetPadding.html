@@ -18,16 +18,19 @@
 {{- $mobileY := "" -}}
 
 {{- $padding := index site.Params $section -}}
-{{- if isset $padding.padding "x" }}
-    {{ $paddingX = $padding.padding.x }}
-{{- else if isset site.Params.main.padding "x" }}
-    {{ $paddingX = site.Params.main.padding.x }}
+{{- $sectionPadding := default dict $padding.padding -}}
+{{- $mainPadding := default dict site.Params.main.padding -}}
+
+{{- if isset $sectionPadding "x" }}
+    {{ $paddingX = index $sectionPadding "x" }}
+{{- else if isset $mainPadding "x" }}
+    {{ $paddingX = index $mainPadding "x" }}
 {{ end -}}
 
-{{- if isset $padding.padding "y" }}
-    {{ $paddingY = $padding.padding.y }}
-{{- else if isset site.Params.main.padding "y" }}
-    {{ $paddingY = site.Params.main.padding.y }}
+{{- if isset $sectionPadding "y" }}
+    {{ $paddingY = index $sectionPadding "y" }}
+{{- else if isset $mainPadding "y" }}
+    {{ $paddingY = index $mainPadding "y" }}
 {{ end -}}
 
 {{- /* default dict avoids IsSet with unsupported type "invalid" warnings when the mobile table is absent */ -}}
