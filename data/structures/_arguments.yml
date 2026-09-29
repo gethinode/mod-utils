@@ -156,9 +156,11 @@ arguments:
       values:
         - above
         - first
+        - split
     comment: >-
-      Arrangement of the preheading, either left or above the header. On smaller
-      screens, the preheading is always placed on top.
+      Arrangement of the preheading, either left or above the header. Use split
+      to place the preheading and header in a narrow column to the left of the
+      content. On smaller screens, all elements are stacked.
   autoplay:
     type: bool
     optional: true
