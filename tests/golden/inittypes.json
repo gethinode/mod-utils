@@ -71,14 +71,15 @@
             "type": "select"
           },
           "arrangement": {
-            "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+            "comment": "Arrangement of the preheading, either left or above the header. Use split to place the preheading and header in a narrow column to the left of the content. On smaller screens, all elements are stacked.",
             "config": "style.title.arrangement",
             "default": "above",
             "optional": true,
             "options": {
               "values": [
                 "above",
-                "first"
+                "first",
+                "split"
               ]
             },
             "type": "select"
@@ -196,14 +197,15 @@
             "type": "select"
           },
           "arrangement": {
-            "comment": "Arrangement of the preheading, either left or above the header. On smaller screens, the preheading is always placed on top.",
+            "comment": "Arrangement of the preheading, either left or above the header. Use split to place the preheading and header in a narrow column to the left of the content. On smaller screens, all elements are stacked.",
             "config": "style.title.arrangement",
             "default": "above",
             "optional": true,
             "options": {
               "values": [
                 "above",
-                "first"
+                "first",
+                "split"
               ]
             },
             "type": "select"
