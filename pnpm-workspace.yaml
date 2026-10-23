@@ -23,3 +23,10 @@ overrides:
   brace-expansion@5: "^5.0.9"
   fast-uri@3: "^3.1.6"
   js-yaml@4: "^4.3.2"
+
+# GHSA-vfj7-8cjw-p6xm (braces) was withdrawn by GitHub on 2026-10-23, but the
+# npm advisory feed behind `pnpm audit` still reports it. Drop this entry once
+# `pnpm audit` stops flagging braces without it.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-vfj7-8cjw-p6xm
