@@ -65,6 +65,8 @@ types:
       level:
   elements:
     - title:
+      subtitle:
+      highlight:
       icon:
       image:
       mode:
