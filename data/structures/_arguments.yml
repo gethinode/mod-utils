@@ -82,6 +82,13 @@ arguments:
         - start
         - center
         - end
+  align-rows:
+    type: bool
+    optional: true
+    default: false
+    comment: >-
+      Aligns card parts across each visual row. Applies to stacked, non-scroll,
+      non-bento groups only.
   alt:
     type: string
     optional: true
@@ -721,6 +728,12 @@ arguments:
     type: bool
     optional: true
     comment: Hides the entire section when no pages are available.
+  highlight:
+    type: string
+    optional: true
+    comment: >-
+      Emphasised line rendered between the subtitle and the card body, such as
+      a price.
   highlight-options:
     type: string
     optional: true
@@ -1581,6 +1594,10 @@ arguments:
       Styles to apply to the individual cards. Supported elements are `ratio`,
       `orientation`, `portrait`, and `width`. The styles are rotated when the
       amount of cards exceeds the available amount of styles.
+  subtitle:
+    type: string
+    optional: true
+    comment: Short line rendered below the card title.
   subtle:
     type: bool
     optional: true

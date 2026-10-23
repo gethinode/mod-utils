@@ -31,6 +31,96 @@
       "width": 8
     }
   },
+  "cards-align-rows-valid": {
+    "args": {
+      "args": {
+        "_bookshopName": "test-cards",
+        "alignRows": true,
+        "elements": [
+          {
+            "content": "Body",
+            "highlight": "10 per month",
+            "mode": false,
+            "subtitle": "For small teams",
+            "title": "Plan"
+          }
+        ]
+      },
+      "defaulted": [
+        "elements[0].mode"
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "_bookshopName": "test-cards",
+      "_bookshop_name": "test-cards",
+      "alignRows": true,
+      "align_rows": true,
+      "default": [],
+      "elements": [
+        {
+          "content": "Body",
+          "highlight": "10 per month",
+          "mode": false,
+          "subtitle": "For small teams",
+          "title": "Plan"
+        }
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    }
+  },
+  "cards-element-typo-rejected": {
+    "args": {
+      "args": {
+        "_bookshopName": "test-cards",
+        "alignRows": true,
+        "elements": [
+          {
+            "content": "Body",
+            "highlight": "10 per month",
+            "highligt": "oops",
+            "mode": false,
+            "subtitle": "For small teams",
+            "title": "Plan"
+          }
+        ]
+      },
+      "defaulted": [
+        "elements[0].mode"
+      ],
+      "err": true,
+      "errmsg": [
+        "[test-cards] argument 'elements[0]': unsupported attribute 'highligt'"
+      ],
+      "warnmsg": []
+    },
+    "initargs": {
+      "_bookshopName": "test-cards",
+      "_bookshop_name": "test-cards",
+      "alignRows": true,
+      "align_rows": true,
+      "default": [],
+      "elements": [
+        {
+          "content": "Body",
+          "highlight": "10 per month",
+          "highligt": "oops",
+          "mode": false,
+          "subtitle": "For small teams",
+          "title": "Plan"
+        }
+      ],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": [
+        "[test-cards] argument 'elements[0]': unsupported attribute 'highligt'"
+      ]
+    }
+  },
   "cloudcannon-explicit-false": {
     "args": {
       "args": {

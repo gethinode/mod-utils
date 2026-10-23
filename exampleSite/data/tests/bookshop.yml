@@ -51,3 +51,24 @@ cases:
       heading:
         title: Hello
       bogus: nope
+  - name: cards-align-rows-valid
+    bookshop: test-cards
+    args:
+      _bookshop_name: test-cards
+      align_rows: true
+      elements:
+        - title: Plan
+          subtitle: For small teams
+          highlight: 10 per month
+          content: Body
+  - name: cards-element-typo-rejected
+    bookshop: test-cards
+    args:
+      _bookshop_name: test-cards
+      align_rows: true
+      elements:
+        - title: Plan
+          subtitle: For small teams
+          highlight: 10 per month
+          highligt: oops
+          content: Body

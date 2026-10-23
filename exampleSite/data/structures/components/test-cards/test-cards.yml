@@ -1,0 +1,6 @@
+comment: Sidecar for the test cards component.
+arguments:
+  align-rows:
+    optional: true
+  elements:
+    optional: true

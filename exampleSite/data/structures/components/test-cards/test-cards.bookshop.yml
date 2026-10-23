@@ -1,0 +1,14 @@
+spec:
+  structures:
+    - content_blocks
+  label: Test cards
+  description: Bookshop fixture for card argument tests
+  icon: view_agenda
+  tags: []
+blueprint:
+  align_rows: false
+  elements:
+    - title:
+      subtitle:
+      highlight:
+      content:
