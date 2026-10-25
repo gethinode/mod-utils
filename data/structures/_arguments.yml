@@ -1214,6 +1214,14 @@ arguments:
     comment: >-
       Flag indicating the element should use an outline color instead of a fill
       color.
+  overlay:
+    type: bool
+    optional: true
+    default: true
+    comment: >-
+      Darken the image to improve caption and navigation control contrast.
+      Set to false to display the image without darkening. Captions and controls
+      remain enabled; check their contrast against the original image.
   overlay-mode:
     type: select
     optional: true
