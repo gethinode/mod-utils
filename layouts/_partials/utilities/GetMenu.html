@@ -4,23 +4,24 @@
 {{- $disable := eq (index $page.Params "sidebar-menu") false -}}
 
 {{- $menu := "" -}}
+{{- $siteData := partial "utilities/GetData.html" . -}}
 {{- if and (or $page.IsPage $page.IsSection) (not $disable) -}}
     {{/* Try filename with language extension */}}
     {{- $path = printf "%s-%s.%s" $page.Section $version $page.Lang -}}
-    {{- $menu = index site.Data $path -}}
+    {{- $menu = index $siteData $path -}}
     {{ if not $menu }}
         {{- $path = printf "%s.%s" $page.Section $page.Lang -}}
-        {{ $menu = index site.Data $path }}
+        {{ $menu = index $siteData $path }}
     {{ end }}
 
     {{/* Try filename without language extension */}}
     {{ if not $menu }}
         {{- $path = printf "%s-%s" $page.Section $version -}}
-        {{- $menu = index site.Data $path -}}
+        {{- $menu = index $siteData $path -}}
     {{ end }}
     {{ if not $menu }}
         {{- $path = $page.Section -}}
-        {{ $menu = index site.Data $path }}
+        {{ $menu = index $siteData $path }}
     {{ end }}
 {{- end -}}
 

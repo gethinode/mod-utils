@@ -42,21 +42,33 @@
             7 = 270 degrees: image has been flipped back-to-front and is on its far side.
             8 = 270 degrees, mirrored: image is on its far side.
         -->
-        {{ with $img.Exif }}
-            {{ $filter := "" }}
-            {{ $orientation := .Tags.Orientation }}
-            {{ if or (eq $orientation 3) (eq $orientation 4) }}
-                {{ $filter = images.Process "r180" }}
-            {{ else if or (eq $orientation 5) (eq $orientation 6) }}
-                {{ $filter = images.Process "r270" }}
-            {{ else if or (eq $orientation 7) (eq $orientation 8) }}
-                {{ $filter = images.Process "r90" }}
-            {{ end }}
-            {{ with $filter }}{{ $img = $img.Filter . }}{{ end }}
-
-            {{- $isMirrored := slice 2 4 5 7 -}}
-            {{- if (in $isMirrored $orientation) }}{{ $mirror = true }}{{ end -}}
+        <!--
+            Hugo v0.155.0 deprecated Image.Exif; Image.Meta reports the orientation as
+            Meta.Orientation. Hugo's docs give Meta as new in v0.155.3, the release the guard
+            uses, though v0.155.0 already has it. The guard keeps Exif for older Hugo, including
+            the v0.147.6 renderer that Bookshop uses for CloudCannon live editing. Use if/else,
+            not cond: cond evaluates both arguments. Without orientation data, $orientation
+            matches none of the values below, so the image is neither rotated nor mirrored.
+        -->
+        {{ $orientation := 0 }}
+        {{ if le (hugo.Version.Compare "0.155.3") 0 }}
+            {{ with $img.Meta }}{{ $orientation = .Orientation }}{{ end }}
+        {{ else }}
+            {{ with $img.Exif }}{{ $orientation = .Tags.Orientation }}{{ end }}
         {{ end }}
+
+        {{ $filter := "" }}
+        {{ if or (eq $orientation 3) (eq $orientation 4) }}
+            {{ $filter = images.Process "r180" }}
+        {{ else if or (eq $orientation 5) (eq $orientation 6) }}
+            {{ $filter = images.Process "r270" }}
+        {{ else if or (eq $orientation 7) (eq $orientation 8) }}
+            {{ $filter = images.Process "r90" }}
+        {{ end }}
+        {{ with $filter }}{{ $img = $img.Filter . }}{{ end }}
+
+        {{- $isMirrored := slice 2 4 5 7 -}}
+        {{- if (in $isMirrored $orientation) }}{{ $mirror = true }}{{ end -}}
     {{ else -}}
         {{- partial "utilities/LogWarn.html" (dict 
             "partial" "utilities/GetImage.html" 

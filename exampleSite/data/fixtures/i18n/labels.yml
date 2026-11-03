@@ -1,0 +1,2 @@
+# GetI18nData fixture: language-neutral labels, shadowed by labels.en.yml
+greeting: neutral

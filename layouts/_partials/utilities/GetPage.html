@@ -39,7 +39,26 @@
         {{ $match := partial "utilities/GetStaticURL" (dict "url" $url) }}
         {{ if not (hasSuffix $match "/") }}{{ $match = printf "%s/" $match }}{{ end }}
 
-        {{ $matches := where site.AllPages "RelPermalink" "like" (printf "%s$" $match) }}
+        {{/* Match against the pages site.AllPages returns: those of every language, in the
+            first version and the first role of Hugo's sort order, which are the version and
+            role of the first site in hugo.Sites. That is not necessarily the default version
+            or role, nor the current site's. Hugo v0.156.0 deprecated site.AllPages, so from
+            that release on the same pages are collected from hugo.Sites. The guard keeps
+            site.AllPages for older Hugo, including the v0.147.6 renderer that Bookshop uses
+            for CloudCannon live editing. Use if/else, not cond: cond evaluates both arguments. */}}
+        {{ $pages := slice }}
+        {{ if le (hugo.Version.Compare "0.156.0") 0 }}
+            {{ $first := index hugo.Sites 0 }}
+            {{ range hugo.Sites }}
+                {{ if and (eq .Version.Name $first.Version.Name) (eq .Role.Name $first.Role.Name) }}
+                    {{ $pages = $pages | append .Pages }}
+                {{ end }}
+            {{ end }}
+        {{ else }}
+            {{ $pages = site.AllPages }}
+        {{ end }}
+
+        {{ $matches := where $pages "RelPermalink" "like" (printf "%s$" $match) }}
         {{ if eq (len $matches) 1 }}
             {{ $ref = index $matches 0 }}
         {{ else if gt (len $matches) 1}}

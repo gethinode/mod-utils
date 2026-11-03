@@ -1,0 +1,4 @@
+---
+title: GetImage
+outputs: ["json"]
+---

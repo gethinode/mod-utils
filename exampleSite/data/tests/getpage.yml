@@ -1,0 +1,28 @@
+# GetPage: references that Page.GetPage and site.GetPage cannot resolve fall back to matching
+# the RelPermalink of every page in every language. The fixture pages under content/getpage
+# carry a slug, so their permalink differs from their content path.
+cases:
+  - name: content-path
+    api: getpage
+    url: /getpage/en-only
+  - name: permalink-current-language
+    api: getpage
+    url: /getpage/renamed-en-only/
+  - name: permalink-other-language
+    api: getpage
+    url: /nl/getpage/renamed-nl-only/
+  - name: permalink-other-language-suffix
+    api: getpage
+    url: /getpage/renamed-nl-only/
+  - name: permalink-in-both-languages-is-ambiguous
+    api: getpage
+    url: /getpage/renamed-shared/
+  - name: permalink-missing
+    api: getpage
+    url: /getpage/renamed-missing/
+  - name: section-other-language
+    api: getpage
+    url: /nl/getpage/
+  - name: home-other-language
+    api: getpage
+    url: /nl/

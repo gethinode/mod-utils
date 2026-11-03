@@ -18,10 +18,11 @@
 
 {{ if not $args.err }}
 	{{ $data := slice }}
+	{{ $siteData := partial "utilities/GetData.html" . }}
 	{{ with $args.languageTag }}
-		{{ with index site.Data (printf "%s.%s" $args.data .) }}{{ $data = $data | append . }}{{ end}}
+		{{ with index $siteData (printf "%s.%s" $args.data .) }}{{ $data = $data | append . }}{{ end}}
 	{{ end }}
-	{{ with (index site.Data $args.data) }}{{ $data = $data | append . }}{{ end }}
+	{{ with (index $siteData $args.data) }}{{ $data = $data | append . }}{{ end }}
 
 	{{ range $data }}
 		{{ if eq .name $args.contact }}

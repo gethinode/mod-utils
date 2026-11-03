@@ -1,0 +1,5 @@
+# GetContact fixture: the language-neutral contact list
+- name: Alice
+  source: neutral
+- name: Bob
+  source: neutral

@@ -1,0 +1,43 @@
+# GetImage: the fixtures under assets/img/orientation store one 16x8 image (red top-left
+# quadrant) with every EXIF orientation. GetImage rotates by the orientation and reports a
+# mirrored one, so width, height and the top-left colour show the rotation applied.
+cases:
+  - name: jpeg-orientation-1
+    api: getimage
+    url: img/orientation/orientation-1.jpg
+  - name: jpeg-orientation-2
+    api: getimage
+    url: img/orientation/orientation-2.jpg
+  - name: jpeg-orientation-3
+    api: getimage
+    url: img/orientation/orientation-3.jpg
+  - name: jpeg-orientation-4
+    api: getimage
+    url: img/orientation/orientation-4.jpg
+  - name: jpeg-orientation-5
+    api: getimage
+    url: img/orientation/orientation-5.jpg
+  - name: jpeg-orientation-6
+    api: getimage
+    url: img/orientation/orientation-6.jpg
+  - name: jpeg-orientation-7
+    api: getimage
+    url: img/orientation/orientation-7.jpg
+  - name: jpeg-orientation-8
+    api: getimage
+    url: img/orientation/orientation-8.jpg
+  - name: jpeg-without-exif
+    api: getimage
+    url: img/orientation/no-exif.jpg
+  - name: png-orientation-6
+    api: getimage
+    url: img/orientation/orientation-6.png
+  - name: tiff-orientation-6
+    api: getimage
+    url: img/orientation/orientation-6.tif
+  - name: gif-without-exif
+    api: getimage
+    url: img/orientation/no-exif.gif
+  - name: bmp-without-exif
+    api: getimage
+    url: img/orientation/no-exif.bmp

@@ -6,14 +6,15 @@
 {{ $file := $i18nPath }}
 
 {{/* Traverse each path segment separately */}}
-{{ $base := site.Data }}
+{{ $siteData := partial "utilities/GetData.html" . }}
+{{ $base := $siteData }}
 {{ $dirFile := path.Split $file }}
 {{ with $dirFile.Dir }}
     {{ $file = $dirFile.File }}
     {{ range split . "/" }}
         {{ with . }}
             {{ $base = index $base . }}
-            {{ if eq $base nil }}{{ $base = site.Data }}{{ break }}{{ end }}
+            {{ if eq $base nil }}{{ $base = $siteData }}{{ break }}{{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
@@ -23,7 +24,7 @@
 
 {{/* Use exact provided path as backup */}}
 {{ if not $data -}}
-    {{ $data = index site.Data $path }}
+    {{ $data = index $siteData $path }}
 {{ end }}
 
 {{ return $data }}

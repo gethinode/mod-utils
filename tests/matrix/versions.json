@@ -1,0 +1,54 @@
+{
+  "/tests/getpage/": {
+    "content-path": {
+      "getpage": "en /getpage/renamed-en-only/"
+    },
+    "home-other-language": {
+      "getpage": "nl /v1/nl/"
+    },
+    "permalink-current-language": {
+      "getpage": "en /v1/getpage/renamed-en-only/"
+    },
+    "permalink-in-both-languages-is-ambiguous": {
+      "getpage": ""
+    },
+    "permalink-missing": {
+      "getpage": ""
+    },
+    "permalink-other-language": {
+      "getpage": "nl /v1/nl/getpage/renamed-nl-only/"
+    },
+    "permalink-other-language-suffix": {
+      "getpage": "nl /v1/nl/getpage/renamed-nl-only/"
+    },
+    "section-other-language": {
+      "getpage": "nl /v1/nl/getpage/"
+    }
+  },
+  "/v1/tests/getpage/": {
+    "content-path": {
+      "getpage": "en /v1/getpage/renamed-en-only/"
+    },
+    "home-other-language": {
+      "getpage": "nl /v1/nl/"
+    },
+    "permalink-current-language": {
+      "getpage": "en /v1/getpage/renamed-en-only/"
+    },
+    "permalink-in-both-languages-is-ambiguous": {
+      "getpage": "en /v1/getpage/renamed-shared/"
+    },
+    "permalink-missing": {
+      "getpage": ""
+    },
+    "permalink-other-language": {
+      "getpage": "nl /v1/nl/getpage/renamed-nl-only/"
+    },
+    "permalink-other-language-suffix": {
+      "getpage": ""
+    },
+    "section-other-language": {
+      "getpage": "nl /v1/nl/getpage/"
+    }
+  }
+}

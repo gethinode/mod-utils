@@ -4,7 +4,7 @@
     Output is canonical JSON (jsonify sorts map keys) compared against tests/golden/<group>.json.
 */ -}}
 {{- $group := .File.ContentBaseName -}}
-{{- $data := index site.Data.tests $group | default .Params -}}
+{{- $data := index (partial "utilities/GetData.html" .).tests $group | default .Params -}}
 {{- $results := dict -}}
 {{- range $case := $data.cases -}}
     {{- $entry := dict -}}
@@ -15,6 +15,23 @@
             "child"     ($case.child | default "")
         ) -}}
         {{- $entry = dict "schema" $compiled -}}
+    {{- else if eq $case.api "contact" -}}
+        {{- $entry = dict "contact" (partial "utilities/GetContact.html" $case.args) -}}
+    {{- else if eq $case.api "menu" -}}
+        {{- $target := site.GetPage $case.page -}}
+        {{- $menu := partial "utilities/GetMenu.html" (dict "page" $target "version" $case.version) -}}
+        {{- $entry = dict "menu" $menu "sidebarFilename" ($target.Scratch.Get "sidebarFilename") -}}
+    {{- else if eq $case.api "i18ndata" -}}
+        {{- $entry = dict "i18ndata" (partial "utilities/GetI18nData.html" (dict "data" $case.data "page" $)) -}}
+    {{- else if eq $case.api "getpage" -}}
+        {{- $ref := partial "utilities/GetPage.html" (dict "url" $case.url "page" $) -}}
+        {{- $entry = dict "getpage" (cond (not $ref) "" (printf "%s %s" $ref.Lang $ref.RelPermalink)) -}}
+    {{- else if eq $case.api "getimage" -}}
+        {{- $img := partial "utilities/GetImage.html" (dict "url" $case.url "page" $) -}}
+        {{- with $img.resource -}}
+            {{- $entry = dict "width" .Width "height" .Height "mirror" $img.mirror
+                "topLeft" (index (.Crop "1x1 TopLeft").Colors 0).ColorHex -}}
+        {{- end -}}
     {{- else if eq $case.api "inittypes" -}}
         {{- $entry = dict "inittypes" (partial "utilities/InitTypes.html" (dict
             "structure" ($case.structure | default "")

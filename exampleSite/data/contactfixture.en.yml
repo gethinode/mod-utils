@@ -1,0 +1,3 @@
+# GetContact fixture: the English contact list, searched before the neutral one
+- name: Alice
+  source: english
