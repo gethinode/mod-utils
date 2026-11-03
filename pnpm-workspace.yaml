@@ -1,6 +1,7 @@
 # pnpm reads this for repo-wide settings even without sub-packages.
 # allowBuilds is the v11 gate for which deps may run install scripts. Keep tight.
 allowBuilds:
+  esbuild: false # via @bookshop/hugo-engine; the renderer test loads only its full-hugo-renderer files
   hugo-extended: true # downloads the platform-specific Hugo binary
   # add more only when a postinstall failure is investigated and trusted
 minimumReleaseAgeExclude:
@@ -16,6 +17,9 @@ minimumReleaseAgeExclude:
 #   major 3 and require the patched >=3.1.6 release.
 # js-yaml: cosmiconfig resolves vulnerable 4.3.1; keep the override on major 4
 #   and require the patched >=4.3.2 release.
+# liquidjs: @bookshop/hugo-engine pins vulnerable 10.17.0; keep the override on
+#   major 10 and require the patched >=10.27.2 release. The renderer test never
+#   loads liquidjs.
 # Drop each override once the upstream dependency ranges resolve patched
 # versions without assistance.
 overrides:
@@ -23,6 +27,7 @@ overrides:
   brace-expansion@5: "^5.0.9"
   fast-uri@3: "^3.1.6"
   js-yaml@4: "^4.3.2"
+  liquidjs@10: "^10.27.2"
 
 # GHSA-vfj7-8cjw-p6xm (braces) was withdrawn by GitHub on 2026-10-23, but the
 # npm advisory feed behind `pnpm audit` still reports it. Drop this entry once
