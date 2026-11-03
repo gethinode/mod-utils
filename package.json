@@ -24,7 +24,7 @@
     "mod:vendor": "rimraf _vendor && hugo mod vendor",
     "prepare": "node .husky/install.mjs",
     "pretest": "pnpm clean && pnpm mod:vendor",
-    "test": "node tests/deprecations.mjs && node tests/golden.mjs && pnpm test:renderer",
+    "test": "node tests/deprecations.mjs && node tests/golden.mjs && node tests/matrix.mjs && pnpm test:renderer",
     "test:renderer": "node --test tests/renderer/renderer.test.mjs",
     "test:update": "pnpm clean && pnpm mod:vendor && hugo -s exampleSite && node tests/golden.mjs --update"
   },

@@ -1,6 +1,13 @@
 baseURL = 'http://example.org/'
 languageCode = 'en-us'
 title = 'Test site for mod-utils'
+defaultContentLanguage = 'en'
+
+# A second language, so GetPage's site-wide match is tested across languages
+[languages.en]
+  weight = 1
+[languages.nl]
+  weight = 2
 
 [params.test]
   enabled = true
