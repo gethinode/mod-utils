@@ -198,16 +198,17 @@
 {{ $bookshop := .bookshop }}
 {{ $child := .child }}
 {{ $errmsg := slice }}
+{{ $siteData := partial "utilities/GetData.html" . }}
 
-{{ $arguments := ((index site.Data.structures "_arguments") | default dict).arguments | default dict }}
-{{ $typesData := ((index site.Data.structures "_types") | default dict).types | default dict }}
+{{ $arguments := ((index $siteData.structures "_arguments") | default dict).arguments | default dict }}
+{{ $typesData := ((index $siteData.structures "_types") | default dict).types | default dict }}
 
 {{/* assemble the raw argument map from the structure file or the bookshop blueprint + sidecar */}}
 {{ $raw := dict }}
 {{ if $structure }}
-    {{ $raw = ((index site.Data.structures $structure) | default dict).arguments | default dict }}
+    {{ $raw = ((index $siteData.structures $structure) | default dict).arguments | default dict }}
 {{ else if $bookshop }}
-    {{ $component := index (site.Data.structures.components | default dict) $bookshop | default dict }}
+    {{ $component := index ($siteData.structures.components | default dict) $bookshop | default dict }}
     {{ $raw = (index $component (printf "%s.bookshop" $bookshop) | default dict).blueprint | default dict }}
     {{ $raw = merge $raw (dict "_bookshop_name" nil "_ordinal" nil "id" nil) }}
     {{ $sidecar := ((index $component $bookshop) | default dict).arguments | default dict }}
@@ -229,7 +230,7 @@
 
 {{/* merge parent-flagged arguments from the child structure, stripping their defaults */}}
 {{ if $child }}
-    {{ $extra := ((index site.Data.structures $child) | default dict).arguments }}
+    {{ $extra := ((index $siteData.structures $child) | default dict).arguments }}
     {{ if not $extra }}
         {{ $errmsg = $errmsg | append (printf "schema: missing definitions: %s" $child) }}
     {{ else }}

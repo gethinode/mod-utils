@@ -1,0 +1,38 @@
+# Partials that read site data: GetContact, GetMenu and GetI18nData.
+cases:
+  - name: contact-language
+    api: contact
+    args: {contact: Alice, data: contactfixture, language-tag: en}
+  - name: contact-neutral-fallback
+    api: contact
+    args: {contact: Bob, data: contactfixture, language-tag: en}
+  - name: contact-without-language
+    api: contact
+    args: {contact: Alice, data: contactfixture}
+  - name: contact-missing
+    api: contact
+    args: {contact: Carol, data: contactfixture}
+  - name: menu-version-language
+    api: menu
+    page: /menufixture/page
+    version: v1
+  - name: menu-version
+    api: menu
+    page: /menufixture/page
+    version: v2
+  - name: menu-section
+    api: menu
+    page: /menufixture/page
+    version: v3
+  - name: i18n-nested-language
+    api: i18ndata
+    data: fixtures/i18n/labels
+  - name: i18n-nested-without-language
+    api: i18ndata
+    data: fixtures/i18n/only-base
+  - name: i18n-top-level-fallback
+    api: i18ndata
+    data: i18nfixture
+  - name: i18n-missing-folder
+    api: i18ndata
+    data: nofolder/contactfixture

@@ -71,6 +71,14 @@ describe('renderer', () => {
 	});
 });
 
+describe('partials in the renderer', () => {
+	test('GetData returns site.Data', () => {
+		const {error, output} = renderer.render('{{ (partial "utilities/GetData.html" .).renderer_test.greeting }}');
+		assert.equal(error, null);
+		assert.equal(output, 'hello');
+	});
+});
+
 describe('exampleSite test pages in the renderer', () => {
 	let built;
 	before(() => {

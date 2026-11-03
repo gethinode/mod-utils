@@ -1,0 +1,19 @@
+{{/*
+    Copyright © 2026 The Hinode Team / Mark Dumay. All rights reserved.
+    Use of this source code is governed by The MIT License (MIT) that can be found in the LICENSE file.
+    Visit gethinode.com/license for more details.
+
+    Returns the project's data files: hugo.Data on Hugo v0.156.0 or later, site.Data otherwise.
+    Hugo deprecated site.Data in v0.156.0. The guard keeps site.Data for older Hugo, including
+    the v0.147.6 renderer that Bookshop uses for CloudCannon live editing, where hugo.Data fails.
+    Use if/else, not cond: cond evaluates both arguments. Takes no arguments.
+*/}}
+
+{{ $data := dict }}
+{{ if le (hugo.Version.Compare "0.156.0") 0 }}
+    {{ $data = hugo.Data }}
+{{ else }}
+    {{ $data = site.Data }}
+{{ end }}
+
+{{ return $data }}

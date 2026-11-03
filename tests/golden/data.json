@@ -1,0 +1,68 @@
+{
+  "contact-language": {
+    "contact": {
+      "name": "Alice",
+      "source": "english"
+    }
+  },
+  "contact-missing": {
+    "contact": ""
+  },
+  "contact-neutral-fallback": {
+    "contact": {
+      "name": "Bob",
+      "source": "neutral"
+    }
+  },
+  "contact-without-language": {
+    "contact": {
+      "name": "Alice",
+      "source": "neutral"
+    }
+  },
+  "i18n-missing-folder": {
+    "i18ndata": [
+      {
+        "name": "Alice",
+        "source": "english"
+      }
+    ]
+  },
+  "i18n-nested-language": {
+    "i18ndata": {
+      "greeting": "hello"
+    }
+  },
+  "i18n-nested-without-language": {
+    "i18ndata": null
+  },
+  "i18n-top-level-fallback": {
+    "i18ndata": {
+      "greeting": "top-level neutral"
+    }
+  },
+  "menu-section": {
+    "menu": [
+      {
+        "title": "section neutral"
+      }
+    ],
+    "sidebarFilename": "data/menufixture"
+  },
+  "menu-version": {
+    "menu": [
+      {
+        "title": "v2 neutral"
+      }
+    ],
+    "sidebarFilename": "data/menufixture-v2"
+  },
+  "menu-version-language": {
+    "menu": [
+      {
+        "title": "v1 English"
+      }
+    ],
+    "sidebarFilename": "data/menufixture-v1.en"
+  }
+}
