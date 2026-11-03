@@ -7,6 +7,7 @@ import process from 'node:process';
 
 const forbidden = [
 	/deprecated: \.Site\.Data\b/,
+	/deprecated: Image\.Exif\b/,
 ];
 
 // Run through the shell, as the package.json script it replaces ran hugo. One command string,

@@ -1,0 +1,7 @@
+# GetImage on WebP, kept apart from getimage: rotating a WebP image means encoding one, which
+# needs Hugo extended. Bookshop's live-editing renderer cannot encode WebP, so the renderer test
+# skips this group.
+cases:
+  - name: webp-orientation-6
+    api: getimage
+    url: img/orientation/orientation-6.webp

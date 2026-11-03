@@ -10,7 +10,7 @@ import {readdirSync, readFileSync} from 'node:fs';
 import path from 'node:path';
 import {after, before, describe, test} from 'node:test';
 import {fileURLToPath} from 'node:url';
-import {bookshopConfig, createRenderer, readTree} from './harness.mjs';
+import {bookshopConfig, createRenderer, readTree, resourceStub} from './harness.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const site = path.join(root, 'exampleSite');
@@ -20,6 +20,19 @@ const normalize = (s) => s.replaceAll('\r\n', '\n');
 // supplies module files as extraFiles instead), after the settings Bookshop itself writes.
 const siteConfig = readFileSync(path.join(site, 'hugo.toml'), 'utf8').replace(/^\[module\][\s\S]*$/m, '');
 const config = `${bookshopConfig}\n${siteConfig}`;
+
+// The image fixtures GetImage resolves, served through resourceStub (the renderer takes no binaries).
+const imageDir = path.join(site, 'assets', 'img', 'orientation');
+const images = Object.fromEntries(readdirSync(imageDir)
+	.filter((file) => !file.endsWith('.py'))
+	.map((file) => [`img/orientation/${file}`, path.join(imageDir, file)]));
+
+// exampleSite test groups the renderer cannot build, with the reason. Their pages are left out.
+const skipped = {
+	'getimage-webp': 'the renderer is not Hugo extended, so it cannot encode the rotated WebP image',
+};
+const content = Object.fromEntries(Object.entries(readTree(path.join(site, 'content'), 'content'))
+	.filter(([file]) => !Object.keys(skipped).some((group) => file === `content/tests/${group}.md`)));
 
 let renderer;
 before(async () => {
@@ -31,7 +44,8 @@ before(async () => {
 			...readTree(path.join(root, 'data'), 'data'),
 			...readTree(path.join(site, 'layouts'), 'layouts'),
 			...readTree(path.join(site, 'data'), 'data'),
-			...readTree(path.join(site, 'content'), 'content'),
+			...content,
+			...resourceStub(images),
 			// Data for the controls below.
 			'data/renderer_test.json': '{"greeting": "hello"}',
 		},
@@ -91,7 +105,7 @@ describe('exampleSite test pages in the renderer', () => {
 
 	const groups = readdirSync(path.join(root, 'tests', 'golden')).map((file) => path.basename(file, '.json'));
 	for (const group of groups) {
-		test(`${group} matches its golden file`, () => {
+		test(`${group} matches its golden file`, {skip: skipped[group]}, () => {
 			const output = `public/tests/${group}/index.json`;
 			const golden = readFileSync(path.join(root, 'tests', 'golden', `${group}.json`), 'utf8');
 			assert.equal(normalize(renderer.read([output])[output] ?? ''), normalize(golden));
