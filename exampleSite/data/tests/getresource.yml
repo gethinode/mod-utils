@@ -1,0 +1,51 @@
+# GetResource: a url that starts with "http" (any case) is first fetched with resources.GetRemote.
+# A url that opens with the scheme "http://" or "https://" (any case) is never matched against the
+# site assets, so an unfetchable one returns nil. Any other url that is not found falls back to the
+# site assets: an asset name that starts with "http", such as "http-logo.jpg"; a protocol-relative
+# url, which has no scheme; a glob pattern that contains a url after its first character; and a url
+# with one slash after "http:".
+#
+# The remote cases use port 1 on the loopback address: Hugo's default security.http.urls policy
+# denies an IP address, and a policy that allows it gets a refused connection, so no case touches
+# the network. The "[" in a url is an invalid pattern for resources.GetMatch, so a case whose url
+# reaches it records "error".
+cases:
+  - name: page-resource
+    api: getresource
+    url: page-resource.txt
+  - name: local-asset
+    api: getresource
+    url: img/orientation/orientation-1.jpg
+  - name: local-asset-absolute
+    api: getresource
+    url: /assets/img/orientation/orientation-1.jpg
+  - name: local-asset-missing
+    api: getresource
+    url: img/missing.jpg
+  - name: local-asset-http-name
+    api: getresource
+    url: http-logo.jpg
+  - name: local-asset-https-name
+    api: getresource
+    url: https_cover.jpg
+  - name: local-asset-http-name-uppercase
+    api: getresource
+    url: HTTP-x.jpg
+  - name: local-asset-protocol-relative
+    api: getresource
+    url: //img/orientation/orientation-1.jpg
+  - name: local-asset-url-in-glob
+    api: getresource
+    url: "{img/orientation/orientation-1.jpg,https://127.0.0.1:1/x.jpg}"
+  - name: invalid-pattern-one-slash
+    api: getresource
+    url: http:/127.0.0.1:1/img/[x.png
+  - name: remote-unreachable
+    api: getresource
+    url: https://127.0.0.1:1/img/[x.png
+  - name: remote-unreachable-http
+    api: getresource
+    url: http://127.0.0.1:1/img/[x.png
+  - name: remote-unreachable-uppercase
+    api: getresource
+    url: HTTPS://127.0.0.1:1/img/[x.png

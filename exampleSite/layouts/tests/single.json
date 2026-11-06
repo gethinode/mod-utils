@@ -26,6 +26,13 @@
     {{- else if eq $case.api "getpage" -}}
         {{- $ref := partial "utilities/GetPage.html" (dict "url" $case.url "page" $) -}}
         {{- $entry = dict "getpage" (cond (not $ref) "" (printf "%s %s" $ref.Lang $ref.RelPermalink)) -}}
+    {{- else if eq $case.api "getresource" -}}
+        {{- /* A failed call is recorded as "error", so one case's error does not stop the build. */ -}}
+        {{- $entry = dict "getresource" "" -}}
+        {{- with try (partial "utilities/GetResource.html" (dict "url" $case.url "page" $)) -}}
+            {{- if .Err }}{{ $entry = dict "getresource" "error" }}{{ end -}}
+            {{- with .Value }}{{ $entry = dict "getresource" .Name }}{{ end -}}
+        {{- end -}}
     {{- else if eq $case.api "getimage" -}}
         {{- $img := partial "utilities/GetImage.html" (dict "url" $case.url "page" $) -}}
         {{- with $img.resource -}}

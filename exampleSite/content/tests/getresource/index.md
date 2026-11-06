@@ -1,0 +1,4 @@
+---
+title: GetResource
+outputs: ["json"]
+---
