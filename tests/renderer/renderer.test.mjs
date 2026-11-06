@@ -30,9 +30,11 @@ const images = Object.fromEntries(readdirSync(imageDir)
 // exampleSite test groups the renderer cannot build, with the reason. Their pages are left out.
 const skipped = {
 	'getimage-webp': 'the renderer is not Hugo extended, so it cannot encode the rotated WebP image',
+	getresource: 'resourceStub replaces GetResource with a stub, so the group would test the stub',
 };
 const content = Object.fromEntries(Object.entries(readTree(path.join(site, 'content'), 'content'))
-	.filter(([file]) => !Object.keys(skipped).some((group) => file === `content/tests/${group}.md`)));
+	.filter(([file]) => !Object.keys(skipped).some((group) => file === `content/tests/${group}.md`
+		|| file.startsWith(`content/tests/${group}/`))));
 
 let renderer;
 before(async () => {

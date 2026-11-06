@@ -1,0 +1,20 @@
+{
+  "local-asset": {
+    "getresource": "/img/orientation/orientation-1.jpg"
+  },
+  "local-asset-absolute": {
+    "getresource": "/img/orientation/orientation-1.jpg"
+  },
+  "local-asset-missing": {
+    "getresource": ""
+  },
+  "page-resource": {
+    "getresource": "page-resource.txt"
+  },
+  "remote-unreachable": {
+    "getresource": ""
+  },
+  "remote-unreachable-uppercase": {
+    "getresource": ""
+  }
+}

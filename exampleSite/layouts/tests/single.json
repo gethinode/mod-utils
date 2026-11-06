@@ -26,6 +26,10 @@
     {{- else if eq $case.api "getpage" -}}
         {{- $ref := partial "utilities/GetPage.html" (dict "url" $case.url "page" $) -}}
         {{- $entry = dict "getpage" (cond (not $ref) "" (printf "%s %s" $ref.Lang $ref.RelPermalink)) -}}
+    {{- else if eq $case.api "getresource" -}}
+        {{- $res := partial "utilities/GetResource.html" (dict "url" $case.url "page" $) -}}
+        {{- $entry = dict "getresource" "" -}}
+        {{- with $res }}{{ $entry = dict "getresource" .Name }}{{ end -}}
     {{- else if eq $case.api "getimage" -}}
         {{- $img := partial "utilities/GetImage.html" (dict "url" $case.url "page" $) -}}
         {{- with $img.resource -}}

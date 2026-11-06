@@ -1,0 +1,24 @@
+# GetResource: a url starting with "http" (any case) is fetched with resources.GetRemote and is
+# never matched against the site assets, so an unfetchable one returns nil. The remote cases use
+# port 1 on the loopback address: Hugo's default security.http.urls policy denies an IP address,
+# and a policy that allows it gets a refused connection, so no case touches the network. The "["
+# in the url is an invalid pattern for resources.GetMatch, which fails the build if it is reached.
+cases:
+  - name: page-resource
+    api: getresource
+    url: page-resource.txt
+  - name: local-asset
+    api: getresource
+    url: img/orientation/orientation-1.jpg
+  - name: local-asset-absolute
+    api: getresource
+    url: /assets/img/orientation/orientation-1.jpg
+  - name: local-asset-missing
+    api: getresource
+    url: img/missing.jpg
+  - name: remote-unreachable
+    api: getresource
+    url: https://127.0.0.1:1/img/[x.png
+  - name: remote-unreachable-uppercase
+    api: getresource
+    url: HTTPS://127.0.0.1:1/img/[x.png
