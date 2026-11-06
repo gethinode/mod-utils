@@ -1,7 +1,8 @@
 <!-- 
     Retrieve a local or remote resource. If the url starts with 'http' (in any letter case), the resource is retrieved
-    from an external location only, and is never matched with a site asset. Else, the url is matched with a page
-    resource and site asset (in that order). 
+    from an external location. Else, the url is matched with a page resource. If no resource is found, the url is then
+    matched with a site asset, unless it starts with the scheme 'http://' or 'https://' (in any letter case). So an asset
+    name such as "http-logo.jpg" is matched with a site asset, while a remote url that cannot be retrieved returns nil.
     
     This partial supports both relative and absolute paths. Hugo has different methods to retrieve page bundle assets
     and site assets. Absolute paths are converted to a relative path to make them compatible with Hugo's methods. The
@@ -17,6 +18,7 @@
 {{ $page := .page -}}
 {{ $res := "" }}
 {{ $remote := hasPrefix (lower $url) "http" }}
+{{ $scheme := gt (len (findRE `(?i)^https?://` $url 1)) 0 }}
 
 {{ define "_partials/inline/GetResourceBypassCache.html" }}
     {{ $url := .url -}}
@@ -58,7 +60,7 @@
     {{ end }}
 {{ end }}
 
-{{ if and (not $res) (not $remote) }}
+{{ if and (not $res) (not $scheme) }}
     {{ if and (eq .url $url) (hasPrefix $url "/assets/") }}
         {{ $url = strings.TrimPrefix "/assets/" $url -}}
     {{ end }}

@@ -5,13 +5,31 @@
   "local-asset-absolute": {
     "getresource": "/img/orientation/orientation-1.jpg"
   },
+  "local-asset-http-name": {
+    "getresource": "/http-logo.jpg"
+  },
+  "local-asset-http-name-uppercase": {
+    "getresource": "/HTTP-x.jpg"
+  },
+  "local-asset-https-name": {
+    "getresource": "/https_cover.jpg"
+  },
   "local-asset-missing": {
     "getresource": ""
+  },
+  "local-asset-protocol-relative": {
+    "getresource": "/img/orientation/orientation-1.jpg"
+  },
+  "local-asset-url-in-glob": {
+    "getresource": "/img/orientation/orientation-1.jpg"
   },
   "page-resource": {
     "getresource": "page-resource.txt"
   },
   "remote-unreachable": {
+    "getresource": ""
+  },
+  "remote-unreachable-http": {
     "getresource": ""
   },
   "remote-unreachable-uppercase": {
