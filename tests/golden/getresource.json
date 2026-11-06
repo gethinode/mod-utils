@@ -1,4 +1,7 @@
 {
+  "invalid-pattern-one-slash": {
+    "getresource": "error"
+  },
   "local-asset": {
     "getresource": "/img/orientation/orientation-1.jpg"
   },
