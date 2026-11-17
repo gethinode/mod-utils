@@ -202,6 +202,63 @@
     },
     "rendered": "icon 1"
   },
+  "icon-string-hundred": {
+    "args": {
+      "args": {
+        "icon": "100"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "icon": "100",
+      "warnmsg": []
+    },
+    "rendered": "icon 100"
+  },
+  "icon-string-leading-zeros": {
+    "args": {
+      "args": {
+        "icon": "007"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "icon": "007",
+      "warnmsg": []
+    },
+    "rendered": "icon 007"
+  },
+  "icon-string-negative": {
+    "args": {
+      "args": {
+        "icon": "-1"
+      },
+      "defaulted": [],
+      "err": false,
+      "errmsg": [],
+      "warnmsg": []
+    },
+    "initargs": {
+      "default": [],
+      "err": false,
+      "errmsg": [],
+      "icon": "-1",
+      "warnmsg": []
+    },
+    "rendered": "icon -1"
+  },
   "icon-string-one": {
     "args": {
       "args": {

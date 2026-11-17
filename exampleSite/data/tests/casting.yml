@@ -88,3 +88,17 @@ cases:
   - name: digit-string-to-bool
     structure: test-cast
     args: {flag: "1"}
+  # More integer-like strings that must stay the exact same string: no length cutoff,
+  # no sign exception, and no canonicalization ("007" must not become "7").
+  - name: icon-string-hundred
+    structure: test-cast
+    render: icon
+    args: {icon: "100"}
+  - name: icon-string-negative
+    structure: test-cast
+    render: icon
+    args: {icon: "-1"}
+  - name: icon-string-leading-zeros
+    structure: test-cast
+    render: icon
+    args: {icon: "007"}
