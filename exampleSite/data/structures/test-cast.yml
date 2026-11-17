@@ -18,3 +18,5 @@ arguments:
   items-list:
     type: slice
     optional: true
+  # inherits the global definition: type [string, uint64]
+  icon:
