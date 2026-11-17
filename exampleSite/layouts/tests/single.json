@@ -57,6 +57,13 @@
         {{- $entry = dict "initargs" (partial "utilities/InitArgs.html" $params) -}}
         {{- $strict := partial "utilities/Args.html" (merge $params (dict "strict" true)) -}}
         {{- $entry = merge $entry (dict "args" $strict) -}}
+        {{- /* "render" names an argument to output the way a component guards it: a falsy
+             value renders nothing */ -}}
+        {{- with $case.render -}}
+            {{- $rendered := "" -}}
+            {{- with index $entry.initargs . }}{{ $rendered = printf "icon %v" . }}{{ end -}}
+            {{- $entry = merge $entry (dict "rendered" $rendered) -}}
+        {{- end -}}
     {{- end -}}
     {{- $results = merge $results (dict $case.name $entry) -}}
 {{- end -}}

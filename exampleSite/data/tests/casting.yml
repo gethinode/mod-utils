@@ -60,3 +60,45 @@ cases:
   - name: fractional-float-to-int
     structure: test-cast
     args: {count: 42.5}
+  # A string argument keeps its string value when it looks like an integer: icon accepts
+  # both string and uint64, and casting "0" to the integer 0 made the icon falsy
+  # (gethinode/hinode#2370).
+  - name: icon-string-zero
+    structure: test-cast
+    render: icon
+    args: {icon: "0"}
+  - name: icon-string-one
+    structure: test-cast
+    render: icon
+    args: {icon: "1"}
+  - name: icon-string-ten
+    structure: test-cast
+    render: icon
+    args: {icon: "10"}
+  # A genuine integer stays an integer.
+  - name: icon-int
+    structure: test-cast
+    render: icon
+    args: {icon: 1}
+  # An int-only argument still casts a numeric string, "0" included.
+  - name: string-zero-to-int
+    structure: test-cast
+    args: {count: "0"}
+  # An argument that accepts no int keeps a digit string and fails its type check.
+  - name: digit-string-to-bool
+    structure: test-cast
+    args: {flag: "1"}
+  # More integer-like strings that must stay the exact same string: no length cutoff,
+  # no sign exception, and no canonicalization ("007" must not become "7").
+  - name: icon-string-hundred
+    structure: test-cast
+    render: icon
+    args: {icon: "100"}
+  - name: icon-string-negative
+    structure: test-cast
+    render: icon
+    args: {icon: "-1"}
+  - name: icon-string-leading-zeros
+    structure: test-cast
+    render: icon
+    args: {icon: "007"}

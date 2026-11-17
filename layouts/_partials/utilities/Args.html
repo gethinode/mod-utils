@@ -126,7 +126,9 @@
             {{ if and (in $node.accepts "bool") (in (slice "true" "false") $value) }}
                 {{ $value = eq $value "true" }}
                 {{ $kind = "bool" }}
-            {{ else if and (in $node.accepts "int") (findRE `^-?\d+$` $value) }}
+            {{ else if and (in $node.accepts "int") (not (in $node.accepts "string")) (findRE `^-?\d+$` $value) }}
+                {{/* an argument that also accepts a string keeps it: icon ([string, uint64])
+                     would otherwise turn "0" into the falsy integer 0 */}}
                 {{ $value = int $value }}
                 {{ $kind = "int" }}
             {{ else if and (in $node.accepts "float") (findRE `^-?(\d+\.\d+|\.\d+)$` $value) }}

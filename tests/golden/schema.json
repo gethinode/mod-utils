@@ -954,6 +954,13 @@
           "value": null,
           "warnmsg": []
         },
+        "icon": {
+          "defaulted": [],
+          "errmsg": [],
+          "newmsg": [],
+          "value": null,
+          "warnmsg": []
+        },
         "items-list": {
           "defaulted": [],
           "errmsg": [],
@@ -1016,6 +1023,21 @@
           "optional": true,
           "types": [
             "bool"
+          ]
+        },
+        "icon": {
+          "accepts": [
+            "string",
+            "int"
+          ],
+          "camelKey": "icon",
+          "comment": "Icon to include. You can use shorthand notation such as `fas sort` to include a Font Awesome icon. The argument also supports files with an `.svg` or `.json` extension.",
+          "kind": "scalar",
+          "name": "icon",
+          "optional": true,
+          "types": [
+            "string",
+            "uint64"
           ]
         },
         "items-list": {
