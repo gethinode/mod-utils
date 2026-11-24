@@ -35,3 +35,7 @@ overrides:
 auditConfig:
   ignoreGhsas:
     - GHSA-vfj7-8cjw-p6xm
+
+# Select standard Hugo archives from 0.170.0 and Extended archives for older Hugo.
+patchedDependencies:
+  hugo-extended@0.170.0: patches/hugo-extended@0.170.0.patch
