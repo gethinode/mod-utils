@@ -63,10 +63,9 @@ types:
       description:
       href:
       level:
-  elements:
-    - title:
-      subtitle:
-      highlight:
+  basic-elements:
+    - &basic-element
+      title:
       icon:
       image:
       mode:
@@ -74,6 +73,10 @@ types:
       link:
       label:
       url:
+  elements:
+    - <<: *basic-element
+      subtitle:
+      highlight:
   links:
     - title:
       url:
